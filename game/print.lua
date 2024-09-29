@@ -1,3 +1,3 @@
 function printWally()
-    return 'Wall-e'
+    return 'Wall-E'
 end
