@@ -6,7 +6,6 @@ function love.resize(w, h)
 end
 
 function love.load()
-    require("game.print")
     require("game.input")
 
     love.window.setTitle('PRO-390 Capstone')
