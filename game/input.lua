@@ -1,7 +1,9 @@
 local word = ''
+
+-- Keyboard Input
 local letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
 
-local function valid(key)
+local function validLetter(key)
     for index, value in ipairs(letters) do
         if key == value then return true end
     end
@@ -10,23 +12,21 @@ local function valid(key)
 end
 
 function love.keypressed(key)
-    --[[if key == 'escape' then
+    if key == 'escape' then
         love.event.quit()
-    end]]--
-
-    if key =='backspace' and #word > 0 then
-        word = word:sub(1, -2)
-    elseif valid(key) then
-        word = word..tostring(key)
     end
 
-    love.keyboard.keysPressed[key] = true
+    if key == 'backspace' and #word > 0 then
+        word = word:sub(1, -2)
+    elseif validLetter(key) then
+        word = word..tostring(key)
+    end
 end
 
-function love.keyboard.wasPressed(key)
-    return love.keyboard.keysPressed[key]
-end
+-- Controller Input (?)
+-- Good luck haha
 
+-- Test Functions
 function drawWord()
     love.graphics.print(word, 10, 100)
 end

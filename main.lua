@@ -9,13 +9,11 @@ function love.load()
     require("game.input")
 
     love.window.setTitle('PRO-390 Capstone')
-
-    love.keyboard.keysPressed = {}
 end
 
 -- Main Game Loop
 function love.update(dt)
-    love.keyboard.keysPressed = {}
+    -- Update game here
 end
 
 function love.draw()
