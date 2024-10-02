@@ -1,3 +1,5 @@
+local state
+
 -- General Config
 love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -6,7 +8,8 @@ function love.resize(w, h)
 end
 
 function love.load()
-    require("game.input")
+    state = require "game.state"
+    state.load()
 
     love.window.setTitle('PRO-390 Capstone')
 end
@@ -14,9 +17,11 @@ end
 -- Main Game Loop
 function love.update(dt)
     -- Update game here
+    state.update(dt)
 end
 
 function love.draw()
     love.graphics.print('Here goes nothing! (^v^)', 10, 10)
-    drawWord()
+    
+    state.draw()
 end
