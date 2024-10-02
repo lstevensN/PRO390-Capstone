@@ -25,7 +25,7 @@ function GameState.update(dt)
 end
 
 function GameState.draw()
-    drawWord()
+    DrawWord()
 
     love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
 end

@@ -38,6 +38,6 @@ end
 -- Good luck haha
 
 -- Test Functions
-function drawWord()
+function DrawWord()
     love.graphics.print(word, 10, 100)
 end

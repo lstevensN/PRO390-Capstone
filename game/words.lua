@@ -7,6 +7,9 @@ local f  = require "game.lists.f"
 local g  = require "game.lists.g"
 local h  = require "game.lists.h"
 local iy = require "game.lists.iy"
+local j  = require "game.lists.j"
+local k  = require "game.lists.k"
+local l  = require "game.lists.l"
 
 local function ValidateWord(word)
     local startLetter = word:sub(1, 1)
@@ -29,6 +32,12 @@ local function ValidateWord(word)
         for i = 1, #h do if h[i] == word then return true end end
     elseif startLetter == 'i' or startLetter == 'y' then
         for i = 1, #iy do if iy[i] == word then return true end end
+    elseif startLetter == 'j' then
+        for i = 1, #j do if j[i] == word then return true end end
+    elseif startLetter == 'k' then
+        for i = 1, #k do if k[i] == word then return true end end
+    elseif startLetter == 'l' then
+        for i = 1, #l do if l[i] == word then return true end end
     end
 
     return false
