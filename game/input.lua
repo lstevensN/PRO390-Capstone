@@ -1,4 +1,13 @@
 local word = ''
+local submittedWord = ''
+
+function GetSubmittedWord() return submittedWord end
+function ResetSubmittedWord() submittedWord = '' end
+
+local function submitWord()
+    submittedWord = word
+    word = ''
+end
 
 -- Keyboard Input
 local letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
@@ -18,6 +27,8 @@ function love.keypressed(key)
 
     if key == 'backspace' and #word > 0 then
         word = word:sub(1, -2)
+    elseif key == 'return' then
+        submitWord()
     elseif validLetter(key) then
         word = word..tostring(key)
     end

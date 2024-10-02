@@ -1,4 +1,6 @@
 -- Handles overall game state
+local wordFound = false
+local ValidateWord
 
 GameState = {
 --  LOAD =  0,
@@ -12,17 +14,20 @@ GameState = {
 
 function GameState.load()
     require("game.input")
-    require("game.words")
+    ValidateWord = require "game.words"
 end
 
 function GameState.update(dt)
-    
+    if GetSubmittedWord() ~= '' then
+        wordFound = ValidateWord(GetSubmittedWord())
+        ResetSubmittedWord()
+    end
 end
 
 function GameState.draw()
     drawWord()
 
-    --love.graphics.print()
+    love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
 end
 
 return GameState

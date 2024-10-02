@@ -565,6 +565,8 @@ local a =
     'ablegate',
     'ablegates',
     'ablegation',
+    'ableism',
+    'ableist',
     'ablend',
     'ableness',
     'ablepharia',
@@ -25418,3 +25420,5 @@ local a =
     'azurmalachite',
     'azurous',
 }
+
+return a
