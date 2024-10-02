@@ -12,6 +12,7 @@ GameState = {
 
 function GameState.load()
     require("game.input")
+    require("game.words")
 end
 
 function GameState.update(dt)
@@ -20,6 +21,8 @@ end
 
 function GameState.draw()
     drawWord()
+
+    --love.graphics.print()
 end
 
 return GameState
