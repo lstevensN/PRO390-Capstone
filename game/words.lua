@@ -13,6 +13,9 @@ local l  = require "game.lists.l"
 local m  = require "game.lists.m"
 local n  = require "game.lists.n"
 local o  = require "game.lists.o"
+local p  = require "game.lists.p"
+local q  = require "game.lists.q"
+local r  = require "game.lists.r"
 
 local function ValidateWord(word)
     local startLetter = word:sub(1, 1)
@@ -47,6 +50,12 @@ local function ValidateWord(word)
         for i = 1, #n do if n[i] == word then return true end end
     elseif startLetter == 'o' then
         for i = 1, #o do if o[i] == word then return true end end
+    elseif startLetter == 'p' then
+        for i = 1, #p do if p[i] == word then return true end end
+    elseif startLetter == 'q' then
+        for i = 1, #q do if q[i] == word then return true end end
+    elseif startLetter == 'r' then
+        for i = 1, #r do if r[i] == word then return true end end
     end
 
     return false
