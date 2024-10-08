@@ -1,6 +1,7 @@
 -- Handles overall game state
 local wordFound = false
-local ValidateWord
+local ValidateWord, Splines, Sprites
+local spline1
 
 GameState = {
 --  LOAD =  0,
@@ -14,7 +15,14 @@ GameState = {
 
 function GameState.load()
     require("game.input")
+
     ValidateWord = require "game.words"
+    Splines = require "game.spline"
+    Sprites = require "game.sprite"
+
+    spline1 = Splines:new({startX = 100, startY = 150, endX = 700, endY = 150, shown = true})
+
+    spline1:addRider(Sprites:new({x = 100, y = 500}))
 end
 
 function GameState.update(dt)
@@ -28,6 +36,8 @@ function GameState.draw()
     DrawWord()
 
     love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
+
+    spline1:draw()
 end
 
 return GameState
