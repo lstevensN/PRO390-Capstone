@@ -9759,6 +9759,7 @@ local e =
 	'espiglerie',
 	'espying',
 	'espinal',
+	'espinas',
 	'espinel',
 	'espinette',
 	'espingole',

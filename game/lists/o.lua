@@ -1412,6 +1412,8 @@ local o =
 	'odobenidae',
 	'odobenus',
 	'odocoileus',
+	'odogaron',
+	'odogarons',
 	'odograph',
 	'odographs',
 	'odology',

@@ -151,6 +151,7 @@ local x =
 	'xenyl',
 	'xenylamine',
 	'xenium',
+	'xeno',
 	'xenobiology',
 	'xenobiologies',
 	'xenobiosis',
