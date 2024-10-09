@@ -21,8 +21,11 @@ function GameState.load()
     Sprites = require "game.sprite"
 
     spline1 = Splines:new({startX = 100, startY = 150, endX = 700, endY = 150, shown = true})
+    spline1:direct()
 
-    spline1:addRider(Sprites:new({x = 100, y = 500}))
+    spline1:addRider(Sprites:new({x = 100, y = 500, speed = 100}))
+    spline1:addRider(Sprites:new({x = 100, y = 500, speed = 200}))
+    spline1:addRider(Sprites:new({x = 100, y = 500, speed = 300}))
 end
 
 function GameState.update(dt)
@@ -30,6 +33,8 @@ function GameState.update(dt)
         wordFound = ValidateWord(GetSubmittedWord())
         ResetSubmittedWord()
     end
+
+    spline1:update(dt)
 end
 
 function GameState.draw()
