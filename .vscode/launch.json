@@ -2,18 +2,10 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Debug Love",
-        "type": "lua-local",
+        "name": "Launch",
+        "type": "lua",
         "request": "launch",
-        "program": {
-          "command": "love"
-        },
-        "args": [
-          "game"
-        ],
-        "scriptRoots": [
-          "game"
-        ]
+        "program": "${workspaceFolder}/main.lua"
       }
     ]
   }

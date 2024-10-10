@@ -1,4 +1,4 @@
-local Sprite = { x = 0, y = 0, speed = 0 }  -- Remember to add Image property!
+local Sprite = { x = 0, y = 0, speed = 0, xvel = 0, yvel = 0 }  -- Remember to add Image property!
 
 function Sprite:new(o)  -- Here too
     o = o or {}
