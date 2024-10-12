@@ -1,49 +1,58 @@
 -- Handles overall game state
-local wordFound = false
-local line, line2
+function GameState()
+    local self = {}
+    local wordFound = false
+    local line, line2
+    local gameState = function (dt) end
+    local drawState = function () end
 
-GameState = {
---  LOAD =  0,
-    MENU  = 1,
-    START = 2,
-    GAME  = 3,
-    WIN   = 4,
-    LOSE  = 5,
-    END   = 6
-}
-
-function GameState.load()
-    require("game.input")
-    require("game.sprite")
-    require("game.line")
-    require("game.words")
-
-    line = Line(100, 700, 300, true, true)
-    line2 = Line(100, 700, 400, true, false)
-
-    line.addRider(Sprite(0, 0, 100))
-    line.addRider(Sprite(0, 0, 150))
-end
-
-function GameState.update(dt)
-    if GetSubmittedWord() ~= '' then
-        wordFound = ValidateWord(GetSubmittedWord())
-        ResetSubmittedWord()
+    local start = function (dt)
+        
     end
 
-    line.update(dt)
-    line2.update(dt)
+    local game = function (dt, level)
+        if GetSubmittedWord() ~= '' then
+            wordFound = ValidateWord(GetSubmittedWord())
+            ResetSubmittedWord()
+        end
+    
+        line.update(dt)
+        line2.update(dt)
+
+        drawState = function ()
+            DrawWord()
+
+            love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
+    
+            line.draw()
+            line2.draw()
+    
+            love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 740, 10)
+        end
+    end
+
+    self.load = function ()
+        require("game.input")
+        require("game.sprite")
+        require("game.line")
+        require("game.words")
+
+        gameState = start
+
+        line = Line(100, 700, 300, true)
+        line2 = Line(100, 700, 400, false, true)
+
+        line.addRider(Sprite(0, 0, 100))
+        line2.addRider(Sprite(0, 0, 200))
+    end
+
+    self.update = function (dt)
+        gameState(dt)
+    end
+
+    self.draw = function ()
+        drawState()
+    end
+
+    return self
 end
-
-function GameState.draw()
-    DrawWord()
-
-    love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
-
-    line.draw()
-    line2.draw()
-
-    love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 740, 10)
-end
-
-return GameState

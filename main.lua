@@ -8,7 +8,9 @@ function love.resize(w, h)
 end
 
 function love.load()
-    state = require "game.state"
+    require("game.state")
+
+    state = GameState()
     state.load()
 
     love.window.setTitle('PRO-390 Capstone')
