@@ -2,23 +2,34 @@
 function GameState()
     local self = {}
     local wordFound = false
-    local line, line2
     local gameState = function (dt) end
     local drawState = function () end
 
+    -- START state
     local start = function (dt)
-        
     end
 
+    -- GAME state
     local game = function (dt, level)
-        if GetSubmittedWord() ~= '' then
-            wordFound = ValidateWord(GetSubmittedWord())
-            ResetSubmittedWord()
-        end
-    
-        line.update(dt)
-        line2.update(dt)
+        -- Initialize Game State
+        local line = Line(100, 700, 300, true)
+        line.addRider(Sprite(0, 0, 100))
 
+        local line2 = Line(100, 700, 400, false, true)
+        line2.addRider(Sprite(0, 0, 200))
+
+        -- Game State Loop
+        gameState = function (dt)
+            if GetSubmittedWord() ~= '' then
+                wordFound = ValidateWord(GetSubmittedWord())
+                ResetSubmittedWord()
+            end
+    
+            line.update(dt)
+            line2.update(dt)
+        end
+
+        -- Game State Draw Instructions
         drawState = function ()
             DrawWord()
 
@@ -37,13 +48,7 @@ function GameState()
         require("game.line")
         require("game.words")
 
-        gameState = start
-
-        line = Line(100, 700, 300, true)
-        line2 = Line(100, 700, 400, false, true)
-
-        line.addRider(Sprite(0, 0, 100))
-        line2.addRider(Sprite(0, 0, 200))
+        gameState = game
     end
 
     self.update = function (dt)
