@@ -1,7 +1,7 @@
 -- Handles overall game state
 local wordFound = false
-local ValidateWord, Splines, Sprites
-local spline1, spline2
+local ValidateWord, Sprites
+local line, line2
 
 GameState = {
 --  LOAD =  0,
@@ -15,24 +15,16 @@ GameState = {
 
 function GameState.load()
     require("game.input")
+    require("game.line")
 
     ValidateWord = require "game.words"
-    Splines = require "game.spline"
     Sprites = require "game.sprite"
 
-    spline1 = Splines:new({startX = 100, startY = 150, endX = 700, endY = 150, shown = true})
-    spline2 = Splines:new({startX = 100, startY = 350, endX = 700, endY = 450, shown = false})
+    line = Line(100, 700, 300, true, true)
+    line2 = Line(100, 700, 400, true, false)
 
-    spline1:direct()
-    spline2:direct()
-
-    spline1:addRider(Sprites:new({speed = 50}))
-    --spline1:addRider(Sprites:new({speed = 200}))
-    --spline1:addRider(Sprites:new({speed = 300}))
-
-    -- spline2:addRider(Sprites:new({speed = 100}))
-    --spline2:addRider(Sprites:new({speed = 200}))
-    --spline2:addRider(Sprites:new({speed = 300}))
+    line.addRider(Sprites:new({speed = 200}))
+    line2.addRider(Sprites:new({speed = 150}))
 end
 
 function GameState.update(dt)
@@ -41,8 +33,8 @@ function GameState.update(dt)
         ResetSubmittedWord()
     end
 
-    spline1:update(dt)
-    spline2:update(dt)
+    line.update(dt)
+    line2.update(dt)
 end
 
 function GameState.draw()
@@ -50,8 +42,8 @@ function GameState.draw()
 
     love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
 
-    spline1:draw()
-    spline2:draw()
+    line.draw()
+    line2.draw()
 
     love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 740, 10)
 end
