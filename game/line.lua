@@ -8,7 +8,7 @@ function Line(x1, x2, y, s, r)
     local riders = {}
 
     self.addRider = function (rider)
-        if rider.speed < 0 then rider.x = endX
+        if rider.getSpeed() < 0 then rider.x = endX
         else rider.x = startX end
         rider.y = locationY
 
@@ -21,11 +21,11 @@ function Line(x1, x2, y, s, r)
 
     self.update = function (dt)
         for i, v in ipairs(riders) do
-            v.xvel = v.speed * dt
+            v.xvel = v.getSpeed() * dt
             v.x = v.x + v.xvel
     
             if (rebound == true and v.x >= endX) then
-                v.speed = -v.speed
+                v.setSpeed(-v.getSpeed())
                 v.x = endX
             elseif (v.x < startX or v.x > endX + 3) then self.removeRider(i) end
         end

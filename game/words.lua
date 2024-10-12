@@ -24,7 +24,7 @@ local w  = require "game.lists.w"
 local x  = require "game.lists.x"
 local z  = require "game.lists.z"
 
-local function ValidateWord(word)
+function ValidateWord(word)
     local startLetter = word:sub(1, 1)
 
     if startLetter == 'a' then
@@ -81,5 +81,3 @@ local function ValidateWord(word)
 
     return false
 end
-
-return ValidateWord

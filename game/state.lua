@@ -1,6 +1,5 @@
 -- Handles overall game state
 local wordFound = false
-local ValidateWord, Sprites
 local line, line2
 
 GameState = {
@@ -15,16 +14,15 @@ GameState = {
 
 function GameState.load()
     require("game.input")
+    require("game.sprite")
     require("game.line")
-
-    ValidateWord = require "game.words"
-    Sprites = require "game.sprite"
+    require("game.words")
 
     line = Line(100, 700, 300, true, true)
     line2 = Line(100, 700, 400, true, false)
 
-    line.addRider(Sprites:new({speed = 200}))
-    line2.addRider(Sprites:new({speed = 150}))
+    line.addRider(Sprite(0, 0, 100))
+    line.addRider(Sprite(0, 0, 150))
 end
 
 function GameState.update(dt)
