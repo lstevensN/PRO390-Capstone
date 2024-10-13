@@ -4,13 +4,25 @@ function GameState()
     local wordFound = false
     local gameState = function (dt) end
     local drawState = function () end
+    local start, game
 
     -- START state
-    local start = function (dt)
+    start = function (dt)
+        local button = Button(400, 300, 100, 50, function () gameState = game end)
+
+        gameState = function (dt)
+            button.update(dt)
+        end
+
+        drawState = function ()
+            button.draw()
+
+            if love.mouse.isDown(1) == true then love.graphics.print("down", 10, 120) end
+        end
     end
 
     -- GAME state
-    local game = function (dt, level)
+    game = function (dt, level)
         -- Initialize Game State
         local line = Line(100, 700, 300, true)
         line.addRider(Sprite(0, 0, 100))
@@ -47,8 +59,9 @@ function GameState()
         require("game.sprite")
         require("game.line")
         require("game.words")
+        require("game.button")
 
-        gameState = game
+        gameState = start
     end
 
     self.update = function (dt)
