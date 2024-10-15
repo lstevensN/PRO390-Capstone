@@ -81,3 +81,12 @@ function ValidateWord(word)
 
     return false
 end
+
+local keyPressed = ''
+
+function GetKeyPressed() return keyPressed end
+function ResetKeyPressed() keyPressed = '' end
+
+function love.keypressed(key)
+    keyPressed = key
+end
