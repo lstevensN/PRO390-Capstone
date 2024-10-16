@@ -5,22 +5,22 @@ function Line(x1, x2, y, s, r)
     local locationY = y or 0
     local rebound = r or false
     local shown = s or false
-    local riders = {}
+    self.riders = {}
 
     self.addRider = function (rider)
         if rider.speed < 0 then rider.x = endX
         else rider.x = startX end
         rider.y = locationY
 
-        table.insert(riders, rider)
+        table.insert(self.riders, rider)
     end
 
     self.removeRider = function (riderIndex)
-        table.remove(riders, riderIndex)
+        table.remove(self.riders, riderIndex)
     end
 
     self.update = function (dt)
-        for i, v in ipairs(riders) do
+        for i, v in ipairs(self.riders) do
             v.xvel = v.speed * dt
             v.x = v.x + v.xvel
     
@@ -37,7 +37,7 @@ function Line(x1, x2, y, s, r)
         end
     
         -- Draw Riders
-        for i, v in ipairs(riders) do
+        for i, v in ipairs(self.riders) do
             love.graphics.circle("line", v.x, v.y, 5)
         end
     end

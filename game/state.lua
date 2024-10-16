@@ -6,7 +6,7 @@ function GameState()
     local start, game
 
     -- START state
-    start = function (dt)
+    start = function ()
         -- Initialize Start State
         local button = Button(400, 300, 100, 50, function () gameState = game end)
 
@@ -24,7 +24,7 @@ function GameState()
     end
 
     -- GAME state
-    game = function (dt, level)
+    game = function (level)
         -- Initialize Game State
         local line = Line(100, 700, 300, true)
         line.addRider(Sprite(0, 0, 100))
@@ -32,9 +32,14 @@ function GameState()
         local line2 = Line(100, 700, 400, false, true)
         line2.addRider(Sprite(0, 0, 200))
 
+        local gun = Gun(300, 600)
+
         local word = ''
         local wordFound = false
-        local letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
+        local wordValue = 0
+        local validLetters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
+        local letters = {}
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -50,8 +55,18 @@ function GameState()
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     word = ''
+
+                    wordValue = 0
+                    for index, value in ipairs(letters) do wordValue = wordValue + value.value end
+                    letters = {}
                 else
-                    for index, value in ipairs(letters) do if key == value then word = word..tostring(key) end end
+                    for index, value in ipairs(validLetters) do
+                        if key == value then
+                            word = word..tostring(key)
+                            table.insert(letters, Letter(key))
+                            break
+                        end
+                    end
                 end
 
                 ResetKeyPressed()
@@ -59,14 +74,20 @@ function GameState()
 
             line.update(dt)
             line2.update(dt)
+
+            gun.aim(line2.riders)
         end
+
 
         -- Game State Draw Instructions
         drawState = function ()
             love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
+            love.graphics.print("Word value: "..tostring(wordValue), 10, 230)
     
             line.draw()
             line2.draw()
+
+            gun.draw()
     
             love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 740, 10)
             love.graphics.print(word, 10, 100)
@@ -79,6 +100,8 @@ function GameState()
         require("game.line")
         require("game.words")
         require("game.button")
+        require("game.letter")
+        require("game.gun")
 
         gameState = start
     end
