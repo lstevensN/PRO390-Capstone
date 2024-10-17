@@ -3,11 +3,9 @@ local rs = require "resolution_solution" ---@type ResolutionSolution
 
 local mouseX, mouseY = 0, 0
 
-ResScale = 1
-
 rs.conf({
-    game_width = 800,
-    game_height = 600,
+    game_width = 1000,
+    game_height = 800,
     scale_mode = rs.ASPECT_MODE
 })
 
@@ -15,9 +13,19 @@ rs.setMode(rs.game_width, rs.game_height, {resizable = true})
 
 local game_canvas = love.graphics.newCanvas(rs.get_game_size())
 
-function love.resize(w, h)
-    rs.resize(w, h)
+local mouse_getPosition = love.mouse.getPosition
+love.mouse.getPosition = function ()
+    local width, height = love.graphics.getDimensions()
+    local original_width = 1000
+    local original_height = 800
+    local sx, sy = width / original_width, height / original_height
+    local x, y = mouse_getPosition()
+    x = x / sx
+    y = y / sy
+    return x, y
 end
+
+function love.resize(w, h) rs.resize(w, h) end
 
 function love.load()
     require("game.state")
@@ -34,7 +42,6 @@ function love.update(dt)
     state.update(dt)
 
     mouseX, mouseY = love.mouse.getPosition()
-    ResScale = rs.scale_width
 end
 
 function love.draw()
@@ -42,8 +49,8 @@ function love.draw()
     love.graphics.clear(0, 0, 0, 1)
     
     love.graphics.print('Here goes nothing! (^v^)', 10, 10)
-    love.graphics.print("mouse x: "..tostring(mouseX / ResScale), 10, 40)
-    love.graphics.print("mouse y: "..tostring(mouseY / ResScale), 10, 60)
+    love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
+    love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
 
     state.draw()
 
