@@ -26,19 +26,23 @@ function GameState()
     -- GAME state
     game = function (level)
         -- Initialize Game State
-        local line = Line(100, 700, 300, true)
+        local line = Line(100, 1100, 300, true)
         line.addRider(Sprite(0, 0, 100))
 
-        local line2 = Line(100, 700, 400, false, true)
+        local line2 = Line(100, 1100, 400, false, true)
         line2.addRider(Sprite(0, 0, 200))
 
-        local gun = Gun(300, 600)
+        local gun = Gun(200, 800)
 
         local word = ''
         local wordFound = false
         local wordValue = 0
         local validLetters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
         local letters = {}
+
+        local wordText = love.graphics.newText(love.graphics.getFont())
+        local wordFoundText = love.graphics.newText(love.graphics.getFont())
+        local wordValueText = love.graphics.newText(love.graphics.getFont())
 
 
         -- Game State Loop
@@ -76,20 +80,23 @@ function GameState()
             line2.update(dt)
 
             gun.aim(line2.riders)
+
+            wordText:set(word)
+            wordFoundText:set("Word found: "..tostring(wordFound))
+            wordValueText:set("Word value: "..tostring(wordValue))
         end
 
 
         -- Game State Draw Instructions
         drawState = function ()
-            love.graphics.print("Word found: "..tostring(wordFound), 10, 200)
-            love.graphics.print("Word value: "..tostring(wordValue), 10, 230)
+            love.graphics.draw(wordText, (600 - wordText:getWidth() / 2) * XScaleFactor, 130 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
+            love.graphics.draw(wordFoundText, (600 - wordFoundText:getWidth() / 2) * XScaleFactor, 160 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
+            love.graphics.draw(wordValueText, (600 - wordValueText:getWidth() / 2) * XScaleFactor, 180 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
     
             line.draw()
             line2.draw()
 
             gun.draw()
-    
-            love.graphics.print(word, 10, 100)
         end
     end
 

@@ -45,5 +45,7 @@ function love.draw()
     love.graphics.print("scale x: "..tostring(XScaleFactor), 10 * XScaleFactor, 90 * YScaleFactor)
     love.graphics.print("scale y: "..tostring(YScaleFactor), 10 * XScaleFactor, 110 * YScaleFactor)
 
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 * XScaleFactor, 10 * YScaleFactor)
+
     state.draw()
 end
