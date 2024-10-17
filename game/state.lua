@@ -89,7 +89,6 @@ function GameState()
 
             gun.draw()
     
-            love.graphics.print("FPS: "..tostring(love.timer.getFPS()), 740, 10)
             love.graphics.print(word, 10, 100)
         end
     end

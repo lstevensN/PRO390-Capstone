@@ -1,7 +1,7 @@
 local state
 local rs = require "resolution_solution" ---@type ResolutionSolution
 
-local screenX, screenY = 800, 600
+local screenX, screenY = 1200, 900
 
 XScaleFactor = 0
 YScaleFactor = 0
@@ -17,7 +17,13 @@ function love.load()
     state.load()
 
     love.window.setTitle('PRO-390 Capstone')
-    love.window.setMode(screenX, screenY, {resizable = true})
+
+    local _, _, flags = love.window.getMode()
+
+    local width, height = love.window.getDesktopDimensions(flags.display)
+
+    if screenX > width or screenY > height then love.window.setMode(width, height, {resizable = true})
+    else love.window.setMode(screenX, screenY, {resizable = true}) end
 end
 
 -- Main Game Loop
@@ -32,12 +38,12 @@ function love.update(dt)
 end
 
 function love.draw()   
-    love.graphics.print('Here goes nothing! (^v^)', 10, 10)
-    love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
-    love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
+    love.graphics.print('Here goes nothing! (^v^)', 10 * XScaleFactor, 10 * YScaleFactor)
+    love.graphics.print("mouse x: "..tostring(mouseX), 10 * XScaleFactor, 40 * YScaleFactor)
+    love.graphics.print("mouse y: "..tostring(mouseY), 10 * XScaleFactor, 60 * YScaleFactor)
 
-    love.graphics.print("scale x: "..tostring(XScaleFactor), 10, 90)
-    love.graphics.print("scale y: "..tostring(YScaleFactor), 10, 110)
+    love.graphics.print("scale x: "..tostring(XScaleFactor), 10 * XScaleFactor, 90 * YScaleFactor)
+    love.graphics.print("scale y: "..tostring(YScaleFactor), 10 * XScaleFactor, 110 * YScaleFactor)
 
     state.draw()
 end
