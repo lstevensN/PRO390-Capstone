@@ -8,9 +8,11 @@ function Gun(xpos, ypos, mode)
     local y = ypos or 0
     local dx = 0
     local dy = 0
+    local canShoot = false
 
-    local blindSpots = function (progress)
-        
+    local blindSpots = function (enemy)
+        if enemy.x < 0 or enemy.x > love.graphics.getWidth() - XOffset * 2 then return true
+        else return false end
     end
 
     self.changeMode = function (newMode) self.mode = newMode end
@@ -23,16 +25,18 @@ function Gun(xpos, ypos, mode)
 
             if self.mode == "first" then
                 for i, v in ipairs(self.enemies) do
-                    if v.progress > self.enemies[targetIndex].progress and blindSpots(v.progress) == false then targetIndex = i end
+                    if v.progress > self.enemies[targetIndex].progress and blindSpots(v) == false then targetIndex = i end
                 end
             elseif self.mode == "last" then
                 for i, v in ipairs(self.enemies) do
-                    if v.progress < self.enemies[targetIndex].progress and blindSpots(v.progress) == false then targetIndex = i end
+                    if v.progress < self.enemies[targetIndex].progress and blindSpots(v) == false then targetIndex = i end
                 end
             end
 
             dx = self.enemies[targetIndex].x - x
             dy = -(self.enemies[targetIndex].y - y)
+
+            if targetIndex ~= 1 then canShoot = true else canShoot = false end
         end
     end
 

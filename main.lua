@@ -37,7 +37,10 @@ function love.update(dt)
     XOffset = (love.graphics.getWidth() - screenX) / 2
 end
 
-function love.draw()   
+function love.draw()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setBackgroundColor(0, 0, 0)
+
     love.graphics.print('Here goes nothing! (^v^)', 10 + XOffset, 10 * ScaleFactor)
     love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
     love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
@@ -48,4 +51,8 @@ function love.draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
 
     state.draw()
+
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", 0, 0, XOffset, love.graphics.getHeight())
+    love.graphics.rectangle("fill", screenX + XOffset, 0, XOffset, love.graphics.getHeight())
 end

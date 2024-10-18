@@ -26,14 +26,17 @@ function GameState()
         -- Initialize Game State
         local gun = Gun(200, 800, "first")
         
-        local line = Line(100, 1100, 300, true)
-        local line2 = Line(100, 1100, 400, false)
-        local line3 = Line(100, 1100, 500, true, true)
+        local line = Line(-100, 1300, 300, true)
+        local line2 = Line(-100, 1300, 400, false)
+        local line3 = Line(-100, 1300, 500, true, true)
 
         line.nextLine = line2
         line2.prevLine = line
         line2.nextLine = line3
         line3.prevLine = line2
+
+        local blankEnemy = Enemy(200, -100, 0)
+        gun.addEnemy(blankEnemy)
         
         local enemy = Enemy(0, 0, 250)
         line.addRider(enemy)
@@ -103,8 +106,8 @@ function GameState()
             love.graphics.draw(wordFoundText, (600 - wordFoundText:getWidth() / 2) + XOffset, 160 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.draw(wordValueText, (600 - wordValueText:getWidth() / 2) + XOffset, 180 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
 
-            love.graphics.print("Enemy1: "..tostring(enemy.progress), 600, 700)
-            love.graphics.print("Enemy2: "..tostring(enemy2.progress), 600, 720)
+            love.graphics.print("Enemy1: "..tostring(enemy.x), 570 + XOffset, 700 * ScaleFactor)
+            love.graphics.print("Enemy2: "..tostring(enemy2.x), 570 + XOffset, 720 * ScaleFactor)
     
             line.draw()
             line2.draw()
