@@ -26,13 +26,24 @@ function GameState()
     -- GAME state
     game = function (level)
         -- Initialize Game State
-        local line = Line(100, 1100, 300, true)
-        line.addRider(Sprite(0, 0, 100))
-
-        local line2 = Line(100, 1100, 400, false, true)
-        line2.addRider(Sprite(0, 0, 200))
-
         local gun = Gun(200, 800)
+        
+        local line = Line(100, 1100, 300, true)
+        local line2 = Line(100, 1100, 400, false)
+        local line3 = Line(100, 1100, 500, true, true)
+
+        line.nextLine = line2
+        line2.prevLine = line
+        line2.nextLine = line3
+        line3.prevLine = line2
+        
+        local enemy = Sprite(0, 0, 300)
+        line.addRider(enemy)
+        gun.addEnemy(enemy)
+
+        local enemy2 = Sprite(0, 0, 200)
+        line.addRider(enemy2)
+        gun.addEnemy(enemy2)
 
         local word = ''
         local wordFound = false
@@ -78,8 +89,9 @@ function GameState()
 
             line.update(dt)
             line2.update(dt)
+            line3.update(dt)
 
-            gun.aim(line2.riders)
+            gun.aim()
 
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
@@ -95,6 +107,7 @@ function GameState()
     
             line.draw()
             line2.draw()
+            line3.draw()
 
             gun.draw()
         end

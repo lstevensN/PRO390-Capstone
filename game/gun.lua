@@ -2,6 +2,7 @@ function Gun(xpos, ypos, mode)
     local self = {}
     self.ammo = {}
     self.mode = mode or "first"
+    self.enemies = {}
     local image = love.graphics.newImage("game/assets/faketurret.png")
     local x = xpos or 0
     local y = ypos or 0
@@ -10,11 +11,16 @@ function Gun(xpos, ypos, mode)
 
     self.changeMode = function (newMode) self.mode = newMode end
 
-    self.aim = function (enemies)
-        if #enemies > 0 then
+    self.addEnemy = function (enemy) table.insert(self.enemies, enemy) end
+
+    self.aim = function ()
+        if #self.enemies > 0 then
             if self.mode == "first" then
-                dx = enemies[1].x - x
-                dy = -(enemies[1].y - y)
+                dx = self.enemies[#self.enemies].x - x
+                dy = -(self.enemies[#self.enemies].y - y)
+            elseif self.mode == "last" then
+                dx = self.enemies[1].x - x
+                dy = -(self.enemies[1].y - y)
             end
         end
     end

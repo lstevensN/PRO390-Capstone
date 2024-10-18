@@ -6,6 +6,10 @@ function Line(x1, x2, y, s, r)
     local rebound = r or false
     local shown = s or false
     self.riders = {}
+    self.prevLine = {}
+    self.nextLine = {}
+
+    local next = next
 
     self.addRider = function (rider)
         if rider.speed < 0 then rider.x = endX
@@ -16,6 +20,14 @@ function Line(x1, x2, y, s, r)
     end
 
     self.removeRider = function (riderIndex)
+        local rider = self.riders[riderIndex]
+        rider.speed = -rider.speed
+
+        if     rebound == true and next(self.prevLine) ~= nil then self.prevLine.addRider(rider)
+        elseif rider.speed > 0 and next(self.nextLine) ~= nil and next(self.prevLine) ~= nil then self.nextLine.addRider(rider)
+        elseif rider.speed < 0 and next(self.prevLine) ~= nil then self.prevLine.addRider(rider)
+        elseif rider.speed < 0 and next(self.nextLine) ~= nil then self.nextLine.addRider(rider) end
+        
         table.remove(self.riders, riderIndex)
     end
 
