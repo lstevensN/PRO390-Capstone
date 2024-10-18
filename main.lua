@@ -3,8 +3,8 @@ local rs = require "resolution_solution" ---@type ResolutionSolution
 
 local screenX, screenY = 1200, 900
 
-XScaleFactor = 0
-YScaleFactor = 0
+XOffset = 0
+ScaleFactor = 0
 
 local mouseX, mouseY = 0, 0
 
@@ -33,19 +33,19 @@ function love.update(dt)
 
     mouseX, mouseY = love.mouse.getPosition()
 
-    XScaleFactor = love.graphics.getWidth() / screenX
-    YScaleFactor = love.graphics.getHeight() / screenY
+    ScaleFactor = love.graphics.getHeight() / screenY
+    XOffset = (love.graphics.getWidth() - screenX) / 2
 end
 
 function love.draw()   
-    love.graphics.print('Here goes nothing! (^v^)', 10 * XScaleFactor, 10 * YScaleFactor)
-    love.graphics.print("mouse x: "..tostring(mouseX), 10 * XScaleFactor, 40 * YScaleFactor)
-    love.graphics.print("mouse y: "..tostring(mouseY), 10 * XScaleFactor, 60 * YScaleFactor)
+    love.graphics.print('Here goes nothing! (^v^)', 10 + XOffset, 10 * ScaleFactor)
+    love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
+    love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
 
-    love.graphics.print("scale x: "..tostring(XScaleFactor), 10 * XScaleFactor, 90 * YScaleFactor)
-    love.graphics.print("scale y: "..tostring(YScaleFactor), 10 * XScaleFactor, 110 * YScaleFactor)
+    love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
+    love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
 
-    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 * XScaleFactor, 10 * YScaleFactor)
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
 
     state.draw()
 end

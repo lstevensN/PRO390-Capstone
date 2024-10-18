@@ -37,7 +37,7 @@ function Gun(xpos, ypos, mode)
     end
 
     self.draw = function ()
-        love.graphics.draw(image, x * XScaleFactor, y * YScaleFactor, math.atan2(dx, dy), 0.5 * XScaleFactor, 0.5 * YScaleFactor, image:getWidth() / 2, image:getHeight() / 2 + 50)
+        love.graphics.draw(image, x + XOffset, y * ScaleFactor, math.atan2(dx, dy), 0.5 * ScaleFactor, 0.5 * ScaleFactor, image:getWidth() / 2, image:getHeight() / 2 + 50)
     end
 
     return self

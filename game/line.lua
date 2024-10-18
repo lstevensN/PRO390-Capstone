@@ -45,12 +45,12 @@ function Line(x1, x2, y, s, r)
 
     self.draw = function ()
         if shown then
-            love.graphics.line(startX * XScaleFactor, locationY * YScaleFactor, endX * XScaleFactor, locationY * YScaleFactor)
+            love.graphics.line(startX + XOffset, locationY * ScaleFactor, endX + XOffset, locationY * ScaleFactor)
         end
     
         -- Draw Riders
         for i, v in ipairs(self.riders) do
-            love.graphics.circle("line", v.x * XScaleFactor, v.y * YScaleFactor, 5)
+            love.graphics.circle("line", v.x + XOffset, v.y * ScaleFactor, 5)
         end
     end
 
