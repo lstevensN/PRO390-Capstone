@@ -9,19 +9,30 @@ function Gun(xpos, ypos, mode)
     local dx = 0
     local dy = 0
 
+    local blindSpots = function (progress)
+        
+    end
+
     self.changeMode = function (newMode) self.mode = newMode end
 
     self.addEnemy = function (enemy) table.insert(self.enemies, enemy) end
 
     self.aim = function ()
         if #self.enemies > 0 then
+            local targetIndex = 1
+
             if self.mode == "first" then
-                dx = self.enemies[#self.enemies].x - x
-                dy = -(self.enemies[#self.enemies].y - y)
+                for i, v in ipairs(self.enemies) do
+                    if v.progress > self.enemies[targetIndex].progress and blindSpots(v.progress) == false then targetIndex = i end
+                end
             elseif self.mode == "last" then
-                dx = self.enemies[1].x - x
-                dy = -(self.enemies[1].y - y)
+                for i, v in ipairs(self.enemies) do
+                    if v.progress < self.enemies[targetIndex].progress and blindSpots(v.progress) == false then targetIndex = i end
+                end
             end
+
+            dx = self.enemies[targetIndex].x - x
+            dy = -(self.enemies[targetIndex].y - y)
         end
     end
 

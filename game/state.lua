@@ -26,7 +26,7 @@ function GameState()
     -- GAME state
     game = function (level)
         -- Initialize Game State
-        local gun = Gun(200, 800)
+        local gun = Gun(200, 800, "first")
         
         local line = Line(100, 1100, 300, true)
         local line2 = Line(100, 1100, 400, false)
@@ -37,11 +37,11 @@ function GameState()
         line2.nextLine = line3
         line3.prevLine = line2
         
-        local enemy = Sprite(0, 0, 300)
+        local enemy = Enemy(0, 0, 250)
         line.addRider(enemy)
         gun.addEnemy(enemy)
 
-        local enemy2 = Sprite(0, 0, 200)
+        local enemy2 = Enemy(0, 0, 300)
         line.addRider(enemy2)
         gun.addEnemy(enemy2)
 
@@ -104,6 +104,9 @@ function GameState()
             love.graphics.draw(wordText, (600 - wordText:getWidth() / 2) * XScaleFactor, 130 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
             love.graphics.draw(wordFoundText, (600 - wordFoundText:getWidth() / 2) * XScaleFactor, 160 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
             love.graphics.draw(wordValueText, (600 - wordValueText:getWidth() / 2) * XScaleFactor, 180 * YScaleFactor, 0, XScaleFactor, YScaleFactor)
+
+            love.graphics.print("Enemy1: "..tostring(enemy.progress), 600, 700)
+            love.graphics.print("Enemy2: "..tostring(enemy2.progress), 600, 720)
     
             line.draw()
             line2.draw()
@@ -121,6 +124,7 @@ function GameState()
         require("game.button")
         require("game.letter")
         require("game.gun")
+        require("game.enemy")
 
         gameState = start
     end
