@@ -9,6 +9,10 @@ function Gun(xpos, ypos, mode)
     local dx = 0
     local dy = 0
     local canShoot = false
+    local letterIndex = 1
+    local targetIndex = 1
+
+    local next = next
 
     local blindSpots = function (enemy)
         if enemy.x < 0 or enemy.x > love.graphics.getWidth() - XOffset * 2 then return true
@@ -19,10 +23,21 @@ function Gun(xpos, ypos, mode)
 
     self.addEnemy = function (enemy) table.insert(self.enemies, enemy) end
 
+    self.fire = function (dt)
+        if canShoot == true and next(self.ammo) ~= nil then
+            -- fire letter bullet
+            -- self.ammo[1][letterIndex]
+
+            letterIndex = letterIndex + 1
+            if letterIndex > #self.ammo then
+                letterIndex = 1
+                table.remove(self.ammo, 1)
+            end
+        end
+    end
+
     self.aim = function ()
         if #self.enemies > 0 then
-            local targetIndex = 1
-
             if self.mode == "first" then
                 for i, v in ipairs(self.enemies) do
                     if v.progress > self.enemies[targetIndex].progress and blindSpots(v) == false then targetIndex = i end

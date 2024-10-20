@@ -7,7 +7,7 @@ function Enemy(xpos, ypos, s)
     -- Remember to add Image property!
 
     self.draw = function ()
-        
+        love.graphics.circle("line", self.x + XOffset, self.y * ScaleFactor, 5)
     end
 
     return self

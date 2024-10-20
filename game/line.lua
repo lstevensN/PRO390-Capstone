@@ -50,7 +50,7 @@ function Line(x1, x2, y, s, r)
     
         -- Draw Riders
         for i, v in ipairs(self.riders) do
-            love.graphics.circle("line", v.x + XOffset, v.y * ScaleFactor, 5)
+            v.draw()
         end
     end
 

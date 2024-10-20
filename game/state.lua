@@ -4,6 +4,7 @@ function GameState()
     local gameState = function (dt) end
     local drawState = function () end
     local start, game
+    local cron
 
     -- START state
     start = function ()
@@ -25,6 +26,7 @@ function GameState()
     game = function (level)
         -- Initialize Game State
         local gun = Gun(200, 800, "first")
+        local fireTimer = cron.every(1, function (dt) gun.fire(dt) end)
         
         local line = Line(-100, 1300, 300, true)
         local line2 = Line(-100, 1300, 400, false)
@@ -73,7 +75,15 @@ function GameState()
                     word = ''
 
                     wordValue = 0
-                    for index, value in ipairs(letters) do wordValue = wordValue + value.value end
+                    if wordFound == true then
+                        local submittedWord = {}
+                        for index, value in ipairs(letters) do
+                            wordValue = wordValue + value.value
+                            table.insert(submittedWord, Letter(value))
+                        end
+
+                        table.insert(gun.ammo, submittedWord)
+                    end
                     letters = {}
                 else
                     for index, value in ipairs(validLetters) do
@@ -93,6 +103,7 @@ function GameState()
             line3.update(dt)
 
             gun.aim()
+            fireTimer:update(dt, dt)
 
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
@@ -114,6 +125,7 @@ function GameState()
             line3.draw()
 
             gun.draw()
+            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 570 + XOffset, 750 * ScaleFactor)
         end
     end
 
@@ -126,6 +138,8 @@ function GameState()
         require("game.letter")
         require("game.gun")
         require("game.enemy")
+
+        cron = require "cron"
 
         gameState = start
     end

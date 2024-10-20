@@ -1,5 +1,10 @@
-function Letter(letter, type)
+function Letter(letter, xpos, ypos, type)
     local self = {}
+    
+    self.x = xpos or 0
+    self.y = ypos or 0
+    self.xvel = 0
+    self.yvel = 0
 
     local setValue = function ()
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return 1
@@ -13,6 +18,14 @@ function Letter(letter, type)
     self.letter = letter
     self.value = setValue()
     self.type = type or "blank"
+
+    self.update = function(dt)
+        
+    end
+
+    self.draw = function ()
+        love.graphics.circle("line", self.x + XOffset, self.y * ScaleFactor, 5)
+    end
 
     return self
 end
