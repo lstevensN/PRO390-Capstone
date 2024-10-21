@@ -49,9 +49,7 @@ function Line(x1, x2, y, s, r)
         end
     
         -- Draw Riders
-        for i, v in ipairs(self.riders) do
-            v.draw()
-        end
+        for i, v in ipairs(self.riders) do v.draw() end
     end
 
     return self

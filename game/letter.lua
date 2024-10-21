@@ -20,10 +20,12 @@ function Letter(letter, xpos, ypos, type)
     self.type = type or "blank"
 
     self.update = function(dt)
-        
+        self.x = self.x + self.xvel * dt
+        self.y = self.y + self.yvel * dt
     end
 
     self.draw = function ()
+        love.graphics.setColor(255, 255, 255, 1)
         love.graphics.circle("line", self.x + XOffset, self.y * ScaleFactor, 5)
     end
 

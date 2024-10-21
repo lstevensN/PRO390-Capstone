@@ -11,12 +11,22 @@ function Gun(xpos, ypos, mode)
     local canShoot = false
     local letterIndex = 1
     local targetIndex = 1
+    local bulletSpeed = 7000
 
     local next = next
 
     local blindSpots = function (enemy)
         if enemy.x < 0 or enemy.x > love.graphics.getWidth() - XOffset * 2 then return true
         else return false end
+    end
+
+    local getDirection = function ()
+        local xdir = self.enemies[targetIndex].x - x
+        local ydir = self.enemies[targetIndex].y - y
+
+        local length = math.sqrt(xdir ^ 2 + ydir ^ 2)
+
+        return xdir / length, ydir / length
     end
 
     self.changeMode = function (newMode) self.mode = newMode end
@@ -26,18 +36,29 @@ function Gun(xpos, ypos, mode)
     self.fire = function (dt)
         if canShoot == true and next(self.ammo) ~= nil then
             -- fire letter bullet
-            -- self.ammo[1][letterIndex]
+            if next(self.ammo[1]) ~= nil then
+                self.ammo[1][letterIndex].x = x
+                self.ammo[1][letterIndex].y = y
 
-            letterIndex = letterIndex + 1
-            if letterIndex > #self.ammo then
-                letterIndex = 1
+                local xdir, ydir = getDirection()
+
+                self.ammo[1][letterIndex].xvel = xdir * bulletSpeed
+                self.ammo[1][letterIndex].yvel = ydir * bulletSpeed
+
+                letterIndex = letterIndex + 1
+            end
+
+            if letterIndex > #self.ammo[1] then
                 table.remove(self.ammo, 1)
+                letterIndex = 1
             end
         end
     end
 
     self.aim = function ()
         if #self.enemies > 0 then
+            targetIndex = 1
+
             if self.mode == "first" then
                 for i, v in ipairs(self.enemies) do
                     if v.progress > self.enemies[targetIndex].progress and blindSpots(v) == false then targetIndex = i end

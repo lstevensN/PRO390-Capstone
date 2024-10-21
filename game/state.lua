@@ -26,7 +26,7 @@ function GameState()
     game = function (level)
         -- Initialize Game State
         local gun = Gun(200, 800, "first")
-        local fireTimer = cron.every(1, function (dt) gun.fire(dt) end)
+        local fireTimer = cron.every(0.25, function (dt) gun.fire(dt) end)
         
         local line = Line(-100, 1300, 300, true)
         local line2 = Line(-100, 1300, 400, false)
@@ -53,6 +53,7 @@ function GameState()
         local wordValue = 0
         local validLetters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
         local letters = {}
+        local submittedLetters = {}
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
@@ -76,20 +77,19 @@ function GameState()
 
                     wordValue = 0
                     if wordFound == true then
-                        local submittedWord = {}
                         for index, value in ipairs(letters) do
                             wordValue = wordValue + value.value
-                            table.insert(submittedWord, Letter(value))
+                            table.insert(submittedLetters, Letter(value))
                         end
 
-                        table.insert(gun.ammo, submittedWord)
+                        table.insert(gun.ammo, submittedLetters)
                     end
                     letters = {}
                 else
                     for index, value in ipairs(validLetters) do
                         if key == value then
                             word = word..tostring(key)
-                            table.insert(letters, Letter(key))
+                            table.insert(letters, Letter(key, 200 + #letters * 20, 400))
                             break
                         end
                     end
@@ -104,6 +104,11 @@ function GameState()
 
             gun.aim()
             fireTimer:update(dt, dt)
+
+            for i, v in ipairs(submittedLetters) do
+                if v.x < 0 + XOffset or v.x > love.graphics.getWidth() - XOffset or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
+                else v.update(dt) end
+            end
 
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
@@ -124,8 +129,11 @@ function GameState()
             line2.draw()
             line3.draw()
 
+            for i, v in ipairs(submittedLetters) do v.draw() end
+
             gun.draw()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 570 + XOffset, 750 * ScaleFactor)
+            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 570 + XOffset, 770 * ScaleFactor)
         end
     end
 
