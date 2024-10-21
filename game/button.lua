@@ -14,7 +14,7 @@ function Button(xpos, ypos, w, h, onclick)
             local x, y = love.mouse.getPosition()
 
             if self.pressed == false and
-            (x >= (self.x - self.width / 2) + XOffset * ScaleFactor and x <= (self.x - self.width / 2 + self.width) + XOffset * ScaleFactor) and
+            (x >= (self.x - self.width / 2) + XOffset and x <= (self.x - self.width / 2 + self.width) + XOffset) and
             (y >= (self.y - self.height / 2) * ScaleFactor and y <= (self.y - self.height / 2 + self.height) * ScaleFactor) then
                 self.onClick()
                 self.pressed = true
@@ -24,7 +24,7 @@ function Button(xpos, ypos, w, h, onclick)
     end
 
     self.draw = function ()
-        love.graphics.rectangle("fill", (self.x - self.width / 2) + XOffset * ScaleFactor, (self.y - self.height / 2) * ScaleFactor, self.width * ScaleFactor, self.height * ScaleFactor)
+        love.graphics.rectangle("fill", (self.x - self.width / 2) + XOffset, (self.y - self.height / 2) * ScaleFactor, self.width * ScaleFactor, self.height * ScaleFactor)
     end
 
     return self

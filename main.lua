@@ -8,6 +8,8 @@ ScaleFactor = 0
 
 local mouseX, mouseY = 0, 0
 
+local bars = love.graphics.newImage("game/assets/lancer_placeholder.png")
+
 function love.resize(w, h) end
 
 function love.load()
@@ -45,8 +47,8 @@ function love.draw()
     love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
     love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
 
-    love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
-    love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
+    -- love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
+    -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
 
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
 
@@ -55,4 +57,5 @@ function love.draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 0, 0, XOffset, love.graphics.getHeight())
     love.graphics.rectangle("fill", screenX + XOffset, 0, XOffset, love.graphics.getHeight())
+    --love.graphics.draw(bars, 0, 0, 0, 1, screenY / 500 * ScaleFactor)
 end

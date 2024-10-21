@@ -9,7 +9,7 @@ function GameState()
     -- START state
     start = function ()
         -- Initialize Start State
-        local button = Button(400, 300, 100, 50, function () gameState = game end)
+        local button = Button(600, 450, 100, 50, function () gameState = game end)
 
         -- Start State Loop
         gameState = function (dt)
@@ -19,6 +19,9 @@ function GameState()
         -- Start State Draw Instructions
         drawState = function ()
             button.draw()
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print("button", 580 + XOffset, 450 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.setColor(255, 255, 255)
         end
     end
 
@@ -48,6 +51,10 @@ function GameState()
         line.addRider(enemy2)
         gun.addEnemy(enemy2)
 
+        local enemy3 = Enemy(0, 0, 350)
+        line.addRider(enemy3)
+        gun.addEnemy(enemy3)
+
         local word = ''
         local wordFound = false
         local wordValue = 0
@@ -71,6 +78,7 @@ function GameState()
             
                 if key == 'backspace' and #word > 0 then
                     word = word:sub(1, -2)
+                    table.remove(letters, #letters)
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     word = ''
@@ -80,8 +88,8 @@ function GameState()
                         local lettas = {}
 
                         for index, value in ipairs(letters) do
-                            wordValue = wordValue + value.value
-                            table.insert(submittedLetters, Letter(value))
+                            -- wordValue = wordValue + value.value
+                            table.insert(submittedLetters, value)
                             table.insert(lettas, submittedLetters[#submittedLetters])
                         end
 
@@ -92,7 +100,7 @@ function GameState()
                     for index, value in ipairs(validLetters) do
                         if key == value then
                             word = word..tostring(key)
-                            table.insert(letters, Letter(key, 200 + #letters * 20, 400))
+                            table.insert(letters, Letter(key, 575 + #letters * 20, 720))
                             break
                         end
                     end
@@ -132,6 +140,7 @@ function GameState()
             line2.draw()
             line3.draw()
 
+            for i, v in ipairs(letters) do v.draw() end
             for i, v in ipairs(submittedLetters) do v.draw() end
 
             gun.draw()
