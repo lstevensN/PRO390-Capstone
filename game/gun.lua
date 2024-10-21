@@ -21,7 +21,7 @@ function Gun(xpos, ypos, mode)
     end
 
     local getDirection = function ()
-        local xdir = self.enemies[targetIndex].x - x
+        local xdir = self.enemies[targetIndex].x + self.enemies[targetIndex].speed / 10 - x
         local ydir = self.enemies[targetIndex].y - y
 
         local length = math.sqrt(xdir ^ 2 + ydir ^ 2)

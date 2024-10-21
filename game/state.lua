@@ -26,7 +26,7 @@ function GameState()
     game = function (level)
         -- Initialize Game State
         local gun = Gun(200, 800, "first")
-        local fireTimer = cron.every(0.25, function (dt) gun.fire(dt) end)
+        local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
         local line = Line(-100, 1300, 300, true)
         local line2 = Line(-100, 1300, 400, false)
@@ -77,12 +77,15 @@ function GameState()
 
                     wordValue = 0
                     if wordFound == true then
+                        local lettas = {}
+
                         for index, value in ipairs(letters) do
                             wordValue = wordValue + value.value
                             table.insert(submittedLetters, Letter(value))
+                            table.insert(lettas, submittedLetters[#submittedLetters])
                         end
 
-                        table.insert(gun.ammo, submittedLetters)
+                        table.insert(gun.ammo, lettas)
                     end
                     letters = {}
                 else
@@ -106,7 +109,7 @@ function GameState()
             fireTimer:update(dt, dt)
 
             for i, v in ipairs(submittedLetters) do
-                if v.x < 0 + XOffset or v.x > love.graphics.getWidth() - XOffset or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
+                if v.x < 0 or v.x > love.graphics.getWidth() - XOffset or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
                 else v.update(dt) end
             end
 
@@ -122,8 +125,8 @@ function GameState()
             love.graphics.draw(wordFoundText, (600 - wordFoundText:getWidth() / 2) + XOffset, 160 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.draw(wordValueText, (600 - wordValueText:getWidth() / 2) + XOffset, 180 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
 
-            love.graphics.print("Enemy1: "..tostring(enemy.x), 570 + XOffset, 700 * ScaleFactor)
-            love.graphics.print("Enemy2: "..tostring(enemy2.x), 570 + XOffset, 720 * ScaleFactor)
+            -- love.graphics.print("Enemy1: "..tostring(enemy.x), 570 + XOffset, 700 * ScaleFactor)
+            -- love.graphics.print("Enemy2: "..tostring(enemy2.x), 570 + XOffset, 720 * ScaleFactor)
     
             line.draw()
             line2.draw()
