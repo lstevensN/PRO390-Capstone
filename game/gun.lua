@@ -33,6 +33,8 @@ function Gun(xpos, ypos, mode)
 
     self.addEnemy = function (enemy) table.insert(self.enemies, enemy) end
 
+    self.removeEnemy = function (enemy) for i, v in ipairs(self.enemies) do if v == enemy then table.remove(self.enemies, i) return end end end
+
     self.fire = function (dt)
         if canShoot == true and next(self.ammo) ~= nil then
             -- fire letter bullet

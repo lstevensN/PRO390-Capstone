@@ -66,6 +66,10 @@ function GameState()
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
         local wordValueText = love.graphics.newText(love.graphics.getFont())
 
+        local distanceBetween = function (x1, y1, x2, y2)
+            return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+        end
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -121,6 +125,25 @@ function GameState()
                 else v.update(dt) end
             end
 
+            -- Collision Detection
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+                v.health = v.health - letter.value
+                if v.health < 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
+                table.remove(submittedLetters, index)
+            end end end
+
+            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+                v.health = v.health - letter.value
+                if v.health < 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
+                table.remove(submittedLetters, index)
+            end end end
+
+            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+                v.health = v.health - letter.value
+                if v.health < 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
+                table.remove(submittedLetters, index)
+            end end end
+            
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
             wordValueText:set("Word value: "..tostring(wordValue))
