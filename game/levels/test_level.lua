@@ -4,9 +4,12 @@ function TestLevel()
     self.spawnTimer = 2
 
     local enemies = {
-        Enemy(0, 0, 250),
-        Enemy(0, 0, 300),
-        Enemy(0, 0, 350)
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "fast"),
+        Enemy(0, 0, "strong"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "fast"),
+        Enemy(0, 0, "strong")
     }
     local spawnIndex = 1
 

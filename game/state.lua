@@ -32,9 +32,9 @@ function GameState()
         local gun = Gun(200, 800, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
-        local line = Line(-100, 1300, 300, true)
-        local line2 = Line(-100, 1300, 400, false)
-        local line3 = Line(-100, 1300, 500, true, true)
+        local line = Line(-100, 1300, 200, true)
+        local line2 = Line(-100, 1300, 350, false)
+        local line3 = Line(-100, 1000, 500, true, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -58,6 +58,7 @@ function GameState()
         local validLetters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
         local letters = {}
         local submittedLetters = {}
+        local chamber = {}
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
@@ -65,6 +66,10 @@ function GameState()
 
         local distanceBetween = function (x1, y1, x2, y2)
             return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+        end
+
+        local fillChamber = function ()
+            
         end
 
 
@@ -90,7 +95,7 @@ function GameState()
                         local lettas = {}
 
                         for index, value in ipairs(letters) do
-                            -- wordValue = wordValue + value.value
+                            wordValue = wordValue + value.value
                             table.insert(submittedLetters, value)
                             table.insert(lettas, submittedLetters[#submittedLetters])
                         end
@@ -129,22 +134,19 @@ function GameState()
             for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
-                table.remove(submittedLetters, index)
-                break
+                if letter.canPierce == false then table.remove(submittedLetters, index) end
             end end end
 
             for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
-                table.remove(submittedLetters, index)
-                break
+                if letter.canPierce == false then table.remove(submittedLetters, index) end
             end end end
 
             for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
-                table.remove(submittedLetters, index)
-                break
+                if letter.canPierce == false then table.remove(submittedLetters, index) end
             end end end
             
             wordText:set(word)
