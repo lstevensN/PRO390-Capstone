@@ -11,7 +11,7 @@ function Gun(xpos, ypos, mode)
     local canShoot = false
     local letterIndex = 1
     local targetIndex = 1
-    local bulletSpeed = 7000
+    local bulletSpeed = 5000
 
     local next = next
 

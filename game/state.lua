@@ -126,19 +126,19 @@ function GameState()
             end
 
             -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
                 table.remove(submittedLetters, index)
             end end end
 
-            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
                 table.remove(submittedLetters, index)
             end end end
 
-            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 10 then 
+            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health < 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
                 table.remove(submittedLetters, index)
@@ -181,6 +181,8 @@ function GameState()
         require("game.letter")
         require("game.gun")
         require("game.enemy")
+
+        require("game.levels.test_level")
 
         cron = require "cron"
 
