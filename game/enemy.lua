@@ -9,7 +9,8 @@ function Enemy(xpos, ypos, t)
         if self.type == "empty" then return 0, 0, 1000
         elseif self.type == "basic" then return 150, 25, 15
         elseif self.type == "fast" then return 250, 25, 15
-        elseif self.type == "strong" then return 100, 35, 50 end
+        elseif self.type == "strong" then return 100, 35, 50
+        elseif self.type == "blank" then return 0, 0, 0 end
     end
     
     self.speed, self.radius, self.health = initialize()

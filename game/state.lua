@@ -69,7 +69,9 @@ function GameState()
         end
 
         local fillChamber = function ()
-            
+            for i,v in ipairs(chamber) do
+                
+            end
         end
 
 
@@ -131,21 +133,20 @@ function GameState()
             end
 
             -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
-                v.health = v.health - letter.value
-                if v.health < 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do
+                if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then v.health = v.health - letter.value end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
-            end end end
+            end if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end end
 
             for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
-                if v.health < 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
+                if v.health <= 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
             end end end
 
             for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
-                if v.health < 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
+                if v.health <= 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
             end end end
             
@@ -172,6 +173,7 @@ function GameState()
             for i, v in ipairs(submittedLetters) do v.draw() end
 
             gun.draw()
+            love.graphics.print("Enemies: "..tostring(#gun.enemies), 570 + XOffset, 730 * ScaleFactor)
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 570 + XOffset, 750 * ScaleFactor)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 570 + XOffset, 770 * ScaleFactor)
         end
