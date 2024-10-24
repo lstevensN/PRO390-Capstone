@@ -27,7 +27,7 @@ function Letter(letter, xpos, ypos, type)
 
     self.draw = function ()
         love.graphics.setColor(255, 255, 255, 1)
-        love.graphics.circle("line", self.x + XOffset, self.y * ScaleFactor, 5)
+        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, 5)
     end
 
     return self

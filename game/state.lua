@@ -5,11 +5,44 @@ function GameState()
     local drawState = function () end
     local start, game
     local cron
+    local Lives
+    local Deck
+
 
     -- START state
     start = function ()
         -- Initialize Start State
         local button = Button(600, 450, 100, 50, function () gameState = game end)
+        Lives = 2
+        Deck = {
+            Letter('a', -100, -100, "strong"),
+            Letter('b', -100, -100, "strong"),
+            Letter('c', -100, -100, "strong"),
+            Letter('d', -100, -100, "strong"),
+            Letter('e', -100, -100, "strong"),
+            Letter('f', -100, -100, "strong"),
+            Letter('a', -100, -100, "strong"),
+            Letter('g', -100, -100, "strong"),
+            Letter('h', -100, -100, "strong"),
+            Letter('i', -100, -100, "strong"),
+            Letter('j', -100, -100, "strong"),
+            Letter('k', -100, -100, "strong"),
+            Letter('l', -100, -100, "strong"),
+            Letter('m', -100, -100, "strong"),
+            Letter('n', -100, -100, "strong"),
+            Letter('o', -100, -100, "strong"),
+            Letter('p', -100, -100, "strong"),
+            Letter('q', -100, -100, "strong"),
+            Letter('r', -100, -100, "strong"),
+            Letter('s', -100, -100, "strong"),
+            Letter('t', -100, -100, "strong"),
+            Letter('u', -100, -100, "strong"),
+            Letter('v', -100, -100, "strong"),
+            Letter('w', -100, -100, "strong"),
+            Letter('x', -100, -100, "strong"),
+            Letter('y', -100, -100, "strong"),
+            Letter('z', -100, -100, "strong")
+        }
 
         -- Start State Loop
         gameState = function (dt)
@@ -133,21 +166,24 @@ function GameState()
             end
 
             -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do
-                if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then v.health = v.health - letter.value end
-                if letter.canPierce == false then table.remove(submittedLetters, index) end
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
+                v.health = v.health - letter.value
+                if letter.canPierce == false then table.remove(submittedLetters, index) end end
+                break
             end if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end end
 
             for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health <= 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
+                break
             end end end
 
             for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health <= 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
+                break
             end end end
             
             wordText:set(word)
