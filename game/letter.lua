@@ -7,6 +7,9 @@ function Letter(letter, xpos, ypos, type)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
+    self.draggable = false
+    self.radius = 10
+    self.clicked = false
 
     local setValue = function ()
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "strong" and 5 or 1)
@@ -21,13 +24,47 @@ function Letter(letter, xpos, ypos, type)
     self.value = setValue()
 
     self.update = function(dt)
+        if self.draggable == true then
+            if love.mouse.isDown(1) then
+                local x, y = love.mouse.getPosition()
+                self.clicked = false
+
+                if DistanceBetween(self.x, self.y, x, y) <= self.radius then
+                    self.x = x
+                    self.y = y
+                    self.xvel = 0
+                    self.yvel = 0
+                    self.clicked = true
+                end
+            end
+
+            if self.value * 25 - self.y > 0 then self.yvel = self.yvel + self.radius * dt
+            elseif self.value * 25 - self.y < 0 then self.yvel = self.yvel - self.radius * dt end
+
+            if self.xvel < 0 then
+                self.xvel = self.xvel + dt * self.radius
+                if self.xvel > 0 then self.xvel = 0 end
+            elseif self.xvel > 0 then
+                self.xvel = self.xvel - dt * self.radius
+                if self.xvel < 0 then self.xvel = 0 end
+            end
+        
+            if self.yvel < 0 then
+                self.yvel = self.yvel + dt * self.radius
+                if self.yvel > 0 then self.yvel = 0 end
+            elseif self.yvel > 0 then
+                self.yvel = self.yvel - dt * self.radius
+                if self.yvel < 0 then self.yvel = 0 end
+            end
+        end
+        
         self.x = self.x + self.xvel * dt
         self.y = self.y + self.yvel * dt
     end
 
     self.draw = function ()
         love.graphics.setColor(255, 255, 255, 1)
-        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, 5)
+        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius)
     end
 
     return self

@@ -60,21 +60,44 @@ function GameState()
 
     -- PREP state
     prep = function ()
+        -- Initialize Prep State
         local button = Button(600, 650, 100, 50, function () gameState = game end)
 
-
-        gameState = function (dt)
-            button.update(dt)
+        for i, v in ipairs(Deck) do
+            v.draggable = true
+            v.x = 480 + 5 + v.radius + math.fmod(i, 10) * 20
+            if i < 10 then v.y = 300
+            elseif i < 20 then v.y = 320
+            else v.y = 340 end
         end
 
+        -- Prep State Loop
+        gameState = function (dt)
+            button.update(dt)
 
+            for i, v in ipairs(Deck) do
+                for index, letter in ipairs(Deck) do
+                    if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
+                        local bumpX = (letter.x - v.x) / v.radius
+                        local bumpY = (letter.y - v.y) / v.radius
+                        letter.x = letter.x + bumpX
+                        letter.y = letter.y + bumpY
+                        letter.xvel = bumpX * letter.radius
+                        letter.yvel = bumpY * letter.radius
+                        v.x = v.x - bumpX
+                        v.y = v.y - bumpY
+                        v.xvel = -bumpX * v.radius
+                        v.yvel = -bumpY * v.radius
+                    end
+                end
+                v.update(dt)
+            end
+        end
+
+        -- Prep State Draw Instructions
         drawState = function ()
             for i, v in ipairs(Deck) do
-                v.x = 480 + math.fmod(i, 10) * 20
-                if i < 10 then v.y = 300
-                elseif i < 20 then v.y = 320
-                else v.y = 340 end
-                
+                love.graphics.print(tostring(v.clicked), v.x, v.y - 20)
                 v.draw()
             end
 
@@ -123,10 +146,6 @@ function GameState()
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
         local wordValueText = love.graphics.newText(love.graphics.getFont())
-
-        local distanceBetween = function (x1, y1, x2, y2)
-            return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
-        end
 
         local fillChamber = function ()
             for i,v in ipairs(chamber) do
@@ -193,20 +212,20 @@ function GameState()
             end
 
             -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if letter.canPierce == false then table.remove(submittedLetters, index) end end
                 break
             end if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end end
 
-            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
+            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health <= 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
                 break
             end end end
 
-            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if distanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
+            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
                 v.health = v.health - letter.value
                 if v.health <= 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
                 if letter.canPierce == false then table.remove(submittedLetters, index) end
@@ -251,6 +270,7 @@ function GameState()
         require("game.letter")
         require("game.gun")
         require("game.enemy")
+        require("game.util")
 
         require("game.levels.test_level")
 

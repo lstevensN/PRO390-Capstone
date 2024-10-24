@@ -1,3 +1,3 @@
-function ToDouble(num) return math.floor(100 * num) / 100 end
-
-function Round(num) return math.floor(num + 0.5) end
+DistanceBetween = function (x1, y1, x2, y2)
+    return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+end
