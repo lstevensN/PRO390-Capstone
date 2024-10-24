@@ -3,7 +3,7 @@ function GameState()
     local self = {}
     local gameState = function (dt) end
     local drawState = function () end
-    local start, game
+    local start, game, prep
     local cron
     local Lives
     local Deck
@@ -12,7 +12,7 @@ function GameState()
     -- START state
     start = function ()
         -- Initialize Start State
-        local button = Button(600, 450, 100, 50, function () gameState = game end)
+        local button = Button(600, 450, 100, 50, function () gameState = prep end)
         Lives = 2
         Deck = {
             Letter('a', -100, -100, "strong"),
@@ -53,7 +53,34 @@ function GameState()
         drawState = function ()
             button.draw()
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("button", 580 + XOffset, 450 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("prep", 580 + XOffset, 450 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.setColor(255, 255, 255)
+        end
+    end
+
+    -- PREP state
+    prep = function ()
+        local button = Button(600, 650, 100, 50, function () gameState = game end)
+
+
+        gameState = function (dt)
+            button.update(dt)
+        end
+
+
+        drawState = function ()
+            for i, v in ipairs(Deck) do
+                v.x = 480 + math.fmod(i, 10) * 20
+                if i < 10 then v.y = 300
+                elseif i < 20 then v.y = 320
+                else v.y = 340 end
+                
+                v.draw()
+            end
+
+            button.draw()
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print("game", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
         end
     end
