@@ -64,7 +64,10 @@ function GameState()
         local button = Button(600, 650, 100, 50, function () gameState = game end)
 
         for i, v in ipairs(Deck) do
-            v.draggable = true
+            v.transmuteMode = true
+
+
+
             v.x = 480 + 5 + v.radius + math.fmod(i, 10) * 20
             if i < 10 then v.y = 300
             elseif i < 20 then v.y = 320
@@ -97,7 +100,7 @@ function GameState()
         -- Prep State Draw Instructions
         drawState = function ()
             for i, v in ipairs(Deck) do
-                love.graphics.print(tostring(v.clicked), v.x, v.y - 20)
+                --love.graphics.print(tostring(v.clicked), v.x, v.y - 20)
                 v.draw()
             end
 
@@ -105,6 +108,9 @@ function GameState()
             love.graphics.setColor(0, 0, 0)
             love.graphics.print("game", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
+
+            love.graphics.rectangle("line", 100 + XOffset, 100 * ScaleFactor, 525 * ScaleFactor, 700 * ScaleFactor)  -- boiler
+            love.graphics.rectangle("line", 725 + XOffset, 100 * ScaleFactor, 375 * ScaleFactor, 350 * ScaleFactor)  -- transmuting area
         end
     end
 

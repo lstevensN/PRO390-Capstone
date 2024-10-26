@@ -8,8 +8,16 @@ function Letter(letter, xpos, ypos, type)
     self.type = type or "blank"
     self.canPierce = false
     self.draggable = false
-    self.radius = 10
+    self.radius = 15
     self.clicked = false
+    self.transmuteMode = false
+    self.bubbleHeight = 0
+    self.transmuting = false
+    self.stored = false
+
+    local mouseInitialX = 0
+    local mouseInitialY = 0
+    local firstClick = false
 
     local setValue = function ()
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "strong" and 5 or 1)
@@ -24,47 +32,48 @@ function Letter(letter, xpos, ypos, type)
     self.value = setValue()
 
     self.update = function(dt)
-        if self.draggable == true then
-            if love.mouse.isDown(1) then
-                local x, y = love.mouse.getPosition()
-                self.clicked = false
+        if self.transmuteMode == true then
+            if self.x - self.radius >= 725 and self.x + self.radius <= 1100 and
+            self.y - self.radius >= 100 and self.y + self.radius <= 450 then self.transmuting = true
+            else self.transmuting = false end
 
-                if DistanceBetween(self.x, self.y, x, y) <= self.radius then
+            -- collison checks & bubbling 
+            if self.clicked == false and self.transmuting == false and self.stored == false then
+                if self.x - self.radius < 100 then self.x = 100 + self.radius self.xvel = -self.xvel end
+                if self.x + self.radius > 625 then self.x = 625 - self.radius self.xvel = -self.xvel end
+                if self.y - self.radius < 100 then self.y = 100 + self.radius self.yvel = -self.yvel end
+                if self.y + self.radius > 800 then self.y = 800 - self.radius self.yvel = -self.yvel end
+
+                -- bubbling :>
+            end
+
+            if love.mouse.isDown(1) then
+                if firstClick == false then
+                    firstClick = true
+                    mouseInitialX, mouseInitialY = love.mouse.getPosition()
+                    if DistanceBetween(self.x, self.y, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
+                elseif self.clicked == true then
+                    local x, y = love.mouse.getPosition()
                     self.x = x
                     self.y = y
                     self.xvel = 0
                     self.yvel = 0
-                    self.clicked = true
                 end
-            end
-
-            if self.value * 25 - self.y > 0 then self.yvel = self.yvel + self.radius * dt
-            elseif self.value * 25 - self.y < 0 then self.yvel = self.yvel - self.radius * dt end
-
-            if self.xvel < 0 then
-                self.xvel = self.xvel + dt * self.radius
-                if self.xvel > 0 then self.xvel = 0 end
-            elseif self.xvel > 0 then
-                self.xvel = self.xvel - dt * self.radius
-                if self.xvel < 0 then self.xvel = 0 end
-            end
-        
-            if self.yvel < 0 then
-                self.yvel = self.yvel + dt * self.radius
-                if self.yvel > 0 then self.yvel = 0 end
-            elseif self.yvel > 0 then
-                self.yvel = self.yvel - dt * self.radius
-                if self.yvel < 0 then self.yvel = 0 end
-            end
+            else firstClick = false self.clicked = false self.draggable = false end
         end
-        
+
         self.x = self.x + self.xvel * dt
         self.y = self.y + self.yvel * dt
     end
 
     self.draw = function ()
         love.graphics.setColor(255, 255, 255, 1)
-        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius)
+        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
+
+        if self.type == "strong" then love.graphics.setColor(0, 0, 0) end
+        love.graphics.print(letter, self.x + XOffset, self.y * ScaleFactor)
+
+        love.graphics.setColor(255, 255, 255)
     end
 
     return self
