@@ -61,17 +61,21 @@ function GameState()
     -- PREP state
     prep = function ()
         -- Initialize Prep State
-        local button = Button(600, 650, 100, 50, function () gameState = game end)
+        local button = Button(960, 750, 300, 150, function () gameState = game end)
+        local boilerX, boilerY, boilerW, boilerH = 50, 100, 375, 700
+        local transmutationX, transmutationY, transmutationW, transmutationH = 475, 100, 250, 250
+        local storageX, storageY, storageW, storageH = 475, 550, 250, 250
 
         local sortDeck = function (letter1, letter2) return letter1.value < letter2.value end
+        local transmute = function () return true end
+
+        local transmuteButton = ButtonCircle(600, 450, 75, transmute)
 
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
 
-            v.x = 480 + 5 + v.radius + math.fmod(i, 10) * 20
-            if i < 10 then v.y = 300
-            elseif i < 20 then v.y = 320
-            else v.y = 340 end
+            v.x = math.random(boilerX, boilerX + boilerW)
+            v.y = math.random(boilerY, boilerY + boilerH)
         end
 
         table.sort(Deck, sortDeck)
@@ -83,24 +87,19 @@ function GameState()
             local selected = {}
 
             button.update(dt)
+            transmuteButton.update(dt)
 
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
-                if v.x - v.radius >= 725 and v.x + v.radius <= 1100 and v.y - v.radius >= 100 and v.y + v.radius <= 450 then withinTransmutationZone = true end
+                if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and 
+                v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH then withinTransmutationZone = true end
                 
                 if withinTransmutationZone then
                     if #transmutationQueue < 2 and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
                 else
                     v.locked = false
 
-                    -- collison checks & bubbling 
-                    if v.x - v.radius < 100 then v.x = 100 + v.radius v.xvel = -v.xvel end
-                    if v.x + v.radius > 525 then v.x = 525 - v.radius v.xvel = -v.xvel end
-                    if v.y - v.radius < 100 then v.y = 100 + v.radius v.yvel = -v.yvel end
-                    if v.y + v.radius > 800 then v.y = 800 - v.radius v.yvel = -v.yvel end
-                    
-                    -- bubbling :>
-
+                    -- letter collision checks
                     for index, letter in ipairs(Deck) do
                         if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
                             local bumpX = (letter.x - v.x) / v.radius
@@ -117,6 +116,16 @@ function GameState()
                     end
                 end
 
+                -- boiler collison checks and bubbling
+                if v.locked == false then
+                    if v.x - v.radius < boilerX then v.x = boilerX + v.radius v.xvel = -v.xvel end
+                    if v.x + v.radius > boilerX + boilerW then v.x = boilerX + boilerW - v.radius v.xvel = -v.xvel end
+                    if v.y - v.radius < boilerY then v.y = boilerY + v.radius v.yvel = -v.yvel end
+                    if v.y + v.radius > boilerY + boilerH then v.y = boilerY + boilerH - v.radius v.yvel = -v.yvel end
+
+                    -- bubbling :>
+                end
+
                 v.update(dt)
 
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
@@ -129,17 +138,20 @@ function GameState()
         -- Prep State Draw Instructions
         drawState = function ()
             for i, v in ipairs(Deck) do
-                --love.graphics.print(tostring(v.clicked), v.x, v.y - 20)
+                -- love.graphics.print(tostring(v.locked), v.x, v.y - 20)
                 v.draw()
             end
 
             button.draw()
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("game", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("game", button.x + XOffset, button.y * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
 
-            love.graphics.rectangle("line", 100 + XOffset, 100 * ScaleFactor, 425, 700 * ScaleFactor)  -- boiler
-            love.graphics.rectangle("line", 725 + XOffset, 100 * ScaleFactor, 375, 350 * ScaleFactor)  -- transmuting area
+            love.graphics.rectangle("line", boilerX + XOffset, boilerY * ScaleFactor, boilerW, boilerH * ScaleFactor)  -- boiler
+            love.graphics.rectangle("line", transmutationX + XOffset, transmutationY * ScaleFactor, transmutationW, transmutationH * ScaleFactor)  -- transmuting area
+            transmuteButton.draw()
+            love.graphics.rectangle("line", storageX + XOffset, storageY * ScaleFactor, storageW, storageH * ScaleFactor)  -- storage
+            love.graphics.rectangle("line", 775 + XOffset, 100 * ScaleFactor, 375, 500 * ScaleFactor)  -- transmutation recipies
 
             love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
         end
