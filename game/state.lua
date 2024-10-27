@@ -63,10 +63,10 @@ function GameState()
         -- Initialize Prep State
         local button = Button(600, 650, 100, 50, function () gameState = game end)
 
+        local sortDeck = function (letter1, letter2) return letter1.value < letter2.value end
+
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
-
-
 
             v.x = 480 + 5 + v.radius + math.fmod(i, 10) * 20
             if i < 10 then v.y = 300
@@ -74,12 +74,13 @@ function GameState()
             else v.y = 340 end
         end
 
+        table.sort(Deck, sortDeck)
+
         local transmutationQueue = {}
 
         -- Prep State Loop
         gameState = function (dt)
             local selected = {}
-            local selectedIndex = 0
 
             button.update(dt)
 
@@ -92,31 +93,34 @@ function GameState()
                 else
                     v.locked = false
 
+                    -- collison checks & bubbling 
+                    if v.x - v.radius < 100 then v.x = 100 + v.radius v.xvel = -v.xvel end
+                    if v.x + v.radius > 525 then v.x = 525 - v.radius v.xvel = -v.xvel end
+                    if v.y - v.radius < 100 then v.y = 100 + v.radius v.yvel = -v.yvel end
+                    if v.y + v.radius > 800 then v.y = 800 - v.radius v.yvel = -v.yvel end
+                    
+                    -- bubbling :>
+
                     for index, letter in ipairs(Deck) do
-                    if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
-                        local bumpX = (letter.x - v.x) / v.radius
-                        local bumpY = (letter.y - v.y) / v.radius
-                        letter.x = letter.x + bumpX
-                        letter.y = letter.y + bumpY
-                        letter.xvel = bumpX * letter.radius
-                        letter.yvel = bumpY * letter.radius
-                        v.x = v.x - bumpX
-                        v.y = v.y - bumpY
-                        v.xvel = -bumpX * v.radius
-                        v.yvel = -bumpY * v.radius
-                    end
+                        if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
+                            local bumpX = (letter.x - v.x) / v.radius
+                            local bumpY = (letter.y - v.y) / v.radius
+                            letter.x = letter.x + bumpX
+                            letter.y = letter.y + bumpY
+                            letter.xvel = bumpX * letter.radius
+                            letter.yvel = bumpY * letter.radius
+                            v.x = v.x - bumpX
+                            v.y = v.y - bumpY
+                            v.xvel = -bumpX * v.radius
+                            v.yvel = -bumpY * v.radius
+                        end
                     end
                 end
 
                 v.update(dt)
 
-                if v.clicked == true then selectedIndex = i table.insert(selected, v) end
-            end
-
-            if Deck[1] ~= selected[1] and selectedIndex ~= 0 then
-                if #selected > 1 then for i, v in ipairs(selected) do if i ~= 1 then v.clicked = false end end end
-                table.remove(Deck, selectedIndex)
-                table.insert(Deck, 1, selected[1])
+                if v.clicked == true and #selected == 0 then table.insert(selected, v) end
+                if selected[1] ~= v then v.clicked = false end
             end
 
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
@@ -134,8 +138,8 @@ function GameState()
             love.graphics.print("game", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
 
-            love.graphics.rectangle("line", 100 + XOffset, 100 * ScaleFactor, 525 * ScaleFactor, 700 * ScaleFactor)  -- boiler
-            love.graphics.rectangle("line", 725 + XOffset, 100 * ScaleFactor, 375 * ScaleFactor, 350 * ScaleFactor)  -- transmuting area
+            love.graphics.rectangle("line", 100 + XOffset, 100 * ScaleFactor, 425, 700 * ScaleFactor)  -- boiler
+            love.graphics.rectangle("line", 725 + XOffset, 100 * ScaleFactor, 375, 350 * ScaleFactor)  -- transmuting area
 
             love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
         end

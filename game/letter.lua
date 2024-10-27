@@ -32,25 +32,15 @@ function Letter(letter, xpos, ypos, type)
 
     self.update = function(dt)
         if self.transmuteMode == true then
-            -- collison checks & bubbling 
-            if self.clicked == false and self.transmuting == false and self.locked == false then
-                if self.x - self.radius < 100 then self.x = 100 + self.radius self.xvel = -self.xvel end
-                if self.x + self.radius > 625 then self.x = 625 - self.radius self.xvel = -self.xvel end
-                if self.y - self.radius < 100 then self.y = 100 + self.radius self.yvel = -self.yvel end
-                if self.y + self.radius > 800 then self.y = 800 - self.radius self.yvel = -self.yvel end
-
-                -- bubbling :>
-            end
-
             if love.mouse.isDown(1) then
                 if firstClick == false then
                     firstClick = true
                     mouseInitialX, mouseInitialY = love.mouse.getPosition()
-                    if DistanceBetween(self.x, self.y, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
+                    if DistanceBetween(self.x + XOffset, self.y * ScaleFactor, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
                 elseif self.clicked == true then
                     local x, y = love.mouse.getPosition()
-                    self.x = x
-                    self.y = y
+                    self.x = x - XOffset
+                    self.y = y / ScaleFactor
                     self.xvel = 0
                     self.yvel = 0
                 end
