@@ -7,19 +7,20 @@ function Button(xpos, ypos, w, h, onclick)
     self.pressed = false
     -- Image Property?
 
+    local firstClick = false
+
     self.onClick = onclick or function () end
 
     self.update = function (dt)
         if love.mouse.isDown(1) then
-            local x, y = love.mouse.getPosition()
+            if firstClick == false then
+                firstClick = true
+                local x, y = love.mouse.getPosition()
 
-            if self.pressed == false and
-            (x >= (self.x - self.width / 2) + XOffset and x <= (self.x - self.width / 2 + self.width) + XOffset) and
-            (y >= (self.y - self.height / 2) * ScaleFactor and y <= (self.y - self.height / 2 + self.height) * ScaleFactor) then
-                self.onClick()
-                self.pressed = true
+                if (x >= (self.x - self.width / 2) + XOffset and x <= (self.x - self.width / 2 + self.width) + XOffset) and
+                (y >= (self.y - self.height / 2) * ScaleFactor and y <= (self.y - self.height / 2 + self.height) * ScaleFactor) then self.onClick() end
             end
-        else self.pressed = false
+        else firstClick = false
         end
     end
 

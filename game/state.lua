@@ -74,12 +74,25 @@ function GameState()
             else v.y = 340 end
         end
 
+        local transmutationQueue = {}
+
         -- Prep State Loop
         gameState = function (dt)
+            local selected = {}
+            local selectedIndex = 0
+
             button.update(dt)
 
             for i, v in ipairs(Deck) do
-                for index, letter in ipairs(Deck) do
+                local withinTransmutationZone = false
+                if v.x - v.radius >= 725 and v.x + v.radius <= 1100 and v.y - v.radius >= 100 and v.y + v.radius <= 450 then withinTransmutationZone = true end
+                
+                if withinTransmutationZone then
+                    if #transmutationQueue < 2 and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
+                else
+                    v.locked = false
+
+                    for index, letter in ipairs(Deck) do
                     if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
                         local bumpX = (letter.x - v.x) / v.radius
                         local bumpY = (letter.y - v.y) / v.radius
@@ -92,9 +105,21 @@ function GameState()
                         v.xvel = -bumpX * v.radius
                         v.yvel = -bumpY * v.radius
                     end
+                    end
                 end
+
                 v.update(dt)
+
+                if v.clicked == true then selectedIndex = i table.insert(selected, v) end
             end
+
+            if Deck[1] ~= selected[1] and selectedIndex ~= 0 then
+                if #selected > 1 then for i, v in ipairs(selected) do if i ~= 1 then v.clicked = false end end end
+                table.remove(Deck, selectedIndex)
+                table.insert(Deck, 1, selected[1])
+            end
+
+            for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
         end
 
         -- Prep State Draw Instructions
@@ -111,6 +136,8 @@ function GameState()
 
             love.graphics.rectangle("line", 100 + XOffset, 100 * ScaleFactor, 525 * ScaleFactor, 700 * ScaleFactor)  -- boiler
             love.graphics.rectangle("line", 725 + XOffset, 100 * ScaleFactor, 375 * ScaleFactor, 350 * ScaleFactor)  -- transmuting area
+
+            love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
         end
     end
 

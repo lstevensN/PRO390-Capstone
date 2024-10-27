@@ -7,13 +7,12 @@ function Letter(letter, xpos, ypos, type)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
-    self.draggable = false
     self.radius = 15
     self.clicked = false
     self.transmuteMode = false
     self.bubbleHeight = 0
     self.transmuting = false
-    self.stored = false
+    self.locked = false
 
     local mouseInitialX = 0
     local mouseInitialY = 0
@@ -33,12 +32,8 @@ function Letter(letter, xpos, ypos, type)
 
     self.update = function(dt)
         if self.transmuteMode == true then
-            if self.x - self.radius >= 725 and self.x + self.radius <= 1100 and
-            self.y - self.radius >= 100 and self.y + self.radius <= 450 then self.transmuting = true
-            else self.transmuting = false end
-
             -- collison checks & bubbling 
-            if self.clicked == false and self.transmuting == false and self.stored == false then
+            if self.clicked == false and self.transmuting == false and self.locked == false then
                 if self.x - self.radius < 100 then self.x = 100 + self.radius self.xvel = -self.xvel end
                 if self.x + self.radius > 625 then self.x = 625 - self.radius self.xvel = -self.xvel end
                 if self.y - self.radius < 100 then self.y = 100 + self.radius self.yvel = -self.yvel end
@@ -59,7 +54,7 @@ function Letter(letter, xpos, ypos, type)
                     self.xvel = 0
                     self.yvel = 0
                 end
-            else firstClick = false self.clicked = false self.draggable = false end
+            else firstClick = false self.clicked = false end
         end
 
         self.x = self.x + self.xvel * dt
