@@ -4,6 +4,7 @@ function Button(xpos, ypos, w, h, onclick)
     self.y = ypos or 0
     self.width = w or 1
     self.height = h or 1
+    self.pressed = false
     -- Image Property?
 
     local firstClick = false
@@ -35,6 +36,7 @@ function ButtonCircle(xpos, ypos, r, onclick)
     self.x = xpos or 0
     self.y = ypos or 0
     self.radius = r or 20
+    self.pressed = false
     -- Image Property?
 
     local firstClick = false

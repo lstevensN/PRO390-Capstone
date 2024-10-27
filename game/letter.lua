@@ -1,4 +1,4 @@
-function Letter(letter, xpos, ypos, type)
+function Letter(letter, xpos, ypos, type, trans)
     local self = {}
     
     self.x = xpos or 0
@@ -9,7 +9,7 @@ function Letter(letter, xpos, ypos, type)
     self.canPierce = false
     self.radius = 15
     self.clicked = false
-    self.transmuteMode = false
+    self.transmuteMode = trans or false
     self.bubbleHeight = 0
     self.transmuting = false
     self.locked = false
@@ -19,11 +19,11 @@ function Letter(letter, xpos, ypos, type)
     local firstClick = false
 
     local setValue = function ()
-        if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "strong" and 5 or 1)
-        elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'o' or letter == 'n' or letter == 't' then return (self.type == "strong" and 10 or 2)
-        elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "strong" and 15 or 3)
-        elseif letter == 'f' or letter == 'k' or letter == 'v' or letter == 'w' or letter == 'y' then return (self.type == "strong" and 20 or 4)
-        elseif letter == 'j' or letter == 'q' or letter == 'x' or letter == 'z' then return (self.type == "strong" and 25 or 5)
+        if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
+        elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'o' or letter == 'n' or letter == 't' then return (self.type == "iron" and 10 or 2)
+        elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
+        elseif letter == 'f' or letter == 'k' or letter == 'v' or letter == 'w' or letter == 'y' then return (self.type == "iron" and 20 or 4)
+        elseif letter == 'j' or letter == 'q' or letter == 'x' or letter == 'z' then return (self.type == "iron" and 25 or 5)
         else return 0 end
     end
 
@@ -53,10 +53,10 @@ function Letter(letter, xpos, ypos, type)
 
     self.draw = function ()
         love.graphics.setColor(255, 255, 255, 1)
-        love.graphics.circle(self.type == "strong" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
+        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
 
-        if self.type == "strong" then love.graphics.setColor(0, 0, 0) end
-        love.graphics.print(letter, self.x + XOffset, self.y * ScaleFactor)
+        if self.type == "iron" then love.graphics.setColor(0, 0, 0) end
+        love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
 
         love.graphics.setColor(255, 255, 255)
     end

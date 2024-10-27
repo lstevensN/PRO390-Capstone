@@ -12,36 +12,36 @@ function GameState()
     -- START state
     start = function ()
         -- Initialize Start State
-        local button = Button(600, 450, 100, 50, function () gameState = prep end)
+        local button = Button(600, 650, 100, 50, function () gameState = prep end)
         Lives = 2
         Deck = {
-            Letter('a', -100, -100, "strong"),
-            Letter('b', -100, -100, "strong"),
-            Letter('c', -100, -100, "strong"),
-            Letter('d', -100, -100, "strong"),
-            Letter('e', -100, -100, "strong"),
-            Letter('f', -100, -100, "strong"),
-            Letter('a', -100, -100, "strong"),
-            Letter('g', -100, -100, "strong"),
-            Letter('h', -100, -100, "strong"),
-            Letter('i', -100, -100, "strong"),
-            Letter('j', -100, -100, "strong"),
-            Letter('k', -100, -100, "strong"),
-            Letter('l', -100, -100, "strong"),
-            Letter('m', -100, -100, "strong"),
-            Letter('n', -100, -100, "strong"),
-            Letter('o', -100, -100, "strong"),
-            Letter('p', -100, -100, "strong"),
-            Letter('q', -100, -100, "strong"),
-            Letter('r', -100, -100, "strong"),
-            Letter('s', -100, -100, "strong"),
-            Letter('t', -100, -100, "strong"),
-            Letter('u', -100, -100, "strong"),
-            Letter('v', -100, -100, "strong"),
-            Letter('w', -100, -100, "strong"),
-            Letter('x', -100, -100, "strong"),
-            Letter('y', -100, -100, "strong"),
-            Letter('z', -100, -100, "strong")
+            Letter('a', -100, -100, "iron"),
+            Letter('b', -100, -100, "iron"),
+            Letter('c', -100, -100, "iron"),
+            Letter('d', -100, -100, "iron"),
+            Letter('e', -100, -100, "iron"),
+            Letter('f', -100, -100, "iron"),
+            Letter('a', -100, -100, "iron"),
+            Letter('g', -100, -100, "iron"),
+            Letter('h', -100, -100, "iron"),
+            Letter('i', -100, -100, "iron"),
+            Letter('j', -100, -100, "iron"),
+            Letter('k', -100, -100, "iron"),
+            Letter('l', -100, -100, "iron"),
+            Letter('m', -100, -100, "iron"),
+            Letter('n', -100, -100, "iron"),
+            Letter('o', -100, -100, "iron"),
+            Letter('p', -100, -100, "iron"),
+            Letter('q', -100, -100, "iron"),
+            Letter('r', -100, -100, "iron"),
+            Letter('s', -100, -100, "iron"),
+            Letter('t', -100, -100, "iron"),
+            Letter('u', -100, -100, "iron"),
+            Letter('v', -100, -100, "iron"),
+            Letter('w', -100, -100, "iron"),
+            Letter('x', -100, -100, "iron"),
+            Letter('y', -100, -100, "iron"),
+            Letter('z', -100, -100, "iron")
         }
 
         -- Start State Loop
@@ -53,7 +53,7 @@ function GameState()
         drawState = function ()
             button.draw()
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("prep", 580 + XOffset, 450 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("prep", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
         end
     end
@@ -62,14 +62,82 @@ function GameState()
     prep = function ()
         -- Initialize Prep State
         local button = Button(960, 750, 300, 150, function () gameState = game end)
+        local transmuteButton
+
         local boilerX, boilerY, boilerW, boilerH = 50, 100, 375, 700
         local transmutationX, transmutationY, transmutationW, transmutationH = 475, 100, 250, 250
         local storageX, storageY, storageW, storageH = 475, 550, 250, 250
 
         local sortDeck = function (letter1, letter2) return letter1.value < letter2.value end
-        local transmute = function () return true end
+        
+        local transmutationQueue = {}
+        local randomTier1Letter = function (type)
+            local num = math.random(5)
+            if num == 1 then return Letter("a", 600, 225, type or "iron", true)
+            elseif num == 2 then return Letter("e", 600, 225, type or "iron", true)
+            elseif num == 3 then return Letter("i", 600, 225, type or "iron", true)
+            elseif num == 4 then return Letter("r", 600, 225, type or "iron", true)
+            else return Letter("s", 600, 225, type or "iron", true) end
+        end
+        local randomTier2Letter = function (type)
+            local num = math.random(6)
+            if num == 1 then return Letter("d", 600, 225, type or "iron", true)
+            elseif num == 2 then return Letter("g", 600, 225, type or "iron", true)
+            elseif num == 3 then return Letter("l", 600, 225, type or "iron", true)
+            elseif num == 4 then return Letter("o", 600, 225, type or "iron", true)
+            elseif num == 5 then return Letter("n", 600, 225, type or "iron", true)
+            else return Letter("t", 600, 225, type or "iron", true) end
+        end
+        local randomTier3Letter = function (type)
+            local num = math.random(6)
+            if num == 1 then return Letter("b", 600, 225, type or "iron", true)
+            elseif num == 2 then return Letter("c", 600, 225, type or "iron", true)
+            elseif num == 3 then return Letter("h", 600, 225, type or "iron", true)
+            elseif num == 4 then return Letter("m", 600, 225, type or "iron", true)
+            elseif num == 5 then return Letter("p", 600, 225, type or "iron", true)
+            else return Letter("u", 600, 225, type or "iron", true) end
+        end
+        local randomTier4Letter = function (type)
+            local num = math.random(5)
+            if num == 1 then return Letter("f", 600, 225, type or "iron", true)
+            elseif num == 2 then return Letter("k", 600, 225, type or "iron", true)
+            elseif num == 3 then return Letter("v", 600, 225, type or "iron", true)
+            elseif num == 4 then return Letter("w", 600, 225, type or "iron", true)
+            else return Letter("y", 600, 225, type or "iron", true) end
+        end
+        local randomTier5Letter = function (type)
+            local num = math.random(4)
+            if num == 1 then return Letter("j", 600, 225, type or "iron", true)
+            elseif num == 2 then return Letter("q", 600, 225, type or "iron", true)
+            elseif num == 3 then return Letter("x", 600, 225, type or "iron", true)
+            else return Letter("z", 600, 225, type or "iron", true) end
+        end
+        
+        local transmute = function ()
+            if #transmutationQueue == 2 then
+                local letterFunction = function () end
+                local valid = false
+                local value1, value2 = transmutationQueue[1].value, transmutationQueue[2].value
+                local type1, type2 = transmutationQueue[1].type, transmutationQueue[2].type
 
-        local transmuteButton = ButtonCircle(600, 450, 75, transmute)
+                if value1 == 5 and value2 == 5 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier2Letter
+                elseif value1 == 10 and value2 == 10 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier3Letter
+                elseif value1 == 15 and value2 == 15 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier4Letter
+                elseif value1 == 20 and value2 == 20 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier5Letter
+                end
+
+                if valid == true then
+                    for i, v in ipairs(Deck) do if v == transmutationQueue[1] then table.remove(Deck, i) end end
+                    for i, v in ipairs(Deck) do if v == transmutationQueue[2] then table.remove(Deck, i) end end
+                    table.insert(Deck, letterFunction())
+                    transmutationQueue = {}
+                end
+            else
+
+            end
+        end
+
+        transmuteButton = ButtonCircle(600, 450, 75, transmute)
 
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
@@ -80,7 +148,6 @@ function GameState()
 
         table.sort(Deck, sortDeck)
 
-        local transmutationQueue = {}
 
         -- Prep State Loop
         gameState = function (dt)
@@ -135,6 +202,7 @@ function GameState()
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
         end
 
+
         -- Prep State Draw Instructions
         drawState = function ()
             for i, v in ipairs(Deck) do
@@ -143,13 +211,15 @@ function GameState()
             end
 
             button.draw()
+            transmuteButton.draw()
+
             love.graphics.setColor(0, 0, 0)
             love.graphics.print("game", button.x + XOffset, button.y * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("transmute", transmuteButton.x + XOffset, transmuteButton.y * ScaleFactor, 0, ScaleFactor, ScaleFactor)
             love.graphics.setColor(255, 255, 255)
 
             love.graphics.rectangle("line", boilerX + XOffset, boilerY * ScaleFactor, boilerW, boilerH * ScaleFactor)  -- boiler
             love.graphics.rectangle("line", transmutationX + XOffset, transmutationY * ScaleFactor, transmutationW, transmutationH * ScaleFactor)  -- transmuting area
-            transmuteButton.draw()
             love.graphics.rectangle("line", storageX + XOffset, storageY * ScaleFactor, storageW, storageH * ScaleFactor)  -- storage
             love.graphics.rectangle("line", 775 + XOffset, 100 * ScaleFactor, 375, 500 * ScaleFactor)  -- transmutation recipies
 
