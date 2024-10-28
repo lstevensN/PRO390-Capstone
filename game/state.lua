@@ -15,8 +15,8 @@ function GameState()
         local button = Button(600, 650, 100, 50, function () gameState = prep end)
         Lives = 2
         Deck = {
-            Letter('a', -100, -100, "iron"),
-            Letter('b', -100, -100, "iron"),
+            Letter('a', -100, -100, "pierce"),
+            Letter('b', -100, -100, "pierce"),
             Letter('c', -100, -100, "iron"),
             Letter('d', -100, -100, "iron"),
             Letter('e', -100, -100, "iron"),
@@ -30,7 +30,7 @@ function GameState()
             Letter('l', -100, -100, "iron"),
             Letter('m', -100, -100, "iron"),
             Letter('n', -100, -100, "iron"),
-            Letter('o', -100, -100, "iron"),
+            Letter('o', -100, -100, "pierce"),
             Letter('p', -100, -100, "iron"),
             Letter('q', -100, -100, "iron"),
             Letter('r', -100, -100, "iron"),
@@ -40,8 +40,8 @@ function GameState()
             Letter('v', -100, -100, "iron"),
             Letter('w', -100, -100, "iron"),
             Letter('x', -100, -100, "iron"),
-            Letter('y', -100, -100, "iron"),
-            Letter('z', -100, -100, "iron")
+            Letter('y', -100, -100, "pierce"),
+            Letter('z', -100, -100, "pierce")
         }
 
         -- Start State Loop
@@ -117,21 +117,32 @@ function GameState()
         local transmute = function ()
             local letterFunction = function () end
             local valid = false
+            local letterType = "iron"
 
             if #transmutationQueue == 2 then
                 local value1, value2 = transmutationQueue[1].value, transmutationQueue[2].value
                 local type1, type2 = transmutationQueue[1].type, transmutationQueue[2].type
 
+                -- iron combining
                 if value1 == 5 and value2 == 5 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier2Letter
                 elseif value1 == 10 and value2 == 10 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier3Letter
                 elseif value1 == 15 and value2 == 15 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier4Letter
                 elseif value1 == 20 and value2 == 20 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier5Letter
+                elseif ((value1 == 25 and value2 == 5) or (value1 == 5 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier1Letter letterType = "pierce"
+                elseif ((value1 == 25 and value2 == 10) or (value1 == 10 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier2Letter letterType = "pierce"
+                elseif ((value1 == 25 and value2 == 15) or (value1 == 15 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier3Letter letterType = "pierce"
+                elseif ((value1 == 25 and value2 == 20) or (value1 == 20 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier4Letter letterType = "pierce"
+                -- pierce combining
+                elseif value1 == 1 and value2 == 1 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier2Letter letterType = "pierce"
+                elseif value1 == 2 and value2 == 2 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier3Letter letterType = "pierce"
+                elseif value1 == 3 and value2 == 3 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier4Letter letterType = "pierce"
+                elseif value1 == 4 and value2 == 4 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier5Letter letterType = "pierce"
                 end
 
                 if valid == true then
                     for i, v in ipairs(Deck) do if v == transmutationQueue[1] then table.remove(Deck, i) end end
                     for i, v in ipairs(Deck) do if v == transmutationQueue[2] then table.remove(Deck, i) end end
-                    table.insert(Deck, letterFunction())
+                    table.insert(Deck, letterFunction(letterType))
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
                 end
@@ -140,17 +151,24 @@ function GameState()
                 local type = transmutationQueue[1].type
                 local letterFunction2 = function () end
 
+                -- iron splitting
                 if value == 25 and type == "iron" then valid = true letterFunction = randomTier4Letter letterFunction2 = randomTier4Letter
                 elseif value == 20 and type == "iron" then valid = true letterFunction = randomTier3Letter letterFunction2 = randomTier3Letter
                 elseif value == 15 and type == "iron" then valid = true letterFunction = randomTier2Letter letterFunction2 = randomTier2Letter
                 elseif value == 10 and type == "iron" then valid = true letterFunction = randomTier1Letter letterFunction2 = randomTier1Letter
+                -- pierce splitting
+                elseif value == 5 and type == "pierce" then valid = true letterFunction = randomTier4Letter letterFunction2 = randomTier4Letter letterType = "pierce"
+                elseif value == 4 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier4Letter
+                elseif value == 3 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier3Letter
+                elseif value == 2 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier2Letter
+                elseif value == 1 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier1Letter
                 end
 
                 if valid == true then
                     for i, v in ipairs(Deck) do if v == transmutationQueue[1] then table.remove(Deck, i) end end
-                    table.insert(Deck, letterFunction())
+                    table.insert(Deck, letterFunction(letterType))
                     Deck[#Deck].x = Deck[#Deck].x - Deck[#Deck].radius * 2
-                    table.insert(Deck, letterFunction2())
+                    table.insert(Deck, letterFunction2(letterType))
                     Deck[#Deck].x = Deck[#Deck].x + Deck[#Deck].radius * 2
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)

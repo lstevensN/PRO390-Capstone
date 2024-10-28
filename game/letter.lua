@@ -19,6 +19,8 @@ function Letter(letter, xpos, ypos, type, trans)
     local firstClick = false
 
     local setValue = function ()
+        if self.type == "pierce" then self.canPierce = true end
+
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
         elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'o' or letter == 'n' or letter == 't' then return (self.type == "iron" and 10 or 2)
         elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
@@ -52,13 +54,18 @@ function Letter(letter, xpos, ypos, type, trans)
     end
 
     self.draw = function ()
-        love.graphics.setColor(255, 255, 255, 1)
+        if self.type == "pierce" then love.graphics.setColor(138/255, 43/255, 226/255) else love.graphics.setColor(1, 1, 1) end
         love.graphics.circle(self.type == "iron" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
 
-        if self.type == "iron" then love.graphics.setColor(0, 0, 0) end
-        love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
+        if self.type == "iron" then
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
+        else
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.print(tostring(self.value), self.x + XOffset, self.y * ScaleFactor)
+        end
 
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(1, 1, 1)
     end
 
     return self
