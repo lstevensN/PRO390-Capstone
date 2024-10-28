@@ -113,10 +113,12 @@ function GameState()
             else return Letter("z", 600, 225, type or "iron", true) end
         end
         
+        -- transmuation recipies
         local transmute = function ()
+            local letterFunction = function () end
+            local valid = false
+
             if #transmutationQueue == 2 then
-                local letterFunction = function () end
-                local valid = false
                 local value1, value2 = transmutationQueue[1].value, transmutationQueue[2].value
                 local type1, type2 = transmutationQueue[1].type, transmutationQueue[2].type
 
@@ -131,9 +133,28 @@ function GameState()
                     for i, v in ipairs(Deck) do if v == transmutationQueue[2] then table.remove(Deck, i) end end
                     table.insert(Deck, letterFunction())
                     transmutationQueue = {}
+                    table.sort(Deck, sortDeck)
                 end
-            else
+            elseif #transmutationQueue == 1 then
+                local value = transmutationQueue[1].value
+                local type = transmutationQueue[1].type
+                local letterFunction2 = function () end
 
+                if value == 25 and type == "iron" then valid = true letterFunction = randomTier4Letter letterFunction2 = randomTier4Letter
+                elseif value == 20 and type == "iron" then valid = true letterFunction = randomTier3Letter letterFunction2 = randomTier3Letter
+                elseif value == 15 and type == "iron" then valid = true letterFunction = randomTier2Letter letterFunction2 = randomTier2Letter
+                elseif value == 10 and type == "iron" then valid = true letterFunction = randomTier1Letter letterFunction2 = randomTier1Letter
+                end
+
+                if valid == true then
+                    for i, v in ipairs(Deck) do if v == transmutationQueue[1] then table.remove(Deck, i) end end
+                    table.insert(Deck, letterFunction())
+                    Deck[#Deck].x = Deck[#Deck].x - Deck[#Deck].radius * 2
+                    table.insert(Deck, letterFunction2())
+                    Deck[#Deck].x = Deck[#Deck].x + Deck[#Deck].radius * 2
+                    transmutationQueue = {}
+                    table.sort(Deck, sortDeck)
+                end
             end
         end
 
