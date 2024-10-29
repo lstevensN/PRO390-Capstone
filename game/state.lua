@@ -64,7 +64,7 @@ function GameState()
         local button = Button(960, 750, 300, 150, function () gameState = game end)
         local transmuteButton
 
-        local boilerX, boilerY, boilerW, boilerH = 50, 100, 375, 700
+        local boilerX, boilerY, boilerW, boilerH = 50, 50, 375, 800
         local transmutationX, transmutationY, transmutationW, transmutationH = 475, 100, 250, 250
         local storageX, storageY, storageW, storageH = 475, 550, 250, 250
 
@@ -197,25 +197,27 @@ function GameState()
 
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
-                if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and 
+                if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and
                 v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH then withinTransmutationZone = true end
                 
                 if withinTransmutationZone then
                     if #transmutationQueue < 2 and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
                 else
                     v.locked = false
+                end
 
-                    -- letter collision checks
-                    for index, letter in ipairs(Deck) do
-                        if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
-                            local bumpX = (letter.x - v.x) / v.radius
-                            local bumpY = (letter.y - v.y) / v.radius
-                            letter.x = letter.x + bumpX
-                            letter.y = letter.y + bumpY
+                -- letter collision checks
+                for index, letter in ipairs(Deck) do
+                    if letter ~= v and DistanceBetween(v.x, v.y, letter.x, letter.y) < v.radius * 2 then
+                        local bumpX = (letter.x - v.x) / v.radius
+                        local bumpY = (letter.y - v.y) / v.radius
+                        letter.x = letter.x + bumpX
+                        letter.y = letter.y + bumpY
+                        v.x = v.x - bumpX
+                        v.y = v.y - bumpY
+                        if withinTransmutationZone == false then
                             letter.xvel = bumpX * letter.radius
                             letter.yvel = bumpY * letter.radius
-                            v.x = v.x - bumpX
-                            v.y = v.y - bumpY
                             v.xvel = -bumpX * v.radius
                             v.yvel = -bumpY * v.radius
                         end
@@ -230,6 +232,12 @@ function GameState()
                     if v.y + v.radius > boilerY + boilerH then v.y = boilerY + boilerH - v.radius v.yvel = -v.yvel end
 
                     -- bubbling :>
+                    if v.value == 1 or (v.value == 5 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 - v.y) * dt
+                    elseif v.value == 2 or (v.value == 10 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 2 - v.y) * dt
+                    elseif v.value == 3 or (v.value == 15 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 3 - v.y) * dt
+                    elseif v.value == 4 or (v.value == 20 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 4 - v.y) * dt
+                    elseif v.value == 5 or (v.value == 25 and v.type == "iron") then v.yvel = v.yvel + (boilerH - v.y) * dt
+                    end
                 end
 
                 v.update(dt)

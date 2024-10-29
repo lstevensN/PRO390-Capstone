@@ -7,7 +7,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
-    self.radius = 15
+    self.radius = 20
     self.clicked = false
     self.transmuteMode = trans or false
     self.bubbleHeight = 0
