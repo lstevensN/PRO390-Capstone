@@ -34,17 +34,18 @@ function GameState()
             Letter('o', -100, -100, "pierce"),
             Letter('p', -100, -100, "iron"),
             Letter('q', -100, -100, "iron"),
-            Letter('r', -100, -100, "iron"),
-            Letter('s', -100, -100, "iron"),
-            Letter('t', -100, -100, "iron"),
             Letter('u', -100, -100, "iron"),
             Letter('v', -100, -100, "iron"),
             Letter('w', -100, -100, "iron"),
             Letter('x', -100, -100, "iron"),
             Letter('y', -100, -100, "pierce"),
-            Letter('z', -100, -100, "pierce")
         }
-        Storage = {}
+        Storage = {
+            Letter('z', -100, -100, "pierce"),
+            Letter('r', -100, -100, "iron"),
+            Letter('s', -100, -100, "iron"),
+            Letter('t', -100, -100, "iron")
+        }
 
         -- Start State Loop
         gameState = function (dt)
@@ -193,6 +194,9 @@ function GameState()
 
         table.sort(Deck, sortDeck)
 
+        for i, v in ipairs(Storage) do v.transmuteMode = true end
+        table.sort(Storage, sortDeck)
+
 
         -- Prep State Loop
         gameState = function (dt)
@@ -333,17 +337,31 @@ function GameState()
         local letters = {}
         local submittedLetters = {}
         local chamber = {}
+        local chamberCount = 5
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
         local wordValueText = love.graphics.newText(love.graphics.getFont())
 
         local fillChamber = function ()
-            for i,v in ipairs(chamber) do
-                
+            for i = 1, chamberCount do
+                local chamberContainsValue = false
+                local chamberLetter
+
+                repeat
+                    chamberContainsValue = false
+                    chamberLetter = Deck[math.random(#Deck)]
+                    for index, value in ipairs(chamber) do if chamberLetter.letter == value.letter then chamberContainsValue = true break end end
+                until chamberContainsValue == false
+
+                chamberLetter.x = 575 + (i - 1) * chamberLetter.radius * 2.5
+                chamberLetter.y = 650
+
+                table.insert(chamber, chamberLetter)
             end
         end
 
+        fillChamber()
 
         -- Game State Loop
         gameState = function (dt)
@@ -442,8 +460,9 @@ function GameState()
             line2.draw()
             line3.draw()
 
-            for i, v in ipairs(letters) do v.draw() end
+            --for i, v in ipairs(letters) do v.draw() end
             for i, v in ipairs(submittedLetters) do v.draw() end
+            for i, v in ipairs(chamber) do v.draw() end
 
             gun.draw()
             love.graphics.print("Enemies: "..tostring(#gun.enemies), 570 + XOffset, 730 * ScaleFactor)
