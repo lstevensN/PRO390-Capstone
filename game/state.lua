@@ -253,14 +253,24 @@ function GameState()
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
                 if selected[1] ~= v then v.clicked = false end
 
-                if v.stored == true then table.insert(Storage, v) table.remove(Deck, i) end
+                if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
             end
 
             for i, v in ipairs(Storage) do
-                if v.x - v.radius < storageX then v.x = storageX + v.radius end
-                if v.x + v.radius > storageX + storageW then v.x = storageX + storageW - v.radius end
-                if v.y - v.radius < storageY then v.y = storageY + v.radius end
-                if v.y + v.radius > storageY + storageH then v.y = storageY + storageH - v.radius end
+                v.x = 500 + (math.fmod(i - 1, 5) * v.radius * 2.5)
+                v.y = 575 + ((math.ceil(i / 5) - 1) * v.radius * 2.5)
+
+                v.update(dt)
+
+                if v.clicked == true and #selected == 0 then table.insert(selected, v) end
+                if selected[1] ~= v then v.clicked = false end
+
+                if v.x - v.radius >= boilerX and v.x + v.radius <= boilerX + boilerW and
+                v.y - v.radius >= boilerY and v.y + v.radius <= boilerY + boilerH then
+                    v.stored = false
+                    table.insert(Deck, v)
+                    table.remove(Storage, i)
+                end
             end
 
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
