@@ -7,6 +7,7 @@ function GameState()
     local cron
     local Lives
     local Deck
+    local Storage
 
 
     -- START state
@@ -43,6 +44,7 @@ function GameState()
             Letter('y', -100, -100, "pierce"),
             Letter('z', -100, -100, "pierce")
         }
+        Storage = {}
 
         -- Start State Loop
         gameState = function (dt)
@@ -182,7 +184,11 @@ function GameState()
             v.transmuteMode = true
 
             v.x = math.random(boilerX, boilerX + boilerW)
-            v.y = math.random(boilerY, boilerY + boilerH)
+            if v.value == 1 or (v.value == 5 and v.type == "iron") then v.y = math.random(boilerH / 5 - 10, boilerH / 5 + 10)
+            elseif v.value == 2 or (v.value == 10 and v.type == "iron") then v.y = math.random(boilerH / 5 * 2 - 10, boilerH / 5 * 2 + 10)
+            elseif v.value == 3 or (v.value == 15 and v.type == "iron") then v.y = math.random(boilerH / 5 * 3 - 10, boilerH / 5 * 3 + 10)
+            elseif v.value == 4 or (v.value == 20 and v.type == "iron") then v.y = math.random(boilerH / 5 * 4 - 10, boilerH / 5 * 4 + 10)
+            elseif v.value == 5 or (v.value == 25 and v.type == "iron") then v.y = math.random(boilerH - 10, boilerH + 10) end
         end
 
         table.sort(Deck, sortDeck)
@@ -197,14 +203,16 @@ function GameState()
 
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
+
                 if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and
                 v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH then withinTransmutationZone = true end
+
+                if v.x - v.radius >= storageX - 15 and v.x + v.radius <= storageX + storageW + 15 and
+                v.y - v.radius >= storageY - 15 and v.y + v.radius <= storageY + storageH + 15 then v.stored = true end
                 
                 if withinTransmutationZone then
                     if #transmutationQueue < 2 and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
-                else
-                    v.locked = false
-                end
+                else v.locked = false end
 
                 -- letter collision checks
                 for index, letter in ipairs(Deck) do
@@ -215,7 +223,7 @@ function GameState()
                         letter.y = letter.y + bumpY
                         v.x = v.x - bumpX
                         v.y = v.y - bumpY
-                        if withinTransmutationZone == false then
+                        if withinTransmutationZone == false and v.stored == false and letter.stored == false then
                             letter.xvel = bumpX * letter.radius
                             letter.yvel = bumpY * letter.radius
                             v.xvel = -bumpX * v.radius
@@ -232,11 +240,11 @@ function GameState()
                     if v.y + v.radius > boilerY + boilerH then v.y = boilerY + boilerH - v.radius v.yvel = -v.yvel end
 
                     -- bubbling :>
-                    if v.value == 1 or (v.value == 5 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 - v.y) * dt
-                    elseif v.value == 2 or (v.value == 10 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 2 - v.y) * dt
-                    elseif v.value == 3 or (v.value == 15 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 3 - v.y) * dt
-                    elseif v.value == 4 or (v.value == 20 and v.type == "iron") then v.yvel = v.yvel + (boilerH / 5 * 4 - v.y) * dt
-                    elseif v.value == 5 or (v.value == 25 and v.type == "iron") then v.yvel = v.yvel + (boilerH - v.y) * dt
+                    if v.value == 1 or (v.value == 5 and v.type == "iron") then v.yvel = v.yvel + math.clamp(-50, (boilerH / 5 - v.y), 50) * dt
+                    elseif v.value == 2 or (v.value == 10 and v.type == "iron") then v.yvel = v.yvel + math.clamp(-50, (boilerH / 5 * 2 - v.y), 50) * dt
+                    elseif v.value == 3 or (v.value == 15 and v.type == "iron") then v.yvel = v.yvel + math.clamp(-50, (boilerH / 5 * 3 - v.y), 50) * dt
+                    elseif v.value == 4 or (v.value == 20 and v.type == "iron") then v.yvel = v.yvel + math.clamp(-50, (boilerH / 5 * 4 - v.y), 50) * dt
+                    elseif v.value == 5 or (v.value == 25 and v.type == "iron") then v.yvel = v.yvel + math.clamp(-50, (boilerH - v.y), 50) * dt
                     end
                 end
 
@@ -244,6 +252,15 @@ function GameState()
 
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
                 if selected[1] ~= v then v.clicked = false end
+
+                if v.stored == true then table.insert(Storage, v) table.remove(Deck, i) end
+            end
+
+            for i, v in ipairs(Storage) do
+                if v.x - v.radius < storageX then v.x = storageX + v.radius end
+                if v.x + v.radius > storageX + storageW then v.x = storageX + storageW - v.radius end
+                if v.y - v.radius < storageY then v.y = storageY + v.radius end
+                if v.y + v.radius > storageY + storageH then v.y = storageY + storageH - v.radius end
             end
 
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
@@ -252,10 +269,8 @@ function GameState()
 
         -- Prep State Draw Instructions
         drawState = function ()
-            for i, v in ipairs(Deck) do
-                -- love.graphics.print(tostring(v.locked), v.x, v.y - 20)
-                v.draw()
-            end
+            for i, v in ipairs(Deck) do v.draw() end
+            for i, v in ipairs(Storage) do v.draw() end
 
             button.draw()
             transmuteButton.draw()

@@ -13,6 +13,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.bubbleHeight = 0
     self.transmuting = false
     self.locked = false
+    self.stored = false
 
     local mouseInitialX = 0
     local mouseInitialY = 0
