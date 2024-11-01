@@ -61,11 +61,11 @@ function Letter(letter, xpos, ypos, type, trans)
         if self.type == "iron" then
             love.graphics.setColor(0, 0, 0)
             --love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
-            love.graphics.print(self.letter, self.x + XOffset, self.y * ScaleFactor)
+            love.graphics.print(self.letter.." "..tostring(self.value / 5), self.x - self.radius / 2 + XOffset, self.y * ScaleFactor)
         else
             love.graphics.setColor(1, 1, 1)
             --love.graphics.print(tostring(self.value), self.x + XOffset, self.y * ScaleFactor)
-            love.graphics.print(self.letter, self.x + XOffset, self.y * ScaleFactor)
+            love.graphics.print(self.letter.." "..tostring(self.value), self.x - self.radius / 2 + XOffset, self.y * ScaleFactor)
         end
 
         love.graphics.setColor(1, 1, 1)

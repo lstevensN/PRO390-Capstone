@@ -337,27 +337,34 @@ function GameState()
         local letters = {}
         local submittedLetters = {}
         local chamber = {}
-        local chamberCount = 5
+        local chamberCount = 1
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
         local wordValueText = love.graphics.newText(love.graphics.getFont())
 
         local fillChamber = function ()
+            if #chamber ~= chamberCount then table.insert(chamber, Deck[math.random(#Deck)]) end
+
             for i = 1, chamberCount do
-                local chamberContainsValue = false
-                local chamberLetter
+                if chamber[i] == {} then
+                    local chamberContainsLetter = false
+                    local chamberLetter
 
-                repeat
-                    chamberContainsValue = false
-                    chamberLetter = Deck[math.random(#Deck)]
-                    for index, value in ipairs(chamber) do if chamberLetter.letter == value.letter then chamberContainsValue = true break end end
-                until chamberContainsValue == false
+                    repeat
+                        chamberContainsLetter = false
+                        chamberLetter = Deck[math.random(#Deck)]
+                        for index, value in ipairs(chamber) do if chamberLetter == value then chamberContainsLetter = true break end end
+                    until chamberContainsLetter == false
 
-                chamberLetter.x = 575 + (i - 1) * chamberLetter.radius * 2.5
-                chamberLetter.y = 650
+                    chamberLetter.x = 575 + (i - 1) * chamberLetter.radius * 2.5
+                    chamberLetter.y = 650
 
-                table.insert(chamber, chamberLetter)
+                    chamber[i] =  chamberLetter
+                end
+
+                chamber[i].x = 575 + (i - 1) * chamber[i].radius * 2.5
+                chamber[i].y = 650
             end
         end
 
@@ -391,6 +398,9 @@ function GameState()
                         end
 
                         table.insert(gun.ammo, lettas)
+
+                        chamberCount = chamberCount + 1
+                        fillChamber()
                     end
                     letters = {}
                 else
