@@ -307,12 +307,12 @@ function GameState()
     game = function ()
         -- Initialize Game State
         local Level = TestLevel()
-        local gun = Gun(200, 800, "first")
+        local gun = Gun(150, 650, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
-        local line = Line(-100, 1300, 200, true)
-        local line2 = Line(-100, 1300, 350, false)
-        local line3 = Line(-100, 1000, 500, true, true)
+        local line = Line(-100, 1300, 130, true)
+        local line2 = Line(-100, 1300, 280, false)
+        local line3 = Line(-100, 1000, 430, true, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -357,18 +357,21 @@ function GameState()
                         for index, value in ipairs(chamber) do if chamberLetter == value then chamberContainsLetter = true break end end
                     until chamberContainsLetter == false
 
-                    chamberLetter.x = 575 + (i - 1) * chamberLetter.radius * 2.5
-                    chamberLetter.y = 650
+                    chamberLetter.x = 400 + (i - 1) * chamberLetter.radius * 2.5
+                    chamberLetter.y = 690
 
                     chamber[i] =  chamberLetter
                 end
 
-                chamber[i].x = 575 + (i - 1) * chamber[i].radius * 2.5
-                chamber[i].y = 650
+                chamber[i].x = 400 + (i - 1) * chamber[i].radius * 2.5
+                chamber[i].y = 690
             end
         end
 
         fillChamber()
+
+        for i, v in ipairs(Deck) do v.locked = false v.transmuteMode = false end
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -392,7 +395,15 @@ function GameState()
                         local lettas = {}
 
                         for index, value in ipairs(letters) do
-                            for i, v in ipairs(chamber) do if value == v then chamber[i] = Letter("nil") break end end
+                            for i, v in ipairs(chamber) do if value == v then
+                                local lock = false
+                                if v.locked == true then lock = true end
+                                chamber[i] = Letter("nil")
+                                chamber[i].locked = lock
+                                break
+                            end end
+
+                            value.locked = false
 
                             wordValue = wordValue + value.value
                             table.insert(submittedLetters, value)
@@ -401,7 +412,12 @@ function GameState()
 
                         table.insert(gun.ammo, lettas)
 
-                        chamberCount = chamberCount + 1
+                        local fillCheck = 0
+
+                        for i, v in ipairs(chamber) do if v.locked == true then fillCheck = fillCheck + 1 end end
+
+                        --if fillCheck == #chamber then chamberCount = chamberCount + 1 end
+                        if chamberCount ~= 8 then chamberCount = chamberCount + 1 end
                         fillChamber()
                     end
                     letters = {}
@@ -412,15 +428,16 @@ function GameState()
 
                             local chamberCheck = false
 
-                            for i, v in ipairs(chamber) do if v.letter == key then
+                            for i, v in ipairs(chamber) do if v.letter == key and v.locked == false then
                                 chamberCheck = true
-                                v.x = 575 + #letters * 20
-                                v.y = 720
+                                v.x = 400 + #letters * 20 * 2.25
+                                v.y = 780
+                                v.locked = true
                                 table.insert(letters, v)
                                 break
                             end end
 
-                            if chamberCheck == false then table.insert(letters, Letter(key, 575 + #letters * 20, 720)) end
+                            if chamberCheck == false then table.insert(letters, Letter(key, 400 + #letters * 20 * 2.25, 780)) end
                             break
                         end
                     end
@@ -472,9 +489,9 @@ function GameState()
 
         -- Game State Draw Instructions
         drawState = function ()
-            love.graphics.draw(wordText, (600 - wordText:getWidth() / 2) + XOffset, 130 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
-            love.graphics.draw(wordFoundText, (600 - wordFoundText:getWidth() / 2) + XOffset, 160 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
-            love.graphics.draw(wordValueText, (600 - wordValueText:getWidth() / 2) + XOffset, 180 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            --love.graphics.draw(wordText, (800 - wordText:getWidth() / 2) + XOffset, 130 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.draw(wordFoundText, (800 - wordFoundText:getWidth() / 2) + XOffset, 160 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.draw(wordValueText, (800 - wordValueText:getWidth() / 2) + XOffset, 180 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
 
             -- love.graphics.print("Enemy1: "..tostring(enemy.x), 570 + XOffset, 700 * ScaleFactor)
             -- love.graphics.print("Enemy2: "..tostring(enemy2.x), 570 + XOffset, 720 * ScaleFactor)
@@ -483,14 +500,19 @@ function GameState()
             line2.draw()
             line3.draw()
 
-            --for i, v in ipairs(letters) do v.draw() end
+            for i, v in ipairs(letters) do v.draw() end
             for i, v in ipairs(submittedLetters) do v.draw() end
             for i, v in ipairs(chamber) do v.draw() end
 
             gun.draw()
-            love.graphics.print("Enemies: "..tostring(#gun.enemies), 570 + XOffset, 730 * ScaleFactor)
-            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 570 + XOffset, 750 * ScaleFactor)
-            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 570 + XOffset, 770 * ScaleFactor)
+            love.graphics.print("Enemies: "..tostring(#gun.enemies), 900 + XOffset, 630 * ScaleFactor)
+            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 900 + XOffset, 650 * ScaleFactor)
+            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 900 + XOffset, 670 * ScaleFactor)
+
+            love.graphics.rectangle("line", 0, 600, 1200, 300)
+
+            love.graphics.rectangle("line", 360, 650, 430, 80)  -- Letter Chamber
+            love.graphics.rectangle("line", 360, 740, 665, 80)  -- Letter Input Area
         end
     end
 

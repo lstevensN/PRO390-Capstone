@@ -49,7 +49,7 @@ function Letter(letter, xpos, ypos, type, trans)
                 end
             else firstClick = false self.clicked = false end
         end
-
+        
         self.x = self.x + self.xvel * dt
         self.y = self.y + self.yvel * dt
     end
