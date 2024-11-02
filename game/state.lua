@@ -344,10 +344,10 @@ function GameState()
         local wordValueText = love.graphics.newText(love.graphics.getFont())
 
         local fillChamber = function ()
-            if #chamber ~= chamberCount then table.insert(chamber, Deck[math.random(#Deck)]) end
+            if #chamber ~= chamberCount then table.insert(chamber, Letter("nil")) end
 
             for i = 1, chamberCount do
-                if chamber[i] == {} then
+                if chamber[i].letter == "nil" then
                     local chamberContainsLetter = false
                     local chamberLetter
 
@@ -392,6 +392,8 @@ function GameState()
                         local lettas = {}
 
                         for index, value in ipairs(letters) do
+                            for i, v in ipairs(chamber) do if value == v then chamber[i] = Letter("nil") break end end
+
                             wordValue = wordValue + value.value
                             table.insert(submittedLetters, value)
                             table.insert(lettas, submittedLetters[#submittedLetters])
@@ -407,7 +409,18 @@ function GameState()
                     for index, value in ipairs(validLetters) do
                         if key == value then
                             word = word..tostring(key)
-                            table.insert(letters, Letter(key, 575 + #letters * 20, 720))
+
+                            local chamberCheck = false
+
+                            for i, v in ipairs(chamber) do if v.letter == key then
+                                chamberCheck = true
+                                v.x = 575 + #letters * 20
+                                v.y = 720
+                                table.insert(letters, v)
+                                break
+                            end end
+
+                            if chamberCheck == false then table.insert(letters, Letter(key, 575 + #letters * 20, 720)) end
                             break
                         end
                     end
