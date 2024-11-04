@@ -45,7 +45,7 @@ function Line(x1, x2, y, s, r)
 
     self.draw = function ()
         if shown then
-            love.graphics.line(startX + XOffset, locationY * ScaleFactor, endX + XOffset, locationY * ScaleFactor)
+            love.graphics.line(startX, locationY, endX, locationY)
         end
     
         -- Draw Riders

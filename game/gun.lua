@@ -16,7 +16,7 @@ function Gun(xpos, ypos, mode)
     local next = next
 
     local blindSpots = function (enemy)
-        if enemy.x < 0 or enemy.x > love.graphics.getWidth() - XOffset * 2 then return true
+        if enemy.x < 0 or enemy.x > love.graphics.getWidth() * 2 then return true
         else return false end
     end
 
@@ -79,7 +79,7 @@ function Gun(xpos, ypos, mode)
     end
 
     self.draw = function ()
-        love.graphics.draw(image, x + XOffset, y * ScaleFactor, math.atan2(dx, dy), 0.5, 1 * ScaleFactor, image:getWidth() / 2, image:getHeight() / 2 + 50)
+        love.graphics.draw(image, x, y, math.atan2(dx, dy), 0.5, 1, image:getWidth() / 2, image:getHeight() / 2 + 50)
     end
 
     return self

@@ -17,15 +17,15 @@ function Button(xpos, ypos, w, h, onclick)
                 firstClick = true
                 local x, y = love.mouse.getPosition()
 
-                if (x >= (self.x - self.width / 2) + XOffset and x <= (self.x - self.width / 2 + self.width) + XOffset) and
-                (y >= (self.y - self.height / 2) * ScaleFactor and y <= (self.y - self.height / 2 + self.height) * ScaleFactor) then self.onClick() end
+                if (x >= self.x - self.width / 2 and x <= self.x - self.width / 2 + self.width) and
+                (y >= self.y - self.height / 2 and y <= self.y - self.height / 2 + self.height) then self.onClick() end
             end
         else firstClick = false
         end
     end
 
     self.draw = function ()
-        love.graphics.rectangle("fill", (self.x - self.width / 2) + XOffset, (self.y - self.height / 2) * ScaleFactor, self.width * ScaleFactor, self.height * ScaleFactor)
+        love.graphics.rectangle("fill", self.x - self.width / 2, self.y - self.height / 2, self.width, self.height)
     end
 
     return self
@@ -49,14 +49,14 @@ function ButtonCircle(xpos, ypos, r, onclick)
                 firstClick = true
                 local x, y = love.mouse.getPosition()
 
-                if DistanceBetween(self.x + XOffset, self.y * ScaleFactor, x, y) < self.radius then self.onClick() end
+                if DistanceBetween(self.x, self.y, x, y) < self.radius then self.onClick() end
             end
         else firstClick = false
         end
     end
 
     self.draw = function ()
-        love.graphics.circle("fill", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
+        love.graphics.circle("fill", self.x, self.y, self.radius)
     end
 
     return self

@@ -56,7 +56,7 @@ function GameState()
         drawState = function ()
             button.draw()
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("prep", 580 + XOffset, 650 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("prep", 580, 650, 0)
             love.graphics.setColor(255, 255, 255)
         end
     end
@@ -290,14 +290,14 @@ function GameState()
             transmuteButton.draw()
 
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("game", button.x + XOffset, button.y * ScaleFactor, 0, ScaleFactor, ScaleFactor)
-            love.graphics.print("transmute", transmuteButton.x + XOffset, transmuteButton.y * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            love.graphics.print("game", button.x, button.y, 0)
+            love.graphics.print("transmute", transmuteButton.x, transmuteButton.y, 0)
             love.graphics.setColor(255, 255, 255)
 
-            love.graphics.rectangle("line", boilerX + XOffset, boilerY * ScaleFactor, boilerW, boilerH * ScaleFactor)  -- boiler
-            love.graphics.rectangle("line", transmutationX + XOffset, transmutationY * ScaleFactor, transmutationW, transmutationH * ScaleFactor)  -- transmuting area
-            love.graphics.rectangle("line", storageX + XOffset, storageY * ScaleFactor, storageW, storageH * ScaleFactor)  -- storage
-            love.graphics.rectangle("line", 775 + XOffset, 100 * ScaleFactor, 375, 500 * ScaleFactor)  -- transmutation recipies
+            love.graphics.rectangle("line", boilerX, boilerY, boilerW, boilerH)  -- boiler
+            love.graphics.rectangle("line", transmutationX, transmutationY, transmutationW, transmutationH)  -- transmuting area
+            love.graphics.rectangle("line", storageX, storageY, storageW, storageH)  -- storage
+            love.graphics.rectangle("line", 775, 100, 375, 500)  -- transmutation recipies
 
             love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
         end
@@ -460,7 +460,7 @@ function GameState()
             fireTimer:update(dt, dt)
 
             for i, v in ipairs(submittedLetters) do
-                if v.x < 0 or v.x > love.graphics.getWidth() - XOffset or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
+                if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
                 else v.update(dt) end
             end
 
@@ -493,12 +493,12 @@ function GameState()
 
         -- Game State Draw Instructions
         drawState = function ()
-            --love.graphics.draw(wordText, (800 - wordText:getWidth() / 2) + XOffset, 130 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
-            love.graphics.draw(wordFoundText, (800 - wordFoundText:getWidth() / 2) + XOffset, 160 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
-            love.graphics.draw(wordValueText, (800 - wordValueText:getWidth() / 2) + XOffset, 180 * ScaleFactor, 0, ScaleFactor, ScaleFactor)
+            --love.graphics.draw(wordText, 800 - wordText:getWidth() / 2, 130, 0)
+            love.graphics.draw(wordFoundText, 800 - wordFoundText:getWidth() / 2, 160, 0)
+            love.graphics.draw(wordValueText, 800 - wordValueText:getWidth() / 2, 180, 0)
 
-            -- love.graphics.print("Enemy1: "..tostring(enemy.x), 570 + XOffset, 700 * ScaleFactor)
-            -- love.graphics.print("Enemy2: "..tostring(enemy2.x), 570 + XOffset, 720 * ScaleFactor)
+            -- love.graphics.print("Enemy1: "..tostring(enemy.x), 570, 700)
+            -- love.graphics.print("Enemy2: "..tostring(enemy2.x), 570, 720)
     
             line.draw()
             line2.draw()
@@ -509,18 +509,18 @@ function GameState()
             for i, v in ipairs(chamber) do v.draw() end
 
             gun.draw()
-            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000 + XOffset, 630 * ScaleFactor)
-            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000 + XOffset, 650 * ScaleFactor)
-            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000 + XOffset, 670 * ScaleFactor)
+            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 630)
+            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 650)
+            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 670)
 
-            love.graphics.rectangle("line", 0, 600 * ScaleFactor, 1200, 300 * ScaleFactor) -- Outline
+            love.graphics.rectangle("line", 0, 600, 1200, 300) -- Outline
 
             --love.graphics.circle("line", 115, 115, 100)
-            love.graphics.circle("line", 1085 + XOffset, 750 * ScaleFactor, 100)  -- Facial Reaction
+            love.graphics.circle("line", 1085, 750, 100)  -- Facial Reaction
 
-            love.graphics.rectangle("line", recentX + XOffset, recentY * ScaleFactor, recentW, recentH * ScaleFactor)  -- Recently Used Words
-            love.graphics.rectangle("line", chambersX + XOffset, chambersY * ScaleFactor, chambersW, chambersH * ScaleFactor)  -- Letter Chambers
-            love.graphics.rectangle("line", inputX + XOffset, inputY * ScaleFactor, inputW, inputH * ScaleFactor)  -- Letter Input Area
+            love.graphics.rectangle("line", recentX, recentY, recentW, recentH)  -- Recently Used Words
+            love.graphics.rectangle("line", chambersX, chambersY, chambersW, chambersH)  -- Letter Chambers
+            love.graphics.rectangle("line", inputX, inputY, inputW, inputH)  -- Letter Input Area
         end
     end
 

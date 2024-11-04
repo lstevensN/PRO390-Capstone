@@ -36,28 +36,30 @@ function love.update(dt)
     mouseX, mouseY = love.mouse.getPosition()
 
     ScaleFactor = love.graphics.getHeight() / screenY
-    XOffset = (love.graphics.getWidth() - screenX) / 2
+    XOffset = (love.graphics.getWidth() - screenX * ScaleFactor) / 2
 end
 
 function love.draw()
     love.graphics.push()
+        love.graphics.translate(XOffset, 0)
+        love.graphics.scale(ScaleFactor)
+
         love.graphics.setColor(1, 1, 1)
         love.graphics.setBackgroundColor(0, 0, 0)
 
-        love.graphics.print('Here goes nothing! (^v^)', 10 + XOffset, 10 * ScaleFactor)
-        love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
-        love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
+        love.graphics.print('Here goes nothing! (^v^)', 10, 10)
+        love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
+        love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
 
-        -- love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
-        -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
+        -- love.graphics.print("offset x: "..tostring(XOffset), 10, 90)
+        -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10, 110)
 
-        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
+        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090, 10)
 
         state.draw()
-    love.grpahics.pop()
+    love.graphics.pop()
 
-    --love.graphics.setColor(0, 0, 0)
-    --love.graphics.rectangle("fill", 0, 0, XOffset, love.graphics.getHeight())
-    --love.graphics.rectangle("fill", screenX + XOffset, 0, XOffset, love.graphics.getHeight())
-    --love.graphics.draw(bars, 0, 0, 0, 1, screenY / 500 * ScaleFactor)
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", 0, 0, XOffset - 1, love.graphics.getHeight())
+    love.graphics.rectangle("fill", screenX * ScaleFactor + XOffset + 1, 0, XOffset - 1, love.graphics.getHeight())
 end

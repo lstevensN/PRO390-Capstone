@@ -39,11 +39,11 @@ function Letter(letter, xpos, ypos, type, trans)
                 if firstClick == false then
                     firstClick = true
                     mouseInitialX, mouseInitialY = love.mouse.getPosition()
-                    if DistanceBetween(self.x + XOffset, self.y * ScaleFactor, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
+                    if DistanceBetween(self.x, self.y, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
                 elseif self.clicked == true then
                     local x, y = love.mouse.getPosition()
-                    self.x = x - XOffset
-                    self.y = y / ScaleFactor
+                    self.x = x
+                    self.y = y
                     self.xvel = 0
                     self.yvel = 0
                 end
@@ -56,16 +56,16 @@ function Letter(letter, xpos, ypos, type, trans)
 
     self.draw = function ()
         if self.type == "pierce" then love.graphics.setColor(138/255, 43/255, 226/255) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius)
+        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x, self.y, self.radius)
 
         if self.type == "iron" then
             love.graphics.setColor(0, 0, 0)
             --love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
-            love.graphics.print(self.letter.." "..tostring(self.value / 5), self.x - self.radius / 2 + XOffset, self.y * ScaleFactor)
+            love.graphics.print(self.letter.." "..tostring(self.value / 5), self.x - self.radius / 2, self.y)
         else
             love.graphics.setColor(1, 1, 1)
             --love.graphics.print(tostring(self.value), self.x + XOffset, self.y * ScaleFactor)
-            love.graphics.print(self.letter.." "..tostring(self.value), self.x - self.radius / 2 + XOffset, self.y * ScaleFactor)
+            love.graphics.print(self.letter.." "..tostring(self.value), self.x - self.radius / 2, self.y)
         end
 
         love.graphics.setColor(1, 1, 1)
