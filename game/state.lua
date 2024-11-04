@@ -513,14 +513,14 @@ function GameState()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000 + XOffset, 650 * ScaleFactor)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000 + XOffset, 670 * ScaleFactor)
 
-            love.graphics.rectangle("line", 0 + XOffset, 600 * ScaleFactor, 1200 * ScaleFactor, 300 * ScaleFactor) -- Outline
+            love.graphics.rectangle("line", 0, 600 * ScaleFactor, 1200, 300 * ScaleFactor) -- Outline
 
             --love.graphics.circle("line", 115, 115, 100)
-            love.graphics.circle("line", 1085 + XOffset, 750 * ScaleFactor, 100 * ScaleFactor)  -- Facial Reaction
+            love.graphics.circle("line", 1085 + XOffset, 750 * ScaleFactor, 100)  -- Facial Reaction
 
-            love.graphics.rectangle("line", recentX + XOffset, recentY * ScaleFactor, recentW * ScaleFactor, recentH * ScaleFactor)  -- Recently Used Words
-            love.graphics.rectangle("line", chambersX + XOffset, chambersY * ScaleFactor, chambersW * ScaleFactor, chambersH * ScaleFactor)  -- Letter Chambers
-            love.graphics.rectangle("line", inputX + XOffset, inputY * ScaleFactor, inputW * ScaleFactor, inputH * ScaleFactor)  -- Letter Input Area
+            love.graphics.rectangle("line", recentX + XOffset, recentY * ScaleFactor, recentW, recentH * ScaleFactor)  -- Recently Used Words
+            love.graphics.rectangle("line", chambersX + XOffset, chambersY * ScaleFactor, chambersW, chambersH * ScaleFactor)  -- Letter Chambers
+            love.graphics.rectangle("line", inputX + XOffset, inputY * ScaleFactor, inputW, inputH * ScaleFactor)  -- Letter Input Area
         end
     end
 

@@ -3,8 +3,8 @@ local rs = require "resolution_solution" ---@type ResolutionSolution
 
 local screenX, screenY = 1200, 900
 
-XOffset = 0
-ScaleFactor = 0
+local XOffset = 0
+local ScaleFactor = 0
 
 local mouseX, mouseY = 0, 0
 
@@ -40,22 +40,24 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.setBackgroundColor(0, 0, 0)
+    love.graphics.push()
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.setBackgroundColor(0, 0, 0)
 
-    love.graphics.print('Here goes nothing! (^v^)', 10 + XOffset, 10 * ScaleFactor)
-    love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
-    love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
+        love.graphics.print('Here goes nothing! (^v^)', 10 + XOffset, 10 * ScaleFactor)
+        love.graphics.print("mouse x: "..tostring(mouseX), 10 + XOffset, 40 * ScaleFactor)
+        love.graphics.print("mouse y: "..tostring(mouseY), 10 + XOffset, 60 * ScaleFactor)
 
-    -- love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
-    -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
+        -- love.graphics.print("offset x: "..tostring(XOffset), 10 + XOffset, 90 * ScaleFactor)
+        -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10 + XOffset, 110 * ScaleFactor)
 
-    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
+        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090 + XOffset, 10 * ScaleFactor)
 
-    state.draw()
+        state.draw()
+    love.grpahics.pop()
 
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("fill", 0, 0, XOffset, love.graphics.getHeight())
-    love.graphics.rectangle("fill", screenX + XOffset, 0, XOffset, love.graphics.getHeight())
+    --love.graphics.setColor(0, 0, 0)
+    --love.graphics.rectangle("fill", 0, 0, XOffset, love.graphics.getHeight())
+    --love.graphics.rectangle("fill", screenX + XOffset, 0, XOffset, love.graphics.getHeight())
     --love.graphics.draw(bars, 0, 0, 0, 1, screenY / 500 * ScaleFactor)
 end

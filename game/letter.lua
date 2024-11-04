@@ -56,7 +56,7 @@ function Letter(letter, xpos, ypos, type, trans)
 
     self.draw = function ()
         if self.type == "pierce" then love.graphics.setColor(138/255, 43/255, 226/255) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius * ScaleFactor)
+        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x + XOffset, self.y * ScaleFactor, self.radius)
 
         if self.type == "iron" then
             love.graphics.setColor(0, 0, 0)
