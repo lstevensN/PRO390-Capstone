@@ -306,6 +306,10 @@ function GameState()
     -- GAME state
     game = function ()
         -- Initialize Game State
+        local recentX, recentY, recentW, recentH = 355, 620, 175, 130
+        local chambersX, chambersY, chambersW, chambersH = 545, 650, 425, 80
+        local inputX, inputY, inputW, inputH = 50, 770, 920, 80
+
         local Level = TestLevel()
         local gun = Gun(150, 650, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
@@ -357,14 +361,14 @@ function GameState()
                         for index, value in ipairs(chamber) do if chamberLetter == value then chamberContainsLetter = true break end end
                     until chamberContainsLetter == false
 
-                    chamberLetter.x = 400 + (i - 1) * chamberLetter.radius * 2.5
-                    chamberLetter.y = 690
+                    chamberLetter.x = chambersX + 30 + (i - 1) * chamberLetter.radius * 2.6
+                    chamberLetter.y = chambersY + chambersH / 2
 
                     chamber[i] =  chamberLetter
                 end
 
-                chamber[i].x = 400 + (i - 1) * chamber[i].radius * 2.5
-                chamber[i].y = 690
+                chamber[i].x = chambersX + 30 + (i - 1) * chamber[i].radius * 2.6
+                chamber[i].y = chambersY + chambersH / 2
             end
         end
 
@@ -430,14 +434,14 @@ function GameState()
 
                             for i, v in ipairs(chamber) do if v.letter == key and v.locked == false then
                                 chamberCheck = true
-                                v.x = 400 + #letters * 20 * 2.25
-                                v.y = 780
+                                v.x = inputX + 30 + #letters * 20 * 2.25
+                                v.y = inputY + inputH / 2
                                 v.locked = true
                                 table.insert(letters, v)
                                 break
                             end end
 
-                            if chamberCheck == false then table.insert(letters, Letter(key, 400 + #letters * 20 * 2.25, 780)) end
+                            if chamberCheck == false then table.insert(letters, Letter(key, inputX + 30 + #letters * 20 * 2.25, inputY + inputH / 2)) end
                             break
                         end
                     end
@@ -505,14 +509,18 @@ function GameState()
             for i, v in ipairs(chamber) do v.draw() end
 
             gun.draw()
-            love.graphics.print("Enemies: "..tostring(#gun.enemies), 900 + XOffset, 630 * ScaleFactor)
-            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 900 + XOffset, 650 * ScaleFactor)
-            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 900 + XOffset, 670 * ScaleFactor)
+            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000 + XOffset, 630 * ScaleFactor)
+            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000 + XOffset, 650 * ScaleFactor)
+            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000 + XOffset, 670 * ScaleFactor)
 
-            love.graphics.rectangle("line", 0, 600, 1200, 300)
+            love.graphics.rectangle("line", 0 + XOffset, 600 * ScaleFactor, 1200 * ScaleFactor, 300 * ScaleFactor) -- Outline
 
-            love.graphics.rectangle("line", 360, 650, 430, 80)  -- Letter Chamber
-            love.graphics.rectangle("line", 360, 740, 665, 80)  -- Letter Input Area
+            --love.graphics.circle("line", 115, 115, 100)
+            love.graphics.circle("line", 1085 + XOffset, 750 * ScaleFactor, 100 * ScaleFactor)  -- Facial Reaction
+
+            love.graphics.rectangle("line", recentX + XOffset, recentY * ScaleFactor, recentW * ScaleFactor, recentH * ScaleFactor)  -- Recently Used Words
+            love.graphics.rectangle("line", chambersX + XOffset, chambersY * ScaleFactor, chambersW * ScaleFactor, chambersH * ScaleFactor)  -- Letter Chambers
+            love.graphics.rectangle("line", inputX + XOffset, inputY * ScaleFactor, inputW * ScaleFactor, inputH * ScaleFactor)  -- Letter Input Area
         end
     end
 
