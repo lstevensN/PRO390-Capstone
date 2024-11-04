@@ -1,14 +1,11 @@
 local state
-local rs = require "resolution_solution" ---@type ResolutionSolution
 
 local screenX, screenY = 1200, 900
 
-local XOffset = 0
-local ScaleFactor = 0
+XOffset = 0
+ScaleFactor = 0
 
 local mouseX, mouseY = 0, 0
-
-local bars = love.graphics.newImage("game/assets/lancer_placeholder.png")
 
 function love.resize(w, h) end
 
@@ -34,6 +31,8 @@ function love.update(dt)
     state.update(dt)
 
     mouseX, mouseY = love.mouse.getPosition()
+    mouseX = (mouseX - XOffset) / ScaleFactor
+    mouseY = mouseY / ScaleFactor
 
     ScaleFactor = love.graphics.getHeight() / screenY
     XOffset = (love.graphics.getWidth() - screenX * ScaleFactor) / 2

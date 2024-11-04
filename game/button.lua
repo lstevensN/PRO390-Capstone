@@ -16,6 +16,8 @@ function Button(xpos, ypos, w, h, onclick)
             if firstClick == false then
                 firstClick = true
                 local x, y = love.mouse.getPosition()
+                x = (x - XOffset) / ScaleFactor
+                y = y / ScaleFactor
 
                 if (x >= self.x - self.width / 2 and x <= self.x - self.width / 2 + self.width) and
                 (y >= self.y - self.height / 2 and y <= self.y - self.height / 2 + self.height) then self.onClick() end
@@ -48,6 +50,8 @@ function ButtonCircle(xpos, ypos, r, onclick)
             if firstClick == false then
                 firstClick = true
                 local x, y = love.mouse.getPosition()
+                x = (x - XOffset) / ScaleFactor
+                y = y / ScaleFactor
 
                 if DistanceBetween(self.x, self.y, x, y) < self.radius then self.onClick() end
             end

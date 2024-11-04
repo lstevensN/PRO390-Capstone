@@ -39,11 +39,13 @@ function Letter(letter, xpos, ypos, type, trans)
                 if firstClick == false then
                     firstClick = true
                     mouseInitialX, mouseInitialY = love.mouse.getPosition()
+                    mouseInitialX = (mouseInitialX - XOffset) / ScaleFactor
+                    mouseInitialY = mouseInitialY / ScaleFactor
                     if DistanceBetween(self.x, self.y, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
                 elseif self.clicked == true then
                     local x, y = love.mouse.getPosition()
-                    self.x = x
-                    self.y = y
+                    self.x = (x - XOffset) / ScaleFactor
+                    self.y = y / ScaleFactor
                     self.xvel = 0
                     self.yvel = 0
                 end
