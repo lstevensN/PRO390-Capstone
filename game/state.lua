@@ -3,16 +3,20 @@ function GameState()
     local self = {}
     local gameState = function (dt) end
     local drawState = function () end
+    local pauseState, pauseDrawState = function () end, function () end
     local start, game, prep
     local cron
     local Lives
     local Deck
     local Storage
+    local paused, canPause, pausePressed = false, false, false
 
 
     -- START state
     start = function ()
         -- Initialize Start State
+        canPause = false
+
         local button = Button(600, 650, 100, 50, function () gameState = prep end)
         Lives = 2
         Deck = {
@@ -64,6 +68,9 @@ function GameState()
     -- PREP state
     prep = function ()
         -- Initialize Prep State
+        canPause = true
+        pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
+
         local button = Button(960, 750, 300, 150, function () gameState = game end)
         local transmuteButton
 
@@ -300,12 +307,16 @@ function GameState()
             love.graphics.rectangle("line", 775, 100, 375, 500)  -- transmutation recipies
 
             love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
+
+            if paused == true then pauseDrawState() end
         end
     end
 
     -- GAME state
     game = function ()
         -- Initialize Game State
+        canPause = true
+
         local recentX, recentY, recentW, recentH = 355, 620, 175, 130
         local chambersX, chambersY, chambersW, chambersH = 545, 650, 425, 80
         local inputX, inputY, inputW, inputH = 50, 770, 920, 80
@@ -382,11 +393,7 @@ function GameState()
             local key = GetKeyPressed()
 
             -- Word Input & Validation (Keyboard)
-            if key ~= '' then
-                if key == 'escape' then
-                    love.event.quit()
-                end
-            
+            if key ~= '' then            
                 if key == 'backspace' and #word > 0 then
                     word = word:sub(1, -2)
                     table.remove(letters, #letters)
@@ -543,7 +550,16 @@ function GameState()
     end
 
     self.update = function (dt)
-        gameState(dt)
+        -- Pausing
+        if canPause == true and love.keyboard.isDown('escape') == true then
+            if pausePressed == false then
+                if paused == false then paused = true
+                elseif paused == true then paused = false end
+                pausePressed = true
+            end
+        else pausePressed = false end
+
+        if paused == false then gameState(dt) end
     end
 
     self.draw = function ()
