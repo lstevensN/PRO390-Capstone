@@ -4,12 +4,13 @@ function GameState()
     local gameState = function (dt) end
     local drawState = function () end
     local pauseState, pauseDrawState = function () end, function () end
-    local start, game, prep
+    local start, game, prep, progress
     local cron
     local Lives
     local Deck
     local Storage
     local paused, canPause, pausePressed = false, false, false
+    local act, difficulty = 4, 2
 
 
     -- START state
@@ -17,7 +18,7 @@ function GameState()
         -- Initialize Start State
         canPause = false
 
-        local button = Button(600, 650, 100, 50, function () gameState = prep end)
+        local button = Button(600, 650, 100, 50, function () gameState = progress end)
         Lives = 2
         Deck = {
             Letter('a', -100, -100, "pierce"),
@@ -51,10 +52,12 @@ function GameState()
             Letter('t', -100, -100, "iron")
         }
 
+
         -- Start State Loop
         gameState = function (dt)
             button.update(dt)
         end
+
 
         -- Start State Draw Instructions
         drawState = function ()
@@ -62,6 +65,60 @@ function GameState()
             love.graphics.setColor(0, 0, 0)
             love.graphics.print("prep", 580, 650, 0)
             love.graphics.setColor(255, 255, 255)
+        end
+    end
+
+    -- PROGRESS state
+    progress = function ()
+        -- Initialize Progress State
+        canPause = true
+
+        local buttonAct1 = ButtonCircle(150, 450, 100, function () gameState = prep end)
+        local buttonAct2 = ButtonCircle(450, 450, 100, function () gameState = prep end)
+        local buttonAct3 = ButtonCircle(750, 450, 100, function () gameState = prep end)
+        local buttonAct4 = ButtonCircle(1050, 450, 100, function () gameState = prep end)
+
+        local buttonDifficultyEasy = Button(450, 730, 90, 50, function () difficulty = 1 end)
+        local buttonDifficultyNormal = Button(550, 730, 90, 50, function () difficulty = 2 end)
+        local buttonDifficultyHard = Button(650, 730, 90, 50, function () difficulty = 3 end)
+        local buttonDifficultyInsane = Button(750, 730, 90, 50, function () difficulty = 4 end)
+
+
+        -- Progress State Loop
+        gameState = function (dt)
+            if act == 1 then buttonAct1.update(dt)
+            elseif act == 2 then buttonAct2.update(dt)
+            elseif act == 3 then buttonAct3.update(dt)
+            elseif act == 4 then buttonAct4.update(dt) end
+
+            buttonDifficultyEasy.update(dt)
+            buttonDifficultyNormal.update(dt)
+            buttonDifficultyHard.update(dt)
+            buttonDifficultyInsane.update(dt)
+        end
+
+
+        -- Progress State Draw Instructions
+        drawState = function ()
+            love.graphics.circle("line", 150, 450, 100)
+            love.graphics.circle("line", 450, 450, 100)
+            love.graphics.circle("line", 750, 450, 100)
+            love.graphics.circle("line", 1050, 450, 100)
+
+            if act == 1 then buttonAct1.draw()
+            elseif act == 2 then buttonAct2.draw()
+            elseif act == 3 then buttonAct3.draw()
+            elseif act == 4 then buttonAct4.draw() end
+
+            love.graphics.rectangle("line", 400, 700, 100, 60)
+            love.graphics.rectangle("line", 500, 700, 100, 60)
+            love.graphics.rectangle("line", 600, 700, 100, 60)
+            love.graphics.rectangle("line", 700, 700, 100, 60)
+
+            if difficulty == 1 then buttonDifficultyEasy.draw()
+            elseif difficulty == 2 then buttonDifficultyNormal.draw()
+            elseif difficulty == 3 then buttonDifficultyHard.draw()
+            elseif difficulty == 4 then buttonDifficultyInsane.draw() end
         end
     end
 
