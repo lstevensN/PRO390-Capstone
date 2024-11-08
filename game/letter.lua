@@ -7,7 +7,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
-    self.radius = 20
+    self.radius = 25
     self.clicked = false
     self.transmuteMode = trans or false
     self.bubbleHeight = 0
@@ -23,13 +23,48 @@ function Letter(letter, xpos, ypos, type, trans)
         if self.type == "pierce" then self.canPierce = true end
 
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
-        elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'o' or letter == 'n' or letter == 't' then return (self.type == "iron" and 10 or 2)
+        elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'n' or letter == 'o' or letter == 't' then return (self.type == "iron" and 10 or 2)
         elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
         elseif letter == 'f' or letter == 'k' or letter == 'v' or letter == 'w' or letter == 'y' then return (self.type == "iron" and 20 or 4)
         elseif letter == 'j' or letter == 'q' or letter == 'x' or letter == 'z' then return (self.type == "iron" and 25 or 5)
         else return 0 end
     end
 
+    local setImage = function ()
+        local image
+
+        if     self.type == "iron" and letter == 'a' then image = love.graphics.newImage("game/assets/letters/iron_letter_a.png")
+        elseif self.type == "iron" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/iron_letter_b.png")
+        elseif self.type == "iron" and letter == 'c' then image = love.graphics.newImage("game/assets/letters/iron_letter_c.png")
+        elseif self.type == "iron" and letter == 'd' then image = love.graphics.newImage("game/assets/letters/iron_letter_d.png")
+        elseif self.type == "iron" and letter == 'e' then image = love.graphics.newImage("game/assets/letters/iron_letter_e.png")
+        elseif self.type == "iron" and letter == 'f' then image = love.graphics.newImage("game/assets/letters/iron_letter_f.png")
+        elseif self.type == "iron" and letter == 'g' then image = love.graphics.newImage("game/assets/letters/iron_letter_g.png")
+        elseif self.type == "iron" and letter == 'h' then image = love.graphics.newImage("game/assets/letters/iron_letter_h.png")
+        elseif self.type == "iron" and letter == 'i' then image = love.graphics.newImage("game/assets/letters/iron_letter_i.png")
+        elseif self.type == "iron" and letter == 'j' then image = love.graphics.newImage("game/assets/letters/iron_letter_j.png")
+        elseif self.type == "iron" and letter == 'k' then image = love.graphics.newImage("game/assets/letters/iron_letter_k.png")
+        elseif self.type == "iron" and letter == 'l' then image = love.graphics.newImage("game/assets/letters/iron_letter_l.png")
+        elseif self.type == "iron" and letter == 'm' then image = love.graphics.newImage("game/assets/letters/iron_letter_m.png")
+        elseif self.type == "iron" and letter == 'n' then image = love.graphics.newImage("game/assets/letters/iron_letter_n.png")
+        elseif self.type == "iron" and letter == 'o' then image = love.graphics.newImage("game/assets/letters/iron_letter_o.png")
+        elseif self.type == "iron" and letter == 'p' then image = love.graphics.newImage("game/assets/letters/iron_letter_p.png")
+        elseif self.type == "iron" and letter == 'q' then image = love.graphics.newImage("game/assets/letters/iron_letter_q.png")
+        elseif self.type == "iron" and letter == 'r' then image = love.graphics.newImage("game/assets/letters/iron_letter_r.png")
+        elseif self.type == "iron" and letter == 's' then image = love.graphics.newImage("game/assets/letters/iron_letter_s.png")
+        elseif self.type == "iron" and letter == 't' then image = love.graphics.newImage("game/assets/letters/iron_letter_t.png")
+        elseif self.type == "iron" and letter == 'u' then image = love.graphics.newImage("game/assets/letters/iron_letter_u.png")
+        elseif self.type == "iron" and letter == 'v' then image = love.graphics.newImage("game/assets/letters/iron_letter_v.png")
+        elseif self.type == "iron" and letter == 'w' then image = love.graphics.newImage("game/assets/letters/iron_letter_w.png")
+        elseif self.type == "iron" and letter == 'x' then image = love.graphics.newImage("game/assets/letters/iron_letter_x.png")
+        elseif self.type == "iron" and letter == 'y' then image = love.graphics.newImage("game/assets/letters/iron_letter_y.png")
+        elseif self.type == "iron" and letter == 'z' then image = love.graphics.newImage("game/assets/letters/iron_letter_z.png")
+        end
+
+        return image
+    end
+
+    self.image = setImage()
     self.letter = letter
     self.value = setValue()
 
@@ -58,12 +93,12 @@ function Letter(letter, xpos, ypos, type, trans)
 
     self.draw = function ()
         if self.type == "pierce" then love.graphics.setColor(138/255, 43/255, 226/255) else love.graphics.setColor(1, 1, 1) end
-        love.graphics.circle(self.type == "iron" and "fill" or "line", self.x, self.y, self.radius)
+        --love.graphics.circle(self.type == "iron" and "fill" or "line", self.x, self.y, self.radius)
 
         if self.type == "iron" then
-            love.graphics.setColor(0, 0, 0)
+            --love.graphics.setColor(0, 0, 0)
             --love.graphics.print(tostring(self.value / 5), self.x + XOffset, self.y * ScaleFactor)
-            love.graphics.print(self.letter.." "..tostring(self.value / 5), self.x - self.radius / 2, self.y)
+            --love.graphics.print(self.letter.." "..tostring(self.value / 5), self.x - self.radius / 2, self.y)
         else
             love.graphics.setColor(1, 1, 1)
             --love.graphics.print(tostring(self.value), self.x + XOffset, self.y * ScaleFactor)
@@ -71,6 +106,7 @@ function Letter(letter, xpos, ypos, type, trans)
         end
 
         love.graphics.setColor(1, 1, 1)
+        if self.image ~= nil then love.graphics.draw(self.image, self.x, self.y, 0, 0.125, 0.125, 200, 200) end
     end
 
     return self

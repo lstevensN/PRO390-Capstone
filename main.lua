@@ -45,6 +45,8 @@ function love.draw()
 
         love.graphics.setColor(1, 1, 1)
         love.graphics.setBackgroundColor(0, 0, 0)
+        
+        state.draw()
 
         love.graphics.print('Here goes nothing! (^v^)', 10, 10)
         love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
@@ -54,8 +56,6 @@ function love.draw()
         -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10, 110)
 
         love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090, 10)
-
-        state.draw()
     love.graphics.pop()
 
     love.graphics.setColor(0, 0, 0)

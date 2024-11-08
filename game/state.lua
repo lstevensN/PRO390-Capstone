@@ -10,7 +10,7 @@ function GameState()
     local Deck
     local Storage
     local paused, canPause, pausePressed = false, false, false
-    local act, difficulty = 4, 2
+    local act, difficulty = 3, 2
 
 
     -- START state
@@ -18,7 +18,10 @@ function GameState()
         -- Initialize Start State
         canPause = false
 
-        local button = Button(600, 650, 100, 50, function () gameState = progress end)
+        local buttonStart = Button(290, 280, 300, 100, function () gameState = progress end)
+        local buttonSettings = Button(290, 480, 300, 100, function () end)
+        local buttonQuit = Button(290, 680, 300, 100, function () love.event.quit() end)  -- DON'T FORGET TO ADD SAVING
+
         Lives = 2
         Deck = {
             Letter('a', -100, -100, "pierce"),
@@ -55,15 +58,22 @@ function GameState()
 
         -- Start State Loop
         gameState = function (dt)
-            button.update(dt)
+            buttonStart.update(dt)
+            buttonSettings.update(dt)
+            buttonQuit.update(dt)
         end
 
 
         -- Start State Draw Instructions
         drawState = function ()
-            button.draw()
+            buttonStart.draw()
+            buttonSettings.draw()
+            buttonQuit.draw()
+
             love.graphics.setColor(0, 0, 0)
-            love.graphics.print("prep", 580, 650, 0)
+            love.graphics.print("start", 290, 280)
+            love.graphics.print("settings", 290, 480)
+            love.graphics.print("quit", 290, 680)
             love.graphics.setColor(255, 255, 255)
         end
     end
@@ -73,15 +83,15 @@ function GameState()
         -- Initialize Progress State
         canPause = true
 
-        local buttonAct1 = ButtonCircle(150, 450, 100, function () gameState = prep end)
-        local buttonAct2 = ButtonCircle(450, 450, 100, function () gameState = prep end)
-        local buttonAct3 = ButtonCircle(750, 450, 100, function () gameState = prep end)
-        local buttonAct4 = ButtonCircle(1050, 450, 100, function () gameState = prep end)
+        local buttonAct1 = ButtonCircle(150, 350, 100, function () gameState = prep end)
+        local buttonAct2 = ButtonCircle(450, 350, 100, function () gameState = prep end)
+        local buttonAct3 = ButtonCircle(750, 350, 100, function () gameState = prep end)
+        local buttonAct4 = ButtonCircle(1050, 350, 100, function () gameState = prep end)
 
-        local buttonDifficultyEasy = Button(450, 730, 90, 50, function () difficulty = 1 end)
-        local buttonDifficultyNormal = Button(550, 730, 90, 50, function () difficulty = 2 end)
-        local buttonDifficultyHard = Button(650, 730, 90, 50, function () difficulty = 3 end)
-        local buttonDifficultyInsane = Button(750, 730, 90, 50, function () difficulty = 4 end)
+        local buttonDifficultyEasy = Button(375, 630, 140, 50, function () difficulty = 1 end)
+        local buttonDifficultyNormal = Button(525, 630, 140, 50, function () difficulty = 2 end)
+        local buttonDifficultyHard = Button(675, 630, 140, 50, function () difficulty = 3 end)
+        local buttonDifficultyInsane = Button(825, 630, 140, 50, function () difficulty = 4 end)
 
 
         -- Progress State Loop
@@ -100,25 +110,27 @@ function GameState()
 
         -- Progress State Draw Instructions
         drawState = function ()
-            love.graphics.circle("line", 150, 450, 100)
-            love.graphics.circle("line", 450, 450, 100)
-            love.graphics.circle("line", 750, 450, 100)
-            love.graphics.circle("line", 1050, 450, 100)
+            love.graphics.circle("line", 150, 350, 100)
+            love.graphics.circle("line", 450, 350, 100)
+            love.graphics.circle("line", 750, 350, 100)
+            love.graphics.circle("line", 1050, 350, 100)
 
             if act == 1 then buttonAct1.draw()
             elseif act == 2 then buttonAct2.draw()
             elseif act == 3 then buttonAct3.draw()
             elseif act == 4 then buttonAct4.draw() end
 
-            love.graphics.rectangle("line", 400, 700, 100, 60)
-            love.graphics.rectangle("line", 500, 700, 100, 60)
-            love.graphics.rectangle("line", 600, 700, 100, 60)
-            love.graphics.rectangle("line", 700, 700, 100, 60)
+            love.graphics.rectangle("line", 300, 600, 150, 60)
+            love.graphics.rectangle("line", 450, 600, 150, 60)
+            love.graphics.rectangle("line", 600, 600, 150, 60)
+            love.graphics.rectangle("line", 750, 600, 150, 60)
 
             if difficulty == 1 then buttonDifficultyEasy.draw()
             elseif difficulty == 2 then buttonDifficultyNormal.draw()
             elseif difficulty == 3 then buttonDifficultyHard.draw()
             elseif difficulty == 4 then buttonDifficultyInsane.draw() end
+
+            love.graphics.rectangle("line", 0, 720, 1200, 180)
         end
     end
 
@@ -374,16 +386,21 @@ function GameState()
         -- Initialize Game State
         canPause = true
 
+        local i_background = love.graphics.newImage("game/assets/beach.png")
+        local i_inputAndChambers = love.graphics.newImage("game/assets/input_and_chambers_2.png")
+        local i_bench = love.graphics.newImage("game/assets/bench_2.png")
+        local i_icon = love.graphics.newImage("game/assets/icon.png")
+
         local recentX, recentY, recentW, recentH = 355, 620, 175, 130
         local chambersX, chambersY, chambersW, chambersH = 545, 650, 425, 80
         local inputX, inputY, inputW, inputH = 50, 770, 920, 80
 
         local Level = TestLevel()
-        local gun = Gun(150, 650, "first")
+        local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
-        local line = Line(-100, 1300, 130, true)
-        local line2 = Line(-100, 1300, 280, false)
+        local line = Line(-100, 1300, 100, true)
+        local line2 = Line(-100, 1300, 265, false)
         local line3 = Line(-100, 1000, 430, true, true)
 
         line.nextLine = line2
@@ -429,14 +446,14 @@ function GameState()
                         for index, value in ipairs(chamber) do if chamberLetter == value then chamberContainsLetter = true break end end
                     until chamberContainsLetter == false
 
-                    chamberLetter.x = chambersX + 30 + (i - 1) * chamberLetter.radius * 2.6
+                    chamberLetter.x = chambersX + 27 + (i - 1) * chamberLetter.radius * 3.08
                     chamberLetter.y = chambersY + chambersH / 2
 
                     chamber[i] =  chamberLetter
                 end
 
-                chamber[i].x = chambersX + 30 + (i - 1) * chamber[i].radius * 2.6
-                chamber[i].y = chambersY + chambersH / 2
+                chamber[i].x = chambersX + 27 + (i - 1) * chamber[i].radius * 3.08
+                chamber[i].y = chambersY + chambersH / 2 + 5
             end
         end
 
@@ -472,6 +489,8 @@ function GameState()
                             end end
 
                             value.locked = false
+                            value.xvel = 0
+                            value.yvel = 0
 
                             wordValue = wordValue + value.value
                             table.insert(submittedLetters, value)
@@ -485,7 +504,7 @@ function GameState()
                         for i, v in ipairs(chamber) do if v.locked == true then fillCheck = fillCheck + 1 end end
 
                         --if fillCheck == #chamber then chamberCount = chamberCount + 1 end
-                        if chamberCount ~= 8 then chamberCount = chamberCount + 1 end
+                        if chamberCount ~= 7 then chamberCount = chamberCount + 1 end
                         fillChamber()
                     end
                     letters = {}
@@ -557,6 +576,11 @@ function GameState()
 
         -- Game State Draw Instructions
         drawState = function ()
+            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_bench, 18, 580, 0, 0.5, 0.5)
+            love.graphics.draw(i_inputAndChambers, 8, 603, 0, 0.5, 0.5)
+            love.graphics.draw(i_icon, 960, 660, 0, 0.5, 0.5)
+
             --love.graphics.draw(wordText, 800 - wordText:getWidth() / 2, 130, 0)
             love.graphics.draw(wordFoundText, 800 - wordFoundText:getWidth() / 2, 160, 0)
             love.graphics.draw(wordValueText, 800 - wordValueText:getWidth() / 2, 180, 0)
@@ -577,14 +601,14 @@ function GameState()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 650)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 670)
 
-            love.graphics.rectangle("line", 0, 600, 1200, 300) -- Outline
+            --love.graphics.rectangle("line", 0, 600, 1200, 300) -- Outline
 
             --love.graphics.circle("line", 115, 115, 100)
-            love.graphics.circle("line", 1085, 750, 100)  -- Facial Reaction
+            --love.graphics.circle("line", 1085, 750, 100)  -- Facial Reaction
 
-            love.graphics.rectangle("line", recentX, recentY, recentW, recentH)  -- Recently Used Words
-            love.graphics.rectangle("line", chambersX, chambersY, chambersW, chambersH)  -- Letter Chambers
-            love.graphics.rectangle("line", inputX, inputY, inputW, inputH)  -- Letter Input Area
+            --love.graphics.rectangle("line", recentX, recentY, recentW, recentH)  -- Recently Used Words
+            --love.graphics.rectangle("line", chambersX, chambersY, chambersW, chambersH)  -- Letter Chambers
+            --love.graphics.rectangle("line", inputX, inputY, inputW, inputH)  -- Letter Input Area
         end
     end
 

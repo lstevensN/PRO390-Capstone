@@ -3,7 +3,7 @@ function Gun(xpos, ypos, mode)
     self.ammo = {}
     self.mode = mode or "first"
     self.enemies = {}
-    local image = love.graphics.newImage("game/assets/faketurret.png")
+    local image = love.graphics.newImage("game/assets/gun.png")
     local x = xpos or 0
     local y = ypos or 0
     local dx = 0
@@ -79,7 +79,7 @@ function Gun(xpos, ypos, mode)
     end
 
     self.draw = function ()
-        love.graphics.draw(image, x, y, math.atan2(dx, dy), 0.75, 1, image:getWidth() / 2, image:getHeight() / 2 + 50)
+        love.graphics.draw(image, x, y, math.atan2(dx, dy), 0.5, 0.5, 205, 325)
     end
 
     return self
