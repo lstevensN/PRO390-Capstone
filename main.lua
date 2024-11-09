@@ -48,6 +48,7 @@ function love.draw()
         
         state.draw()
 
+        love.graphics.setColor(0, 0, 0)
         love.graphics.print('Here goes nothing! (^v^)', 10, 10)
         love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
         love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
