@@ -16,7 +16,9 @@ function Enemy(xpos, ypos, t)
     self.speed, self.radius, self.health = initialize()
 
     self.draw = function ()
+        love.graphics.setColor(0, 0, 0)
         love.graphics.circle("line", self.x, self.y, self.radius)
+        love.graphics.setColor(1, 1, 1)
     end
 
     return self

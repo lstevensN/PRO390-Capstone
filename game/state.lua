@@ -142,7 +142,7 @@ function GameState()
 
         local background = love.graphics.newImage("game/assets/transmute UI.png")
 
-        local button = Button(960, 750, 300, 150, function () gameState = game end)
+        local goButton = Button(950, 720, 280, 170, function () gameState = game end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -257,7 +257,7 @@ function GameState()
             end
         end
 
-        transmuteButton = ButtonCircle(600, 450, 75, transmute)
+        transmuteButton = Button(605, 450, 300, 100, transmute, "game/assets/transmute_button.png", "game/assets/transmute_button_pressed.png")
 
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
@@ -280,7 +280,7 @@ function GameState()
         gameState = function (dt)
             local selected = {}
 
-            button.update(dt)
+            goButton.update(dt)
             transmuteButton.update(dt)
 
             for i, v in ipairs(Deck) do
@@ -368,20 +368,8 @@ function GameState()
             for i, v in ipairs(Deck) do v.draw() end
             for i, v in ipairs(Storage) do v.draw() end
 
-            button.draw()
+            goButton.draw()
             transmuteButton.draw()
-
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.print("game", button.x, button.y, 0)
-            love.graphics.print("transmute", transmuteButton.x, transmuteButton.y, 0)
-            love.graphics.setColor(255, 255, 255)
-
-            --love.graphics.rectangle("line", boilerX, boilerY, boilerW, boilerH)  -- boiler
-            --love.graphics.rectangle("line", transmutationX, transmutationY, transmutationW, transmutationH)  -- transmuting area
-            --love.graphics.rectangle("line", storageX, storageY, storageW, storageH)  -- storage
-            --love.graphics.rectangle("line", 775, 100, 375, 500)  -- transmutation recipies
-
-            love.graphics.print("Transmutation: "..tostring(#transmutationQueue), 800, 150)
 
             if paused == true then pauseDrawState() end
         end
@@ -393,6 +381,7 @@ function GameState()
         canPause = true
         math.randomseed(os.time())
 
+        -- assets
         local i_background = love.graphics.newImage("game/assets/beach.png")
         local i_inputAndChambers = love.graphics.newImage("game/assets/input_and_chambers_2.png")
         local i_bench = love.graphics.newImage("game/assets/bench_2.png")
@@ -607,15 +596,6 @@ function GameState()
             love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 630)
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 650)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 670)
-
-            --love.graphics.rectangle("line", 0, 600, 1200, 300) -- Outline
-
-            --love.graphics.circle("line", 115, 115, 100)
-            --love.graphics.circle("line", 1085, 750, 100)  -- Facial Reaction
-
-            --love.graphics.rectangle("line", recentX, recentY, recentW, recentH)  -- Recently Used Words
-            --love.graphics.rectangle("line", chambersX, chambersY, chambersW, chambersH)  -- Letter Chambers
-            --love.graphics.rectangle("line", inputX, inputY, inputW, inputH)  -- Letter Input Area
         end
     end
 
