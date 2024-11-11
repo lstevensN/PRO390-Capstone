@@ -130,6 +130,14 @@ function GameState()
             elseif difficulty == 3 then buttonDifficultyHard.draw()
             elseif difficulty == 4 then buttonDifficultyInsane.draw() end
 
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print("Easy", 375, 630)
+            love.graphics.print("Normal", 525, 630)
+            love.graphics.print("Hard", 675, 630)
+            love.graphics.print("Insane", 825, 630)
+            love.graphics.print("ACT 3", 750, 350)
+            love.graphics.setColor(1, 1, 1)
+
             love.graphics.rectangle("line", 0, 720, 1200, 180)
         end
     end
@@ -654,8 +662,6 @@ function GameState()
             love.graphics.draw(i_icon, 960, 660, 0, 0.5, 0.5)
 
             --love.graphics.draw(wordText, 800 - wordText:getWidth() / 2, 130, 0)
-            love.graphics.draw(wordFoundText, 800 - wordFoundText:getWidth() / 2, 160, 0)
-            love.graphics.draw(wordValueText, 800 - wordValueText:getWidth() / 2, 180, 0)
     
             line.draw()
             line2.draw()
@@ -667,6 +673,8 @@ function GameState()
 
             gun.draw()
             love.graphics.setColor(0, 0, 0)
+            love.graphics.draw(wordFoundText, 1000, 490, 0)
+            love.graphics.draw(wordValueText, 1000, 510, 0)
             love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 530)
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)

@@ -148,11 +148,13 @@ function Letter(letter, xpos, ypos, type, trans)
     end
 
     self.draw = function ()
+        --[[
         if self.canPierce == true then
             love.graphics.setColor(138/255, 43/255, 226/255)
             love.graphics.circle("line", self.x, self.y, self.radius + 1)
             love.graphics.setColor(1, 1, 1)
         end
+        ]]
 
         if self.image ~= nil then love.graphics.draw(self.image, self.x, self.y, 0, 0.125, 0.125, 200, 200) end
     end
