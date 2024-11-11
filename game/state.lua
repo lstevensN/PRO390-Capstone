@@ -483,7 +483,7 @@ function GameState()
                 if key == 'backspace' and #word > 0 then
                     word = word:sub(1, -2)
 
-                    for i, v in ipairs(chambers) do 
+                    for i, v in ipairs(chambers) do
                         if typedLetters[#typedLetters] == v then
                             v.locked = false
                             v.x = chambersX + (i - 1) * 61.6
@@ -493,6 +493,11 @@ function GameState()
                     end
 
                     table.remove(typedLetters, #typedLetters)
+
+                    local containsPierce = false
+
+                    for _, l in ipairs(typedLetters) do if l.type == "pierce" then containsPierce = true break end end
+                    if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false end end
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     word = ''
@@ -541,14 +546,19 @@ function GameState()
 
                             local chamberCheck = false
 
-                            for i, v in ipairs(chambers) do if v.letter == key and v.locked == false then
-                                chamberCheck = true
-                                v.x = inputX + 30 + #typedLetters * 20 * 2.25
-                                v.y = inputY + inputH / 2
-                                v.locked = true
-                                table.insert(typedLetters, v)
-                                break
-                            end end
+                            for i, v in ipairs(chambers) do
+                                if v.letter == key and v.locked == false then
+                                    chamberCheck = true
+                                    v.x = inputX + 30 + #typedLetters * 20 * 2.25
+                                    v.y = inputY + inputH / 2
+                                    v.locked = true
+
+                                    if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true end end
+
+                                    table.insert(typedLetters, v)
+                                    break
+                                end
+                            end
 
                             if chamberCheck == false then table.insert(typedLetters, Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)) end
                             break
@@ -569,30 +579,66 @@ function GameState()
             fireTimer:update(dt, dt)
 
             for i, v in ipairs(submittedLetters) do
-                if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then table.remove(submittedLetters, i)
+                if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then
+                    if v.type ~= "pierce" then v.canPierce = false end
+                    table.remove(submittedLetters, i)
                 else v.update(dt) end
             end
 
             -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
-                v.health = v.health - letter.value
-                if letter.canPierce == false then table.remove(submittedLetters, index) end end
-                break
-            end if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end end
+            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do
+                    if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
+                        local alreadyHitBy = false
+                    
+                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        else
+                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
+                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                        end
 
-            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
-                v.health = v.health - letter.value
+                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        break
+                    end
+                end
+
+                if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
+            end
+
+            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do
+                    if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
+                        local alreadyHitBy = false
+                    
+                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        else
+                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
+                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                        end
+
+                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        break
+                    end
+                end
+
                 if v.health <= 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
-                if letter.canPierce == false then table.remove(submittedLetters, index) end
-                break
-            end end end
+            end
 
-            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then 
-                v.health = v.health - letter.value
+            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do
+                    if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
+                        local alreadyHitBy = false
+                    
+                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        else
+                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
+                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                        end
+
+                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        break
+                    end
+                end
+
                 if v.health <= 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
-                if letter.canPierce == false then table.remove(submittedLetters, index) end
-                break
-            end end end
+            end
             
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))

@@ -4,6 +4,7 @@ function Enemy(xpos, ypos, t)
     self.y = ypos or 0
     self.progress = 0
     self.type = t or "empty"
+    self.hitBy = {}
 
     local initialize = function ()
         if self.type == "empty" then return 0, 0, 1000
