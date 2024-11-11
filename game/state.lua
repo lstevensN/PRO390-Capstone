@@ -419,41 +419,57 @@ function GameState()
         local wordFound = false
         local wordValue = 0
         local validLetters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' }
-        local letters = {}
+        
+        local typedLetters = {}
         local submittedLetters = {}
-        local chamber = {}
+        local chambers = {}
         local chamberCount = 1
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
         local wordValueText = love.graphics.newText(love.graphics.getFont())
 
-        local fillChamber = function ()
-            if #chamber ~= chamberCount then table.insert(chamber, Letter("nil")) end
+        local resetChambers = function ()
+            for i, v in ipairs(chambers) do
+                v.locked = false
+                v.x = chambersX + (i - 1) * 61.6
+                v.y = chambersY + chambersH / 2 + 5
+            end
+        end
+
+        local fillChambers = function ()
+            if #chambers ~= chamberCount then table.insert(chambers, Letter("nil")) end
 
             for i = 1, chamberCount do
-                if chamber[i].letter == "nil" then
-                    local chamberContainsLetter = false
+                if chambers[i].letter == "nil" then
+                    local chamberContainsLetter, gunContainsLetter = false, false
                     local chamberLetter
 
                     repeat
                         chamberContainsLetter = false
-                        chamberLetter = Deck[math.random(#Deck)]
-                        for index, value in ipairs(chamber) do if chamberLetter == value then chamberContainsLetter = true break end end
-                    until chamberContainsLetter == false
+                        gunContainsLetter = false
+
+                        repeat
+                            chamberContainsLetter = false
+                            chamberLetter = Deck[math.random(#Deck)]
+                            for index, value in ipairs(chambers) do if chamberLetter == value then chamberContainsLetter = true break end end
+                        until chamberContainsLetter == false
+
+                        for index, value in ipairs(gun.ammo) do
+                            for ind, val in ipairs(value) do if chamberLetter == val then gunContainsLetter = true break end end
+                            if gunContainsLetter == true then break end
+                        end
+                    until gunContainsLetter == false
 
                     chamberLetter.x = chambersX + (i - 1) * 61.6
-                    chamberLetter.y = chambersY + chambersH / 2
+                    chamberLetter.y = chambersY + chambersH / 2 + 5
 
-                    chamber[i] =  chamberLetter
+                    chambers[i] =  chamberLetter
                 end
-
-                chamber[i].x = chambersX + (i - 1) * 61.6
-                chamber[i].y = chambersY + chambersH / 2 + 5
             end
         end
 
-        fillChamber()
+        fillChambers()
 
         for i, v in ipairs(Deck) do v.locked = false v.transmuteMode = false end
 
@@ -463,47 +479,61 @@ function GameState()
             local key = GetKeyPressed()
 
             -- Word Input & Validation (Keyboard)
-            if key ~= '' then            
+            if key ~= '' then
                 if key == 'backspace' and #word > 0 then
                     word = word:sub(1, -2)
-                    table.remove(letters, #letters)
+
+                    for i, v in ipairs(chambers) do 
+                        if typedLetters[#typedLetters] == v then
+                            v.locked = false
+                            v.x = chambersX + (i - 1) * 61.6
+                            v.y = chambersY + chambersH / 2 + 5
+                            break
+                        end
+                    end
+
+                    table.remove(typedLetters, #typedLetters)
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     word = ''
-
                     wordValue = 0
-                    if wordFound == true then
-                        local lettas = {}
 
-                        for index, value in ipairs(letters) do
-                            for i, v in ipairs(chamber) do if value == v then
+                    if wordFound == true then
+                        local lettersInWord = {}
+
+                        for index, value in ipairs(typedLetters) do
+                            -- Removes letter from chamber
+                            for i, v in ipairs(chambers) do if value == v then
                                 local lock = false
                                 if v.locked == true then lock = true end
-                                chamber[i] = Letter("nil")
-                                chamber[i].locked = lock
+                                chambers[i] = Letter("nil")
+                                chambers[i].locked = lock
                                 break
                             end end
 
                             value.locked = false
+                            value.x = 140
+                            value.y = 675
                             value.xvel = 0
                             value.yvel = 0
 
                             wordValue = wordValue + value.value
                             table.insert(submittedLetters, value)
-                            table.insert(lettas, submittedLetters[#submittedLetters])
+                            table.insert(lettersInWord, submittedLetters[#submittedLetters])
                         end
 
-                        table.insert(gun.ammo, lettas)
+                        table.insert(gun.ammo, lettersInWord)
 
                         local fillCheck = 0
 
-                        for i, v in ipairs(chamber) do if v.locked == true then fillCheck = fillCheck + 1 end end
+                        for i, v in ipairs(chambers) do if v.locked == true then fillCheck = fillCheck + 1 end end
 
                         --if fillCheck == #chamber then chamberCount = chamberCount + 1 end
                         if chamberCount ~= 7 then chamberCount = chamberCount + 1 end
-                        fillChamber()
-                    end
-                    letters = {}
+                        fillChambers()
+                    else resetChambers() end
+                    
+                    typedLetters = {}
                 else
                     for index, value in ipairs(validLetters) do
                         if key == value then
@@ -511,16 +541,16 @@ function GameState()
 
                             local chamberCheck = false
 
-                            for i, v in ipairs(chamber) do if v.letter == key and v.locked == false then
+                            for i, v in ipairs(chambers) do if v.letter == key and v.locked == false then
                                 chamberCheck = true
-                                v.x = inputX + 30 + #letters * 20 * 2.25
+                                v.x = inputX + 30 + #typedLetters * 20 * 2.25
                                 v.y = inputY + inputH / 2
                                 v.locked = true
-                                table.insert(letters, v)
+                                table.insert(typedLetters, v)
                                 break
                             end end
 
-                            if chamberCheck == false then table.insert(letters, Letter(key, inputX + 30 + #letters * 20 * 2.25, inputY + inputH / 2)) end
+                            if chamberCheck == false then table.insert(typedLetters, Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)) end
                             break
                         end
                     end
@@ -580,22 +610,21 @@ function GameState()
             --love.graphics.draw(wordText, 800 - wordText:getWidth() / 2, 130, 0)
             love.graphics.draw(wordFoundText, 800 - wordFoundText:getWidth() / 2, 160, 0)
             love.graphics.draw(wordValueText, 800 - wordValueText:getWidth() / 2, 180, 0)
-
-            -- love.graphics.print("Enemy1: "..tostring(enemy.x), 570, 700)
-            -- love.graphics.print("Enemy2: "..tostring(enemy2.x), 570, 720)
     
             line.draw()
             line2.draw()
             line3.draw()
 
-            for i, v in ipairs(letters) do v.draw() end
+            for i, v in ipairs(typedLetters) do v.draw() end
             for i, v in ipairs(submittedLetters) do v.draw() end
-            for i, v in ipairs(chamber) do v.draw() end
+            for i, v in ipairs(chambers) do v.draw() end
 
             gun.draw()
-            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 630)
-            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 650)
-            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 670)
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 530)
+            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
+            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)
+            love.graphics.setColor(1, 1, 1)
         end
     end
 
