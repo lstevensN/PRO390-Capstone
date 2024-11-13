@@ -9,14 +9,13 @@ function Letter(letter, xpos, ypos, type, trans)
     self.canPierce = false
     self.radius = 24
     self.clicked = false
+    self.hoveredOver = false
     self.transmuteMode = trans or false
     self.bubbleHeight = 0
     self.transmuting = false
     self.locked = false
     self.stored = false
 
-    local mouseInitialX = 0
-    local mouseInitialY = 0
     local firstClick = false
 
     local setValue = function ()
@@ -31,7 +30,7 @@ function Letter(letter, xpos, ypos, type, trans)
     end
 
     local setImage = function ()
-        local image
+        local image, preview
 
         if     self.type == "blank" and letter == 'a' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_a.png")
         elseif self.type == "blank" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_b.png")
@@ -61,15 +60,21 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif self.type == "blank" and letter == 'z' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_z.png")
         end
 
-        if     self.type == "iron" and letter == 'a' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_a.png")
+        if     self.type == "iron" and letter == 'a' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_a.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
         elseif self.type == "iron" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_b.png")
         elseif self.type == "iron" and letter == 'c' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_c.png")
         elseif self.type == "iron" and letter == 'd' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_d.png")
-        elseif self.type == "iron" and letter == 'e' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_e.png")
+        elseif self.type == "iron" and letter == 'e' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_e.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
         elseif self.type == "iron" and letter == 'f' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_f.png")
         elseif self.type == "iron" and letter == 'g' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_g.png")
         elseif self.type == "iron" and letter == 'h' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_h.png")
-        elseif self.type == "iron" and letter == 'i' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_i.png")
+        elseif self.type == "iron" and letter == 'i' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_i.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
         elseif self.type == "iron" and letter == 'j' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_j.png")
         elseif self.type == "iron" and letter == 'k' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_k.png")
         elseif self.type == "iron" and letter == 'l' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_l.png")
@@ -78,8 +83,12 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif self.type == "iron" and letter == 'o' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_o.png")
         elseif self.type == "iron" and letter == 'p' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_p.png")
         elseif self.type == "iron" and letter == 'q' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_q.png")
-        elseif self.type == "iron" and letter == 'r' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_r.png")
-        elseif self.type == "iron" and letter == 's' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_s.png")
+        elseif self.type == "iron" and letter == 'r' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_r.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
+        elseif self.type == "iron" and letter == 's' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_s.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
         elseif self.type == "iron" and letter == 't' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_t.png")
         elseif self.type == "iron" and letter == 'u' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_u.png")
         elseif self.type == "iron" and letter == 'v' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_v.png")
@@ -117,26 +126,28 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif self.type == "pierce" and letter == 'z' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_z.png")
         end
 
-        return image
+        return image, preview
     end
 
-    self.image = setImage()
+    self.image, self.preview = setImage()
     self.letter = letter
     self.value = setValue()
 
     self.update = function(dt)
         if self.transmuteMode == true then
+            local mouseX, mouseY = love.mouse.getPosition()
+            mouseX = (mouseX - XOffset) / ScaleFactor
+            mouseY = mouseY / ScaleFactor
+
+            if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then self.hoveredOver = true else self.hoveredOver = false end
+
             if love.mouse.isDown(1) then
                 if firstClick == false then
                     firstClick = true
-                    mouseInitialX, mouseInitialY = love.mouse.getPosition()
-                    mouseInitialX = (mouseInitialX - XOffset) / ScaleFactor
-                    mouseInitialY = mouseInitialY / ScaleFactor
-                    if DistanceBetween(self.x, self.y, mouseInitialX, mouseInitialY) < self.radius then self.clicked = true end
+                    if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then self.clicked = true end
                 elseif self.clicked == true then
-                    local x, y = love.mouse.getPosition()
-                    self.x = (x - XOffset) / ScaleFactor
-                    self.y = y / ScaleFactor
+                    self.x = mouseX
+                    self.y = mouseY
                     self.xvel = 0
                     self.yvel = 0
                 end

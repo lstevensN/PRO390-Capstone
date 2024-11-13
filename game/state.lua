@@ -149,6 +149,13 @@ function GameState()
         pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
 
         local background = love.graphics.newImage("game/assets/transmute UI.png")
+        
+        local countFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
+        local boilerCount = love.graphics.newText(countFont)
+        
+        local previewFont = love.graphics.newFont("game/assets/fonts/WC_RoughTrad.ttf", 80)
+        local previewText = love.graphics.newText(previewFont)
+        local preview = nil
 
         local goButton = Button(950, 720, 280, 170, function () gameState = game end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
@@ -346,6 +353,11 @@ function GameState()
                 if selected[1] ~= v then v.clicked = false end
 
                 if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
+
+                if v.hoveredOver == true or v.clicked == true then
+                    previewText:set(string.upper(v.letter))
+                    if v.preview ~= nil then preview = v.preview end
+                end
             end
 
             for i, v in ipairs(Storage) do
@@ -363,9 +375,16 @@ function GameState()
                     table.insert(Deck, v)
                     table.remove(Storage, i)
                 end
+
+                if v.hoveredOver == true or v.clicked == true then
+                    previewText:set(string.upper(v.letter))
+                    if v.preview ~= nil then preview = v.preview end
+                end
             end
 
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
+
+            boilerCount:set("Letters: "..tostring(#Deck))
         end
 
 
@@ -375,6 +394,13 @@ function GameState()
 
             for i, v in ipairs(Deck) do v.draw() end
             for i, v in ipairs(Storage) do v.draw() end
+
+            love.graphics.draw(boilerCount, 237 - boilerCount:getWidth() / 2, 857, 0)
+
+            if preview ~= nil then love.graphics.draw(preview, 830, 175, 0, 0.25, 0.25) end
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
+            love.graphics.setColor(1, 1, 1)
 
             goButton.draw()
             transmuteButton.draw()
