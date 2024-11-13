@@ -63,67 +63,161 @@ function Letter(letter, xpos, ypos, type, trans)
         if     self.type == "iron" and letter == 'a' then
             image = love.graphics.newImage("game/assets/letters/irons/iron_letter_a.png")
             preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
-        elseif self.type == "iron" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_b.png")
-        elseif self.type == "iron" and letter == 'c' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_c.png")
-        elseif self.type == "iron" and letter == 'd' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_d.png")
+        elseif self.type == "iron" and letter == 'b' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_b.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
+        elseif self.type == "iron" and letter == 'c' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_c.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
+        elseif self.type == "iron" and letter == 'd' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_d.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
         elseif self.type == "iron" and letter == 'e' then
             image = love.graphics.newImage("game/assets/letters/irons/iron_letter_e.png")
             preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
-        elseif self.type == "iron" and letter == 'f' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_f.png")
-        elseif self.type == "iron" and letter == 'g' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_g.png")
-        elseif self.type == "iron" and letter == 'h' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_h.png")
+        elseif self.type == "iron" and letter == 'f' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_f.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier4.png")
+        elseif self.type == "iron" and letter == 'g' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_g.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
+        elseif self.type == "iron" and letter == 'h' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_h.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
         elseif self.type == "iron" and letter == 'i' then
             image = love.graphics.newImage("game/assets/letters/irons/iron_letter_i.png")
             preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
-        elseif self.type == "iron" and letter == 'j' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_j.png")
-        elseif self.type == "iron" and letter == 'k' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_k.png")
-        elseif self.type == "iron" and letter == 'l' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_l.png")
-        elseif self.type == "iron" and letter == 'm' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_m.png")
-        elseif self.type == "iron" and letter == 'n' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_n.png")
-        elseif self.type == "iron" and letter == 'o' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_o.png")
-        elseif self.type == "iron" and letter == 'p' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_p.png")
-        elseif self.type == "iron" and letter == 'q' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_q.png")
+        elseif self.type == "iron" and letter == 'j' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_j.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier5.png")
+        elseif self.type == "iron" and letter == 'k' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_k.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier4.png")
+        elseif self.type == "iron" and letter == 'l' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_l.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
+        elseif self.type == "iron" and letter == 'm' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_m.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
+        elseif self.type == "iron" and letter == 'n' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_n.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
+        elseif self.type == "iron" and letter == 'o' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_o.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
+        elseif self.type == "iron" and letter == 'p' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_p.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
+        elseif self.type == "iron" and letter == 'q' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_q.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier5.png")
         elseif self.type == "iron" and letter == 'r' then
             image = love.graphics.newImage("game/assets/letters/irons/iron_letter_r.png")
             preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
         elseif self.type == "iron" and letter == 's' then
             image = love.graphics.newImage("game/assets/letters/irons/iron_letter_s.png")
-            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
-        elseif self.type == "iron" and letter == 't' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_t.png")
-        elseif self.type == "iron" and letter == 'u' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_u.png")
-        elseif self.type == "iron" and letter == 'v' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_v.png")
-        elseif self.type == "iron" and letter == 'w' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_w.png")
-        elseif self.type == "iron" and letter == 'x' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_x.png")
-        elseif self.type == "iron" and letter == 'y' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_y.png")
-        elseif self.type == "iron" and letter == 'z' then image = love.graphics.newImage("game/assets/letters/irons/iron_letter_z.png")
+        preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier1.png")
+        elseif self.type == "iron" and letter == 't' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_t.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier2.png")
+        elseif self.type == "iron" and letter == 'u' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_u.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier3.png")
+        elseif self.type == "iron" and letter == 'v' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_v.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier4.png")
+        elseif self.type == "iron" and letter == 'w' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_w.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier4.png")
+        elseif self.type == "iron" and letter == 'x' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_x.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier5.png")
+        elseif self.type == "iron" and letter == 'y' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_y.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier4.png")
+        elseif self.type == "iron" and letter == 'z' then
+            image = love.graphics.newImage("game/assets/letters/irons/iron_letter_z.png")
+            preview = love.graphics.newImage("game/assets/previews/iron/iron_preview_tier5.png")
         end
 
-        if     self.type == "pierce" and letter == 'a' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_a.png")
-        elseif self.type == "pierce" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_b.png")
-        elseif self.type == "pierce" and letter == 'c' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_c.png")
-        elseif self.type == "pierce" and letter == 'd' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_d.png")
-        elseif self.type == "pierce" and letter == 'e' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_e.png")
-        elseif self.type == "pierce" and letter == 'f' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_f.png")
-        elseif self.type == "pierce" and letter == 'g' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_g.png")
-        elseif self.type == "pierce" and letter == 'h' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_h.png")
-        elseif self.type == "pierce" and letter == 'i' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_i.png")
-        elseif self.type == "pierce" and letter == 'j' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_j.png")
-        elseif self.type == "pierce" and letter == 'k' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_k.png")
-        elseif self.type == "pierce" and letter == 'l' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_l.png")
-        elseif self.type == "pierce" and letter == 'm' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_m.png")
-        elseif self.type == "pierce" and letter == 'n' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_n.png")
-        elseif self.type == "pierce" and letter == 'o' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_o.png")
-        elseif self.type == "pierce" and letter == 'p' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_p.png")
-        elseif self.type == "pierce" and letter == 'q' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_q.png")
-        elseif self.type == "pierce" and letter == 'r' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_r.png")
-        elseif self.type == "pierce" and letter == 's' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_s.png")
-        elseif self.type == "pierce" and letter == 't' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_t.png")
-        elseif self.type == "pierce" and letter == 'u' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_u.png")
-        elseif self.type == "pierce" and letter == 'v' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_v.png")
-        elseif self.type == "pierce" and letter == 'w' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_w.png")
-        elseif self.type == "pierce" and letter == 'x' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_x.png")
-        elseif self.type == "pierce" and letter == 'y' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_y.png")
-        elseif self.type == "pierce" and letter == 'z' then image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_z.png")
+        if     self.type == "pierce" and letter == 'a' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_a.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier1.png")
+        elseif self.type == "pierce" and letter == 'b' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_b.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'c' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_c.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'd' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_d.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'e' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_e.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier1.png")
+        elseif self.type == "pierce" and letter == 'f' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_f.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier4.png")
+        elseif self.type == "pierce" and letter == 'g' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_g.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'h' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_h.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'i' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_i.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier1.png")
+        elseif self.type == "pierce" and letter == 'j' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_j.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
+        elseif self.type == "pierce" and letter == 'k' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_k.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier4.png")
+        elseif self.type == "pierce" and letter == 'l' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_l.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'm' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_m.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'n' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_n.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'o' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_o.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'p' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_p.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'q' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_q.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
+        elseif self.type == "pierce" and letter == 'r' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_r.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier1.png")
+        elseif self.type == "pierce" and letter == 's' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_s.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier1.png")
+        elseif self.type == "pierce" and letter == 't' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_t.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier2.png")
+        elseif self.type == "pierce" and letter == 'u' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_u.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier3.png")
+        elseif self.type == "pierce" and letter == 'v' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_v.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier4.png")
+        elseif self.type == "pierce" and letter == 'w' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_w.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier4.png")
+        elseif self.type == "pierce" and letter == 'x' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_x.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
+        elseif self.type == "pierce" and letter == 'y' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_y.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier4.png")
+        elseif self.type == "pierce" and letter == 'z' then
+            image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_z.png")
+            preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
         end
 
         return image, preview

@@ -155,6 +155,7 @@ function GameState()
         
         local previewFont = love.graphics.newFont("game/assets/fonts/WC_RoughTrad.ttf", 80)
         local previewText = love.graphics.newText(previewFont)
+        local previewColorWhite = false
         local preview = nil
 
         local goButton = Button(950, 720, 280, 170, function () gameState = game end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
@@ -355,6 +356,7 @@ function GameState()
                 if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
 
                 if v.hoveredOver == true or v.clicked == true then
+                    if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
@@ -377,6 +379,7 @@ function GameState()
                 end
 
                 if v.hoveredOver == true or v.clicked == true then
+                    if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
@@ -395,10 +398,12 @@ function GameState()
             for i, v in ipairs(Deck) do v.draw() end
             for i, v in ipairs(Storage) do v.draw() end
 
+            if #Deck == 15 then love.graphics.setColor(1, 0, 0) end
             love.graphics.draw(boilerCount, 237 - boilerCount:getWidth() / 2, 857, 0)
+            love.graphics.setColor(1, 1, 1)
 
             if preview ~= nil then love.graphics.draw(preview, 830, 175, 0, 0.25, 0.25) end
-            love.graphics.setColor(0, 0, 0)
+            if previewColorWhite == false then love.graphics.setColor(0, 0, 0) end
             love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
             love.graphics.setColor(1, 1, 1)
 
