@@ -155,6 +155,7 @@ function GameState()
         
         local previewFont = love.graphics.newFont("game/assets/fonts/WC_RoughTrad.ttf", 80)
         local previewText = love.graphics.newText(previewFont)
+        local previewDetails = love.graphics.newText(countFont)
         local previewColorWhite = false
         local preview = nil
 
@@ -355,8 +356,10 @@ function GameState()
 
                 if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
 
+                -- set preview
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                    previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
@@ -403,7 +406,9 @@ function GameState()
             love.graphics.setColor(1, 1, 1)
 
             if preview ~= nil then love.graphics.draw(preview, 830, 175, 0, 0.25, 0.25) end
-            if previewColorWhite == false then love.graphics.setColor(0, 0, 0) end
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.draw(previewDetails, 975, 200, 0)
+            if previewColorWhite == true then love.graphics.setColor(1, 1, 1) end
             love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
             love.graphics.setColor(1, 1, 1)
 
