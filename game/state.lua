@@ -4,12 +4,13 @@ function GameState()
     local gameState = function (dt) end
     local drawState = function () end
     local pauseState, pauseDrawState = function () end, function () end
-    local start, game, prep, progress
+    local start, game, prep, progress, result
     local cron
     local Deck
     local Storage
     local paused, canPause, pausePressed = false, false, false
-    local Act, Difficulty = 2, 2
+    local Act, Difficulty = 1, 2
+    local alive = true
 
     local Fade
 
@@ -81,7 +82,7 @@ function GameState()
     -- PROGRESS state
     progress = function ()
         -- Initialize Progress State
-        canPause = true
+        canPause = false
 
         local i_background = love.graphics.newImage("game/assets/progress UI.png")
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
@@ -101,13 +102,17 @@ function GameState()
         elseif Act == 3 then buttonAct3.locked = false
         elseif Act == 4 then buttonAct4.locked = false end
 
+        local back = false
+
 
         -- Progress State Loop
         gameState = function (dt)
-            buttonAct1.update(dt)
-            buttonAct2.update(dt)
-            buttonAct3.update(dt)
-            buttonAct4.update(dt)
+            if back == false and love.keyboard.isDown('escape') == true then back = true Fade.start(function () gameState = start end) end
+
+            if Act == 1 then buttonAct1.update(dt)
+            elseif Act == 2 then buttonAct2.update(dt)
+            elseif Act == 3 then buttonAct3.update(dt)
+            elseif Act == 4 then buttonAct4.update(dt) end
 
             buttonDifficultyEasy.update(dt)
             buttonDifficultyNormal.update(dt)
@@ -159,7 +164,7 @@ function GameState()
     -- PREP state
     prep = function ()
         -- Initialize Prep State
-        canPause = true
+        canPause = false
         pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
 
         local background = love.graphics.newImage("game/assets/transmute UI.png")
@@ -308,9 +313,13 @@ function GameState()
         for i, v in ipairs(Storage) do v.transmuteMode = true end
         table.sort(Storage, sortDeck)
 
+        local back = false
+
 
         -- Prep State Loop
         gameState = function (dt)
+            if back == false and love.keyboard.isDown('escape') == true then back = true Fade.start(function () gameState = progress end) end
+
             local selected = {}
 
             backButton.update(dt)
@@ -487,6 +496,8 @@ function GameState()
         local submittedLetters = {}
         local chambers = {}
         local chamberCount = 1
+
+        local done = false
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
@@ -706,6 +717,11 @@ function GameState()
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
             wordValueText:set("Word value: "..tostring(wordValue))
+
+            if done == false and Level.over == true and #gun.enemies == 1 then
+                done = true
+                Fade.start(function () gameState = result end)
+            end
         end
 
 
@@ -734,6 +750,44 @@ function GameState()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)
             love.graphics.setColor(1, 1, 1)
+        end
+    end
+
+    result = function ()
+        -- Initialize Result State
+        canPause = false
+
+        local i_background = love.graphics.newImage("game/assets/results UI.png")
+
+        local nextFunc
+        if alive == true then nextFunc = function ()
+            if Act ~= 4 then
+                Fade.start(function () gameState = progress end)
+                Act = Act + 1
+                -- Put dropped Glorbs into Storage
+            else gameState = start end  -- Big Win
+        end
+        else nextFunc = function () -- Restart Game
+            Fade.start(function () gameState = start end)
+            Act = 1
+            Difficulty = 2
+            -- Reset Deck/Storage
+        end end
+
+        local nextButton = Button(600, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
+
+
+        -- Result State Loop
+        gameState = function (dt)
+            nextButton.update(dt)
+        end
+
+
+        -- Result State Draw Instructions
+        drawState = function ()
+            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+
+            nextButton.draw()
         end
     end
 
