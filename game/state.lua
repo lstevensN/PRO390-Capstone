@@ -87,7 +87,7 @@ function GameState()
         local i_background = love.graphics.newImage("game/assets/progress UI.png")
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
 
-        local buttonAct1 = ButtonGear(150, 350, 100, function () Fade.start(function () gameState = prep end) end)
+        local buttonAct1 = ButtonGear(150, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act1.png", "game/assets/gear_act1_back.png", "game/assets/gear_act1_back_hover.png")
         local buttonAct2 = ButtonGear(450, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
         local buttonAct3 = ButtonGear(750, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
         local buttonAct4 = ButtonGear(1050, 350, 142, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
@@ -753,6 +753,7 @@ function GameState()
         end
     end
 
+    -- RESULT state
     result = function ()
         -- Initialize Result State
         canPause = false
