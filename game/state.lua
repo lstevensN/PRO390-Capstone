@@ -11,13 +11,14 @@ function GameState()
     local paused, canPause, pausePressed = false, false, false
     local Act, Difficulty = 2, 2
 
+    local Fade
 
     -- START state
     start = function ()
         -- Initialize Start State
         canPause = false
 
-        local buttonStart = Button(290, 280, 300, 100, function () gameState = progress end)
+        local buttonStart = Button(290, 280, 300, 100, function () Fade.start(function () gameState = progress end) end)
         local buttonSettings = Button(290, 480, 300, 100, function () end)
         local buttonQuit = Button(290, 680, 300, 100, function () love.event.quit() end)  -- DON'T FORGET TO ADD SAVING
 
@@ -85,10 +86,10 @@ function GameState()
         local i_background = love.graphics.newImage("game/assets/progress UI.png")
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
 
-        local buttonAct1 = ButtonGear(150, 350, 100, function () gameState = prep end)
-        local buttonAct2 = ButtonGear(450, 350, 100, function () gameState = prep end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
-        local buttonAct3 = ButtonGear(750, 350, 100, function () gameState = prep end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
-        local buttonAct4 = ButtonGear(1050, 350, 142, function () gameState = prep end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
+        local buttonAct1 = ButtonGear(150, 350, 100, function () Fade.start(function () gameState = prep end) end)
+        local buttonAct2 = ButtonGear(450, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
+        local buttonAct3 = ButtonGear(750, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
+        local buttonAct4 = ButtonGear(1050, 350, 142, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
 
         local buttonDifficultyEasy = Button(375, 630, 140, 50, function () Difficulty = 1 end)
         local buttonDifficultyNormal = Button(525, 630, 140, 50, function () Difficulty = 2 end)
@@ -172,7 +173,9 @@ function GameState()
         local previewColorWhite = false
         local preview = nil
 
-        local goButton = Button(950, 720, 280, 170, function () gameState = game end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
+        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
+
+        local goButton = Button(950, 720, 280, 170, function () Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -310,6 +313,7 @@ function GameState()
         gameState = function (dt)
             local selected = {}
 
+            backButton.update(dt)
             goButton.update(dt)
             transmuteButton.update(dt)
 
@@ -410,6 +414,8 @@ function GameState()
         -- Prep State Draw Instructions
         drawState = function ()
             love.graphics.draw(background, 0, 0, 0, 0.5, 0.5)
+
+            backButton.draw()
 
             for i, v in ipairs(Deck) do v.draw() end
             for i, v in ipairs(Storage) do v.draw() end
@@ -741,12 +747,15 @@ function GameState()
         require("game.gun")
         require("game.enemy")
         require("game.util")
+        require("game.fade")
 
         require("game.levels.test_level")
 
         cron = require "cron"
 
         gameState = start
+
+        Fade = Fader()
     end
 
     self.update = function (dt)
@@ -760,10 +769,14 @@ function GameState()
         else pausePressed = false end
 
         if paused == false then gameState(dt) end
+
+        Fade.update(dt)
     end
 
     self.draw = function ()
         drawState()
+
+        Fade.draw()
     end
 
     return self
