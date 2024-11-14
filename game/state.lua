@@ -6,11 +6,10 @@ function GameState()
     local pauseState, pauseDrawState = function () end, function () end
     local start, game, prep, progress
     local cron
-    local Lives
     local Deck
     local Storage
     local paused, canPause, pausePressed = false, false, false
-    local act, difficulty = 4, 2
+    local Act, Difficulty = 2, 2
 
 
     -- START state
@@ -87,22 +86,27 @@ function GameState()
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
 
         local buttonAct1 = ButtonGear(150, 350, 100, function () gameState = prep end)
-        local buttonAct2 = ButtonGear(450, 350, 100, function () gameState = prep end)
-        local buttonAct3 = ButtonGear(750, 350, 100, function () gameState = prep end)
+        local buttonAct2 = ButtonGear(450, 350, 100, function () gameState = prep end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
+        local buttonAct3 = ButtonGear(750, 350, 100, function () gameState = prep end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
         local buttonAct4 = ButtonGear(1050, 350, 142, function () gameState = prep end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
 
-        local buttonDifficultyEasy = Button(375, 630, 140, 50, function () difficulty = 1 end)
-        local buttonDifficultyNormal = Button(525, 630, 140, 50, function () difficulty = 2 end)
-        local buttonDifficultyHard = Button(675, 630, 140, 50, function () difficulty = 3 end)
-        local buttonDifficultyInsane = Button(825, 630, 140, 50, function () difficulty = 4 end)
+        local buttonDifficultyEasy = Button(375, 630, 140, 50, function () Difficulty = 1 end)
+        local buttonDifficultyNormal = Button(525, 630, 140, 50, function () Difficulty = 2 end)
+        local buttonDifficultyHard = Button(675, 630, 140, 50, function () Difficulty = 3 end)
+        local buttonDifficultyInsane = Button(825, 630, 140, 50, function () Difficulty = 4 end)
+
+        if Act == 1 then buttonAct1.locked = false
+        elseif Act == 2 then buttonAct2.locked = false
+        elseif Act == 3 then buttonAct3.locked = false
+        elseif Act == 4 then buttonAct4.locked = false end
 
 
         -- Progress State Loop
         gameState = function (dt)
-            if act == 1 then buttonAct1.update(dt)
-            elseif act == 2 then buttonAct2.update(dt)
-            elseif act == 3 then buttonAct3.update(dt)
-            elseif act == 4 then buttonAct4.update(dt) end
+            buttonAct1.update(dt)
+            buttonAct2.update(dt)
+            buttonAct3.update(dt)
+            buttonAct4.update(dt)
 
             buttonDifficultyEasy.update(dt)
             buttonDifficultyNormal.update(dt)
@@ -120,27 +124,30 @@ function GameState()
             love.graphics.circle("line", 750, 350, 100)
             love.graphics.circle("line", 1050, 350, 100)
 
-            if act == 1 then buttonAct1.draw()
-            elseif act == 2 then buttonAct2.draw()
-            elseif act == 3 then buttonAct3.draw()
-            elseif act == 4 then buttonAct4.draw() end
+            buttonAct1.draw()
+            if Act < 2 then love.graphics.setColor(0.5, 0.5, 0.5) end
+            buttonAct2.draw()
+            if Act < 3 then love.graphics.setColor(0.5, 0.5, 0.5) end
+            buttonAct3.draw()
+            if Act < 4 then love.graphics.setColor(0.5, 0.5, 0.5) end
+            buttonAct4.draw()
+            love.graphics.setColor(1, 1, 1)
 
             love.graphics.rectangle("line", 300, 600, 150, 60)
             love.graphics.rectangle("line", 450, 600, 150, 60)
             love.graphics.rectangle("line", 600, 600, 150, 60)
             love.graphics.rectangle("line", 750, 600, 150, 60)
 
-            if difficulty == 1 then buttonDifficultyEasy.draw()
-            elseif difficulty == 2 then buttonDifficultyNormal.draw()
-            elseif difficulty == 3 then buttonDifficultyHard.draw()
-            elseif difficulty == 4 then buttonDifficultyInsane.draw() end
+            if Difficulty == 1 then buttonDifficultyEasy.draw()
+            elseif Difficulty == 2 then buttonDifficultyNormal.draw()
+            elseif Difficulty == 3 then buttonDifficultyHard.draw()
+            elseif Difficulty == 4 then buttonDifficultyInsane.draw() end
 
             love.graphics.setColor(0, 0, 0)
             love.graphics.print("Easy", 375, 630)
             love.graphics.print("Normal", 525, 630)
             love.graphics.print("Hard", 675, 630)
             love.graphics.print("Insane", 825, 630)
-            love.graphics.print("ACT 3", 750, 350)
             love.graphics.setColor(1, 1, 1)
 
             love.graphics.draw(i_tooltip, 0, 720, 0, 0.5, 0.5)

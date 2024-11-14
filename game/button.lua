@@ -56,6 +56,7 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
     self.radius = r or 20
     self.pressed = false
     self.hoveredOver = false
+    self.locked = true
     -- Image Property?
 
     local setFront = function ()
@@ -89,7 +90,7 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
 
         if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then
             self.hoveredOver = true
-            rotation = rotation + dt
+            if self.locked == false then rotation = rotation + dt end
         else self.hoveredOver = false end
 
         if love.mouse.isDown(1) then
@@ -97,14 +98,13 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
                 firstClick = true
                 if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then self.onClick() end
             end
-        else firstClick = false
-        end
+        else firstClick = false end
     end
 
     self.draw = function ()
         if self.front == nil then love.graphics.circle("fill", self.x, self.y, self.radius)
         else
-            if self.hoveredOver == true then love.graphics.draw(self.backHovered, self.x, self.y, -rotation / 2, 0.5, 0.5, 285, 285)
+            if self.hoveredOver == true and self.locked == false then love.graphics.draw(self.backHovered, self.x, self.y, -rotation / 2, 0.5, 0.5, 285, 285)
             else love.graphics.draw(self.back, self.x, self.y, -rotation / 2, 0.5, 0.5, 285, 285) end
 
             love.graphics.draw(self.front, self.x, self.y, rotation, 0.5, 0.5, 285, 285)
