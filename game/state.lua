@@ -10,7 +10,7 @@ function GameState()
     local Deck
     local Storage
     local paused, canPause, pausePressed = false, false, false
-    local act, difficulty = 3, 2
+    local act, difficulty = 4, 2
 
 
     -- START state
@@ -83,10 +83,13 @@ function GameState()
         -- Initialize Progress State
         canPause = true
 
-        local buttonAct1 = ButtonCircle(150, 350, 100, function () gameState = prep end)
-        local buttonAct2 = ButtonCircle(450, 350, 100, function () gameState = prep end)
-        local buttonAct3 = ButtonCircle(750, 350, 100, function () gameState = prep end)
-        local buttonAct4 = ButtonCircle(1050, 350, 100, function () gameState = prep end)
+        local i_background = love.graphics.newImage("game/assets/progress UI.png")
+        local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
+
+        local buttonAct1 = ButtonGear(150, 350, 100, function () gameState = prep end)
+        local buttonAct2 = ButtonGear(450, 350, 100, function () gameState = prep end)
+        local buttonAct3 = ButtonGear(750, 350, 100, function () gameState = prep end)
+        local buttonAct4 = ButtonGear(1050, 350, 142, function () gameState = prep end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
 
         local buttonDifficultyEasy = Button(375, 630, 140, 50, function () difficulty = 1 end)
         local buttonDifficultyNormal = Button(525, 630, 140, 50, function () difficulty = 2 end)
@@ -110,6 +113,8 @@ function GameState()
 
         -- Progress State Draw Instructions
         drawState = function ()
+            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+
             love.graphics.circle("line", 150, 350, 100)
             love.graphics.circle("line", 450, 350, 100)
             love.graphics.circle("line", 750, 350, 100)
@@ -138,7 +143,8 @@ function GameState()
             love.graphics.print("ACT 3", 750, 350)
             love.graphics.setColor(1, 1, 1)
 
-            love.graphics.rectangle("line", 0, 720, 1200, 180)
+            love.graphics.draw(i_tooltip, 0, 720, 0, 0.5, 0.5)
+            --love.graphics.rectangle("line", 0, 720, 1200, 180)
         end
     end
 
