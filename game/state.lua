@@ -86,16 +86,21 @@ function GameState()
 
         local i_background = love.graphics.newImage("game/assets/progress UI.png")
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
+        local i_difficulty = love.graphics.newImage("game/assets/difficulty_selection.png")
+        local i_easy = love.graphics.newImage("game/assets/difficulty_easy.png")
+        local i_normal = love.graphics.newImage("game/assets/difficulty_normal.png")
+        local i_hard = love.graphics.newImage("game/assets/difficulty_hard.png")
+        local i_insane = love.graphics.newImage("game/assets/difficulty_insane.png")
 
         local buttonAct1 = ButtonGear(150, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act1.png", "game/assets/gear_act1_back.png", "game/assets/gear_act1_back_hover.png")
         local buttonAct2 = ButtonGear(450, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
         local buttonAct3 = ButtonGear(750, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
         local buttonAct4 = ButtonGear(1050, 350, 142, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
 
-        local buttonDifficultyEasy = Button(375, 630, 140, 50, function () Difficulty = 1 end)
-        local buttonDifficultyNormal = Button(525, 630, 140, 50, function () Difficulty = 2 end)
-        local buttonDifficultyHard = Button(675, 630, 140, 50, function () Difficulty = 3 end)
-        local buttonDifficultyInsane = Button(825, 630, 140, 50, function () Difficulty = 4 end)
+        local buttonDifficultyEasy = Button(378, 632, 140, 50, function () Difficulty = 1 end, "game/assets/difficulty_easy_selected.png")
+        local buttonDifficultyNormal = Button(526, 632, 140, 50, function () Difficulty = 2 end, "game/assets/difficulty_normal_selected.png")
+        local buttonDifficultyHard = Button(676, 632, 140, 50, function () Difficulty = 3 end, "game/assets/difficulty_hard_selected.png")
+        local buttonDifficultyInsane = Button(824, 632, 140, 50, function () Difficulty = 4 end, "game/assets/difficulty_insane_selected.png")
 
         if Act == 1 then buttonAct1.locked = false
         elseif Act == 2 then buttonAct2.locked = false
@@ -140,7 +145,8 @@ function GameState()
             elseif hoveredAct == 3 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
             elseif hoveredAct == 4 then descriptionText:set((Act >= hoveredAct) and "The Party" or "???") end
 
-            if Difficulty == 1 and hoveredAct == 1 then rewardText:set("REWARD: 1 GLORB")
+            if Act == 4 and hoveredAct == 4 then rewardText:set("REWARD: ???")
+            elseif Difficulty == 1 and hoveredAct == 1 then rewardText:set("REWARD: 1 GLORB")
             elseif Difficulty == 1 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(1 * hoveredAct).." GLORBS" or "???")
             elseif Difficulty == 2 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(2 * hoveredAct).." GLORBS" or "???")
             elseif Difficulty == 3 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(3 * hoveredAct).." GLORBS" or "???")
@@ -151,11 +157,6 @@ function GameState()
         -- Progress State Draw Instructions
         drawState = function ()
             love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
-
-            love.graphics.circle("line", 150, 350, 100)
-            love.graphics.circle("line", 450, 350, 100)
-            love.graphics.circle("line", 750, 350, 100)
-            love.graphics.circle("line", 1050, 350, 100)
 
             if Act > 1 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct1.draw()
@@ -170,22 +171,18 @@ function GameState()
             buttonAct4.draw()
             love.graphics.setColor(1, 1, 1)
 
-            love.graphics.rectangle("line", 300, 600, 150, 60)
-            love.graphics.rectangle("line", 450, 600, 150, 60)
-            love.graphics.rectangle("line", 600, 600, 150, 60)
-            love.graphics.rectangle("line", 750, 600, 150, 60)
+            love.graphics.draw(i_difficulty, 300, 600, 0, 0.5, 0.5)
+            love.graphics.setColor(0.5, 0.5, 0.5)
+            love.graphics.draw(i_easy, 308, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_normal, 456, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_hard, 606, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_insane, 754, 607, 0, 0.25, 0.25)
+            love.graphics.setColor(1, 1, 1)
 
             if Difficulty == 1 then buttonDifficultyEasy.draw()
             elseif Difficulty == 2 then buttonDifficultyNormal.draw()
             elseif Difficulty == 3 then buttonDifficultyHard.draw()
             elseif Difficulty == 4 then buttonDifficultyInsane.draw() end
-
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.print("Easy", 375, 630)
-            love.graphics.print("Normal", 525, 630)
-            love.graphics.print("Hard", 675, 630)
-            love.graphics.print("Insane", 825, 630)
-            love.graphics.setColor(1, 1, 1)
 
             love.graphics.draw(i_tooltip, 0, 720, 0, 0.5, 0.5)
             love.graphics.setColor(0, 0, 0)
