@@ -5,6 +5,7 @@ function Enemy(xpos, ypos, t)
     self.progress = 0
     self.type = t or "empty"
     self.hitBy = {}
+    self.sandwichHeld = nil
 
     local initialize = function ()
         if self.type == "empty" then return 0, 0, 1000

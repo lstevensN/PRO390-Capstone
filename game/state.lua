@@ -495,6 +495,7 @@ function GameState()
         local chambersX, chambersY, chambersW, chambersH = 572, 650, 425, 80
         local inputX, inputY, inputW, inputH = 50, 770, 920, 80
 
+        -- set Level based on Act/Difficulty
         local Level = TestLevel()
         local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
@@ -530,6 +531,7 @@ function GameState()
         local chamberCount = 1
 
         local done = false
+        local successfullyStolenSandwiches = 0
 
         local wordText = love.graphics.newText(love.graphics.getFont())
         local wordFoundText = love.graphics.newText(love.graphics.getFont())
@@ -691,8 +693,9 @@ function GameState()
                 else v.update(dt) end
             end
 
-            -- Collision Detection
-            for i, v in ipairs(line.riders) do for index, letter in ipairs(submittedLetters) do
+            -- Collision Detection (+ Sandwich Stealing)
+            for i, v in ipairs(line.riders) do
+                for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local alreadyHitBy = false
                     
@@ -707,10 +710,19 @@ function GameState()
                     end
                 end
 
-                if v.health <= 0 then table.remove(line.riders, i) gun.removeEnemy(v) end
+                if v.sandwichHeld == nil then
+                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
+
+                if v.health <= 0 then
+                    if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    table.remove(line.riders, i)
+                    gun.removeEnemy(v)
+                end
             end
 
-            for i, v in ipairs(line2.riders) do for index, letter in ipairs(submittedLetters) do
+            for i, v in ipairs(line2.riders) do
+                for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local alreadyHitBy = false
                     
@@ -725,10 +737,19 @@ function GameState()
                     end
                 end
 
-                if v.health <= 0 then table.remove(line2.riders, i) gun.removeEnemy(v) end
+                if v.sandwichHeld == nil then
+                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
+
+                if v.health <= 0 then
+                    if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    table.remove(line2.riders, i)
+                    gun.removeEnemy(v)
+                end
             end
 
-            for i, v in ipairs(line3.riders) do for index, letter in ipairs(submittedLetters) do
+            for i, v in ipairs(line3.riders) do
+                for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local alreadyHitBy = false
                     
@@ -743,15 +764,33 @@ function GameState()
                     end
                 end
 
-                if v.health <= 0 then table.remove(line3.riders, i) gun.removeEnemy(v) end
+                if v.sandwichHeld == nil then
+                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
+
+                if v.health <= 0 then
+                    if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    table.remove(line3.riders, i)
+                    gun.removeEnemy(v)
+                end
             end
             
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
             wordValueText:set("Word value: "..tostring(wordValue))
 
+            -- Win Condition
             if done == false and Level.over == true and #gun.enemies == 1 then
                 done = true
+                Fade.start(function () gameState = result end)
+            end
+
+            -- Lose Condition
+            successfullyStolenSandwiches = 0
+            for _, s in ipairs(Level.sandwiches) do if s.stolen == true and s.x < 0 and s.y < 200 then successfullyStolenSandwiches = successfullyStolenSandwiches + 1 end end
+            if done == false and successfullyStolenSandwiches == #Level.sandwiches then
+                done = true
+                alive = false
                 Fade.start(function () gameState = result end)
             end
         end
@@ -763,8 +802,6 @@ function GameState()
             love.graphics.draw(i_bench, 18, 580, 0, 0.5, 0.5)
             love.graphics.draw(i_inputAndChambers, 8, 603, 0, 0.5, 0.5)
             love.graphics.draw(i_icon, 960, 660, 0, 0.5, 0.5)
-
-            --love.graphics.draw(wordText, 800 - wordText:getWidth() / 2, 130, 0)
     
             line.draw()
             line2.draw()
@@ -775,6 +812,7 @@ function GameState()
             for i, v in ipairs(chambers) do v.draw() end
 
             gun.draw()
+
             love.graphics.setColor(0, 0, 0)
             love.graphics.draw(wordFoundText, 1000, 490, 0)
             love.graphics.draw(wordValueText, 1000, 510, 0)
@@ -782,6 +820,8 @@ function GameState()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)
             love.graphics.setColor(1, 1, 1)
+
+            for _, s in ipairs(Level.sandwiches) do s.draw() end
         end
     end
 
@@ -802,6 +842,7 @@ function GameState()
         end
         else nextFunc = function () -- Restart Game
             Fade.start(function () gameState = start end)
+            alive = true
             Act = 1
             Difficulty = 2
             -- Reset Deck/Storage
@@ -835,6 +876,7 @@ function GameState()
         require("game.enemy")
         require("game.util")
         require("game.fade")
+        require("game.sandwich")
 
         require("game.levels.test_level")
 
