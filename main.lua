@@ -22,7 +22,7 @@ function love.load()
     local width, height = love.window.getDesktopDimensions(flags.display)
 
     if screenX > width or screenY > height then love.window.setMode(width, height, {resizable = true})
-    else love.window.setMode(screenX, screenY, {resizable = true}) end
+    else love.window.setMode(screenX, screenY, {resizable = true, minwidth = 1200, minheight = 900}) end
 end
 
 -- Main Game Loop

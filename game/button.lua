@@ -93,7 +93,7 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
             if self.locked == false then rotation = rotation + dt end
         else self.hoveredOver = false end
 
-        if love.mouse.isDown(1) then
+        if self.locked == false and love.mouse.isDown(1) then
             if firstClick == false then
                 firstClick = true
                 if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then self.onClick() end

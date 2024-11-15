@@ -102,6 +102,14 @@ function GameState()
         elseif Act == 3 then buttonAct3.locked = false
         elseif Act == 4 then buttonAct4.locked = false end
 
+        local titleFont = love.graphics.newFont("game/assets/fonts/mixolydian titling bd.otf", 36)
+        local titleText = love.graphics.newText(titleFont)
+        local descriptionFont = love.graphics.newFont("game/assets/fonts/NotoSerif-Regular.ttf", 28)
+        local descriptionText = love.graphics.newText(descriptionFont, "Hello")
+        local rewardText = love.graphics.newText(descriptionFont, "Hello")
+
+        local hoveredAct = Act
+
         local back = false
 
 
@@ -109,15 +117,34 @@ function GameState()
         gameState = function (dt)
             if back == false and love.keyboard.isDown('escape') == true then back = true Fade.start(function () gameState = start end) end
 
-            if Act == 1 then buttonAct1.update(dt)
-            elseif Act == 2 then buttonAct2.update(dt)
-            elseif Act == 3 then buttonAct3.update(dt)
-            elseif Act == 4 then buttonAct4.update(dt) end
+            buttonAct1.update(dt)
+            buttonAct2.update(dt)
+            buttonAct3.update(dt)
+            buttonAct4.update(dt)
 
             buttonDifficultyEasy.update(dt)
             buttonDifficultyNormal.update(dt)
             buttonDifficultyHard.update(dt)
             buttonDifficultyInsane.update(dt)
+            
+            if buttonAct1.hoveredOver == true then hoveredAct = 1
+            elseif buttonAct2.hoveredOver == true then hoveredAct = 2
+            elseif buttonAct3.hoveredOver == true then hoveredAct = 3
+            elseif buttonAct4.hoveredOver == true then hoveredAct = 4 end
+
+            local completeStatus = (Act > hoveredAct) and " - COMPLETED!" or ""
+            titleText:set("[ACT "..tostring(hoveredAct).."]"..completeStatus)
+
+            if hoveredAct == 1 then descriptionText:set((Act >= hoveredAct) and "The Hunger" or "???")
+            elseif hoveredAct == 2 then descriptionText:set((Act >= hoveredAct) and "The Battle" or "???")
+            elseif hoveredAct == 3 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
+            elseif hoveredAct == 4 then descriptionText:set((Act >= hoveredAct) and "The Party" or "???") end
+
+            if Difficulty == 1 and hoveredAct == 1 then rewardText:set("REWARD: 1 GLORB")
+            elseif Difficulty == 1 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(1 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 2 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(2 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 3 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(3 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 4 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(4 * hoveredAct).." GLORBS" or "???") end
         end
 
 
@@ -130,11 +157,15 @@ function GameState()
             love.graphics.circle("line", 750, 350, 100)
             love.graphics.circle("line", 1050, 350, 100)
 
+            if Act > 1 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct1.draw()
-            if Act < 2 then love.graphics.setColor(0.5, 0.5, 0.5) end
+            love.graphics.setColor(1, 1, 1)
+            if Act < 2 or Act > 2 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct2.draw()
-            if Act < 3 then love.graphics.setColor(0.5, 0.5, 0.5) end
+            love.graphics.setColor(1, 1, 1)
+            if Act < 3 or Act > 3 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct3.draw()
+            love.graphics.setColor(1, 1, 1)
             if Act < 4 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct4.draw()
             love.graphics.setColor(1, 1, 1)
@@ -157,7 +188,11 @@ function GameState()
             love.graphics.setColor(1, 1, 1)
 
             love.graphics.draw(i_tooltip, 0, 720, 0, 0.5, 0.5)
-            --love.graphics.rectangle("line", 0, 720, 1200, 180)
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.draw(titleText, 50, 726, 0)
+            love.graphics.draw(rewardText, 1180 - rewardText:getWidth(), 728, 0)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.draw(descriptionText, 50, 790, 0)
         end
     end
 
