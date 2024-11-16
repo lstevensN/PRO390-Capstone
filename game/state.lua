@@ -11,6 +11,7 @@ function GameState()
     local paused, canPause, pausePressed = false, false, false
     local Act, Difficulty = 1, 2
     local alive = true
+    local gameResults
 
     local Fade
 
@@ -515,6 +516,7 @@ function GameState()
         local spawnTimer = cron.every(Level.spawnTimer, function ()
             if Level.canSpawn == true then
                 local enemy = Level.spawnEnemy()
+                if enemy.type ~= "blank" and enemy.type ~= "empty" then gameResults.totalEnemies = gameResults.totalEnemies + 1 end
                 line.addRider(enemy)
                 gun.addEnemy(enemy)
             end
@@ -581,6 +583,9 @@ function GameState()
 
         for i, v in ipairs(Deck) do v.locked = false v.transmuteMode = false end
 
+        gameResults = Results()
+        gameResults.totalSandwiches = #Level.sandwiches
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -608,10 +613,9 @@ function GameState()
                     if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false end end
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
-                    word = ''
                     wordValue = 0
 
-                    if wordFound == true then
+                    if wordFound == true and string.len(word) > 2 then
                         local lettersInWord = {}
 
                         for index, value in ipairs(typedLetters) do
@@ -635,6 +639,16 @@ function GameState()
                             table.insert(lettersInWord, submittedLetters[#submittedLetters])
                         end
 
+                        if wordValue > gameResults.bestValue then
+                            gameResults.bestWord = {}
+                            gameResults.bestValue = wordValue
+
+                            for _, l in ipairs(lettersInWord) do
+                                local letter = Letter(l.letter, 0, 0, l.type)
+                                table.insert(gameResults.bestWord, letter)
+                            end
+                        end
+
                         table.insert(gun.ammo, lettersInWord)
 
                         local fillCheck = 0
@@ -646,30 +660,33 @@ function GameState()
                         fillChambers()
                     else resetChambers() end
                     
+                    word = ''
                     typedLetters = {}
                 else
-                    for index, value in ipairs(validLetters) do
-                        if key == value then
-                            word = word..tostring(key)
+                    if string.len(word) < 20 then
+                        for index, value in ipairs(validLetters) do
+                            if key == value then
+                                word = word..tostring(key)
 
-                            local chamberCheck = false
+                                local chamberCheck = false
 
-                            for i, v in ipairs(chambers) do
-                                if v.letter == key and v.locked == false then
-                                    chamberCheck = true
-                                    v.x = inputX + 30 + #typedLetters * 20 * 2.25
-                                    v.y = inputY + inputH / 2
-                                    v.locked = true
+                                for i, v in ipairs(chambers) do
+                                    if v.letter == key and v.locked == false then
+                                        chamberCheck = true
+                                        v.x = inputX + 30 + #typedLetters * 20 * 2.25
+                                        v.y = inputY + inputH / 2
+                                        v.locked = true
 
-                                    if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true end end
+                                        if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true end end
 
-                                    table.insert(typedLetters, v)
-                                    break
+                                        table.insert(typedLetters, v)
+                                        break
+                                    end
                                 end
-                            end
 
-                            if chamberCheck == false then table.insert(typedLetters, Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)) end
-                            break
+                                if chamberCheck == false then table.insert(typedLetters, Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)) end
+                                break
+                            end
                         end
                     end
                 end
@@ -716,6 +733,7 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    gameResults.enemies = gameResults.enemies + 1
                     table.remove(line.riders, i)
                     gun.removeEnemy(v)
                 end
@@ -743,6 +761,7 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    gameResults.enemies = gameResults.enemies + 1
                     table.remove(line2.riders, i)
                     gun.removeEnemy(v)
                 end
@@ -770,6 +789,7 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
+                    gameResults.enemies = gameResults.enemies + 1
                     table.remove(line3.riders, i)
                     gun.removeEnemy(v)
                 end
@@ -779,6 +799,9 @@ function GameState()
             wordFoundText:set("Word found: "..tostring(wordFound))
             wordValueText:set("Word value: "..tostring(wordValue))
 
+            successfullyStolenSandwiches = 0
+            for _, s in ipairs(Level.sandwiches) do if s.stolen == true and s.x < 0 and s.y < 200 then successfullyStolenSandwiches = successfullyStolenSandwiches + 1 end end
+            
             -- Win Condition
             if done == false and Level.over == true and #gun.enemies == 1 then
                 done = true
@@ -786,13 +809,13 @@ function GameState()
             end
 
             -- Lose Condition
-            successfullyStolenSandwiches = 0
-            for _, s in ipairs(Level.sandwiches) do if s.stolen == true and s.x < 0 and s.y < 200 then successfullyStolenSandwiches = successfullyStolenSandwiches + 1 end end
             if done == false and successfullyStolenSandwiches == #Level.sandwiches then
                 done = true
                 alive = false
                 Fade.start(function () gameState = result end)
             end
+
+            gameResults.stolenSandwiches = successfullyStolenSandwiches
         end
 
 
@@ -850,6 +873,25 @@ function GameState()
 
         local nextButton = Button(600, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
 
+        local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
+        local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
+
+        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ", 50)
+        local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
+
+        local enemiesTitle = love.graphics.newText(resultBoldFont, "Squids Repelled:  ")
+        local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
+
+        local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
+        local bestWordText = love.graphics.newText(resultFont, "("..tostring(gameResults.bestValue)..")")
+
+
+
+        for i, l in ipairs(gameResults.bestWord) do
+            l.y =  425
+            l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
+        end
+
 
         -- Result State Loop
         gameState = function (dt)
@@ -860,6 +902,18 @@ function GameState()
         -- Result State Draw Instructions
         drawState = function ()
             love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+
+            love.graphics.draw(sandwichTitle, 100, 210, 0)
+            love.graphics.draw(sandwichText, 100 + sandwichTitle:getWidth(), 210, 0)
+
+            love.graphics.draw(enemiesTitle, 100, 300, 0)
+            love.graphics.draw(enemiesText, 100 + enemiesTitle:getWidth(), 300, 0)
+
+            if #gameResults.bestWord > 2 then
+                love.graphics.draw(bestWordTitle, 100, 390, 0)
+                for _, l in ipairs(gameResults.bestWord) do l.draw() end
+                love.graphics.draw(bestWordText, gameResults.bestWord[#gameResults.bestWord].x + gameResults.bestWord[#gameResults.bestWord].radius * 2, 390, 0)
+            end
 
             nextButton.draw()
         end
@@ -877,6 +931,7 @@ function GameState()
         require("game.util")
         require("game.fade")
         require("game.sandwich")
+        require("game.results")
 
         require("game.levels.test_level")
 
