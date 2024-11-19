@@ -26,6 +26,7 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
         elseif letter == 'f' or letter == 'k' or letter == 'v' or letter == 'w' or letter == 'y' then return (self.type == "iron" and 20 or 4)
         elseif letter == 'j' or letter == 'q' or letter == 'x' or letter == 'z' then return (self.type == "iron" and 25 or 5)
+        elseif self.type == "glorb" then return "?"
         else return 0 end
     end
 
@@ -218,6 +219,11 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif self.type == "pierce" and letter == 'z' then
             image = love.graphics.newImage("game/assets/letters/pierces/pierce_letter_z.png")
             preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
+        end
+
+        if self.type == "glorb" then
+            image = love.graphics.newImage("game/assets/letters/glorb.png")
+            preview = love.graphics.newImage("game/assets/previews/glorb_preview.png")
         end
 
         return image, preview

@@ -24,7 +24,6 @@ function GameState()
         local buttonSettings = Button(290, 480, 300, 100, function () end)
         local buttonQuit = Button(290, 680, 300, 100, function () love.event.quit() end)  -- DON'T FORGET TO ADD SAVING
 
-        Lives = 2
         Deck = {
             Letter('a', -100, -100, "pierce"),
             Letter('b', -100, -100, "pierce"),
@@ -213,7 +212,7 @@ function GameState()
 
         local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
 
-        local goButton = Button(950, 720, 280, 170, function () Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
+        local goButton = Button(950, 770, 280, 170, function () Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -332,6 +331,9 @@ function GameState()
 
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
+            v.xvel = 0
+            v.yvel = 0
+            v.locked = false
 
             v.x = math.random(boilerX, boilerX + boilerW)
             if v.value == 1 or (v.value == 5 and v.type == "iron") then v.y = math.random(boilerY + boilerH / 10 - 10, boilerY + boilerH / 10 + 10)
@@ -344,7 +346,13 @@ function GameState()
         table.sort(Deck, sortDeck)
 
         for i, v in ipairs(Storage) do v.transmuteMode = true end
-        table.sort(Storage, sortDeck)
+        --table.sort(Storage, sortDeck)
+
+        local glorbHolder = {}
+        local glorbSelection = {}
+        local glorbing = false
+        local glorbingX, glorbingY = 0, 0
+        local i_glorbSelection = love.graphics.newImage("game/assets/glorb_selection.png")
 
         local back = false
 
@@ -355,9 +363,11 @@ function GameState()
 
             local selected = {}
 
-            backButton.update(dt)
-            goButton.update(dt)
-            transmuteButton.update(dt)
+            if glorbing == false then
+                backButton.update(dt)
+                goButton.update(dt)
+                transmuteButton.update(dt)
+            end
 
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
@@ -411,7 +421,7 @@ function GameState()
                 v.update(dt)
 
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
-                if selected[1] ~= v then v.clicked = false end
+                if selected[1] ~= v or glorbing == true then v.clicked = false end
 
                 if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
 
@@ -428,7 +438,7 @@ function GameState()
                 v.x = storageX + 28 * (math.fmod(i - 1, 5)) * 2 + 28
                 v.y = storageY + 28 * ((math.ceil(i / 5) - 1)) * 2 + 28
 
-                v.update(dt)
+                if glorbing == false then v.update(dt) end
 
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
                 if selected[1] ~= v then v.clicked = false end
@@ -436,18 +446,58 @@ function GameState()
                 if v.x - v.radius >= boilerX and v.x + v.radius <= boilerX + boilerW and
                 v.y - v.radius >= boilerY and v.y + v.radius <= boilerY + boilerH then
                     v.stored = false
-                    table.insert(Deck, v)
+                    if v.type == "glorb" then table.insert(glorbHolder, v) else table.insert(Deck, v) end
                     table.remove(Storage, i)
                 end
 
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                    previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
             end
 
+            for i, v in ipairs(glorbHolder) do
+                v.update(dt)
+
+                if selected[1] ~= v then
+                    v.clicked = false
+                    glorbing = true
+                else
+                    glorbingX = v.x + v.radius + 10
+                    glorbingY = v.y - v.radius * 2
+                end
+            end
+
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
+
+            if glorbing == true then
+                if #glorbSelection == 0 then
+                    table.insert(glorbSelection, Letter("a", glorbingX + 40, glorbingY + 45, "iron"))
+                    table.insert(glorbSelection, Letter("e", glorbingX + 95, glorbingY + 45, "iron"))
+                    table.insert(glorbSelection, Letter("i", glorbingX + 150, glorbingY + 45, "iron"))
+                    table.insert(glorbSelection, Letter("r", glorbingX + 205, glorbingY + 45, "iron"))
+                    table.insert(glorbSelection, Letter("s", glorbingX + 260, glorbingY + 45, "iron"))
+
+                    for _, v in ipairs(glorbSelection) do v.transmuteMode = true end
+                end
+
+                for _, v in ipairs(glorbSelection) do
+                    v.update(dt)
+
+                    if v.clicked == true then
+                        glorbing = false
+                        v.x = glorbingX - 50
+
+                        table.insert(Deck, v)
+
+                        glorbHolder = {}
+                        glorbSelection = {}
+                        break
+                    end
+                end
+            end
 
             boilerCount:set("Letters: "..tostring(#Deck))
         end
@@ -458,9 +508,12 @@ function GameState()
             love.graphics.draw(background, 0, 0, 0, 0.5, 0.5)
 
             backButton.draw()
+            goButton.draw()
+            transmuteButton.draw()
 
             for i, v in ipairs(Deck) do v.draw() end
             for i, v in ipairs(Storage) do v.draw() end
+            for i, v in ipairs(glorbHolder) do v.draw() end
 
             if #Deck == 15 then love.graphics.setColor(1, 0, 0) end
             love.graphics.draw(boilerCount, 237 - boilerCount:getWidth() / 2, 857, 0)
@@ -473,8 +526,10 @@ function GameState()
             love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
             love.graphics.setColor(1, 1, 1)
 
-            goButton.draw()
-            transmuteButton.draw()
+            if glorbing == true then
+                love.graphics.draw(i_glorbSelection, glorbingX, glorbingY, 0, 0.5, 0.5)
+                for i, v in ipairs(glorbSelection) do v.draw() end
+            end
 
             if paused == true then pauseDrawState() end
         end
@@ -620,13 +675,15 @@ function GameState()
 
                         for index, value in ipairs(typedLetters) do
                             -- Removes letter from chamber
-                            for i, v in ipairs(chambers) do if value == v then
-                                local lock = false
-                                if v.locked == true then lock = true end
-                                chambers[i] = Letter("nil")
-                                chambers[i].locked = lock
-                                break
-                            end end
+                            for i, v in ipairs(chambers) do
+                                if value == v then
+                                    local lock = false
+                                    if v.locked == true then lock = true end
+                                    chambers[i] = Letter("nil")
+                                    chambers[i].locked = lock
+                                    break
+                                end
+                            end
 
                             value.locked = false
                             value.x = 140
@@ -655,8 +712,8 @@ function GameState()
 
                         for i, v in ipairs(chambers) do if v.locked == true then fillCheck = fillCheck + 1 end end
 
-                        --if fillCheck == #chamber then chamberCount = chamberCount + 1 end
-                        if chamberCount ~= 7 then chamberCount = chamberCount + 1 end
+                        if fillCheck == #chambers then chamberCount = chamberCount + 1 end
+                        --if chamberCount ~= 7 then chamberCount = chamberCount + 1 end
                         fillChambers()
                     else resetChambers() end
                     
@@ -859,8 +916,16 @@ function GameState()
         if alive == true then nextFunc = function ()
             if Act ~= 4 then
                 Fade.start(function () gameState = progress end)
-                Act = Act + 1
+
                 -- Put dropped Glorbs into Storage
+                local glorbReward = Act * Difficulty
+                for i = 0, glorbReward do
+                    if #Storage ~= 25 then
+                        table.insert(Storage, Letter("?", 0, 0, "glorb"))
+                    else break end
+                end
+                
+                Act = Act + 1
             else gameState = start end  -- Big Win
         end
         else nextFunc = function () -- Restart Game
