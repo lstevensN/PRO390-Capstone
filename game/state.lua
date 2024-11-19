@@ -223,6 +223,14 @@ function GameState()
         local storageX, storageY, storageW, storageH = 465, 535, 280, 280
 
         local sortDeck = function (letter1, letter2) return letter1.value < letter2.value end
+
+        local glorbHolder = {}
+        local glorbSelection = {}
+        local glorbing = false
+        local glorbTransmuting = false
+        local glorbProcessing = false
+        local glorbingX, glorbingY = 0, 0
+        local i_glorbSelection = love.graphics.newImage("game/assets/glorb_selection.png")
         
         local transmutationQueue = {}
         local randomTier1Letter = function (type)
@@ -273,7 +281,22 @@ function GameState()
             local valid = false
             local letterType = "iron"
 
-            if #transmutationQueue == 2 then
+            if glorbTransmuting == true then
+                if #transmutationQueue == 1 then
+                    local opType1, opType2
+                    glorbingX = 450
+                    glorbingY = 300
+                    glorbProcessing = true
+
+                    letterType = transmutationQueue[1].type
+                    if letterType == "iron" then opType1 = "pierce"
+                    elseif letterType == "pierce" then opType1 = "iron"
+                    end
+
+                    glorbSelection = {}
+                    table.insert(glorbSelection, Letter(transmutationQueue[1].letter, glorbingX + 100, glorbingY + 45, opType1, true))
+                end
+            elseif #transmutationQueue == 2 then
                 local value1, value2 = transmutationQueue[1].value, transmutationQueue[2].value
                 local type1, type2 = transmutationQueue[1].type, transmutationQueue[2].type
 
@@ -351,13 +374,6 @@ function GameState()
         for i, v in ipairs(Storage) do v.transmuteMode = true end
         --table.sort(Storage, sortDeck)
 
-        local glorbHolder = {}
-        local glorbSelection = {}
-        local glorbing = false
-        local glorbTransmuting = false
-        local glorbingX, glorbingY = 0, 0
-        local i_glorbSelection = love.graphics.newImage("game/assets/glorb_selection.png")
-
         local back = false
 
 
@@ -368,23 +384,26 @@ function GameState()
                 Fade.start(function () gameState = progress end)
             elseif glorbing == true and back == false and love.keyboard.isDown('escape') == true then
                 back = true
-                glorbing = false
-                glorbTransmuting = false
-                glorbHolder[1].stored = true
-                glorbHolder[1].locked = false
-                table.insert(Storage, glorbHolder[1])
+                
+                if glorbProcessing == true then
+                    glorbProcessing = false
+                    glorbSelection = {}
+                else
+                    glorbing = false
+                    glorbTransmuting = false
+                    glorbHolder[1].stored = true
+                    glorbHolder[1].locked = false
+                    table.insert(Storage, glorbHolder[1])
 
-                glorbSelection = {}
-                glorbHolder = {}
+                    glorbSelection = {}
+                    glorbHolder = {}
+                end
             elseif love.keyboard.isDown('escape') == false then back = false end
 
             local selected = {}
 
-            if glorbing == false then
-                backButton.update(dt)
-                goButton.update(dt)
-                transmuteButton.update(dt)
-            end
+            if glorbing == false then backButton.update(dt) goButton.update(dt) end
+            if (glorbing == false or glorbTransmuting == true) and glorbProcessing == false then transmuteButton.update(dt) end
 
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
@@ -397,7 +416,7 @@ function GameState()
                     v.y - v.radius >= storageY - 15 and v.y + v.radius <= storageY + storageH + 15 then v.stored = true end
                     
                     if withinTransmutationZone then
-                        if #transmutationQueue < 2 and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
+                        if #transmutationQueue < (glorbTransmuting and 1 or 2) and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
                     else v.locked = false end
                 end
 
@@ -437,7 +456,7 @@ function GameState()
 
                 v.update(dt)
 
-                if v.clicked == true and #selected == 0 then table.insert(selected, v) end
+                if v.clicked == true and #selected == 0 and glorbProcessing == false then table.insert(selected, v) end
                 if selected[1] ~= v or (glorbing == true and glorbTransmuting == false) then v.clicked = false end
 
                 if v.stored == true and #Storage < 25 then table.insert(Storage, v) table.remove(Deck, i) else v.stored = false end
@@ -455,7 +474,8 @@ function GameState()
                 v.x = storageX + 28 * (math.fmod(i - 1, 5)) * 2 + 28
                 v.y = storageY + 28 * ((math.ceil(i / 5) - 1)) * 2 + 28
 
-                if glorbing == false then v.update(dt) end
+                v.update(dt)
+                if glorbing == true then v.clicked = false end
 
                 if v.clicked == true and #selected == 0 then table.insert(selected, v) end
                 if selected[1] ~= v then v.clicked = false end
@@ -485,6 +505,7 @@ function GameState()
                 end
             end
 
+            -- GLORBS
             if glorbing == true then
                 if glorbTransmuting == false then
                     if #glorbSelection == 0 then
@@ -494,10 +515,10 @@ function GameState()
                             local num = math.random(1, 100)
                             local sLetter
 
-                            if num <= 50 then sLetter = randomTier1Letter()
-                            elseif num <= 70 then sLetter = randomTier2Letter()
-                            elseif num <= 85 then sLetter = randomTier3Letter()
-                            elseif num <= 95 then sLetter = randomTier4Letter()
+                            if num <= 75 then sLetter = randomTier1Letter()
+                            elseif num <= 90 then sLetter = randomTier2Letter()
+                            elseif num <= 95 then sLetter = randomTier3Letter()
+                            elseif num <= 99 then sLetter = randomTier4Letter()
                             elseif num <= 100 then sLetter = randomTier5Letter() end
 
                             table.insert(glorbSelection, sLetter)
@@ -512,6 +533,13 @@ function GameState()
 
                     for _, v in ipairs(glorbSelection) do
                         v.update(dt)
+
+                        if v.hoveredOver == true then
+                            previewColorWhite = false
+                            previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
+                            previewText:set(string.upper(v.letter))
+                            if v.preview ~= nil then preview = v.preview end
+                        end
     
                         if v.clicked == true then
                             glorbing = false
@@ -525,6 +553,45 @@ function GameState()
                             break
                         end
                     end
+                elseif glorbProcessing == true then
+                    local hoveredLetter = nil
+
+                    glorbHolder[1].update(dt)
+                    glorbHolder[1].clicked = false
+                    transmutationQueue[1].update(dt)
+
+                    if glorbHolder[1].hoveredOver == true then hoveredLetter = glorbHolder[1] end
+                    if transmutationQueue[1].hoveredOver == true then hoveredLetter = transmutationQueue[1] end
+
+                    for _, v in ipairs(glorbSelection) do
+                        v.update(dt)
+
+                        if v.hoveredOver == true then hoveredLetter = v end
+
+                        if v.clicked == true then
+                            glorbing = false
+                            glorbTransmuting = false
+                            glorbProcessing = false
+                            v.x = 600
+                            v.y = 225
+                            v.clicked = false
+    
+                            for i, l in ipairs(Deck) do if l == transmutationQueue[1] then table.remove(Deck, i) end end
+                            table.insert(Deck, v)
+    
+                            transmutationQueue = {}
+                            glorbHolder = {}
+                            glorbSelection = {}
+                            break
+                        end
+                    end
+
+                    if hoveredLetter ~= nil then
+                        if hoveredLetter.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                        previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nDamage: "..tostring(hoveredLetter.value))
+                        previewText:set(string.upper(hoveredLetter.letter))
+                        if hoveredLetter.preview ~= nil then preview = hoveredLetter.preview end
+                    end
                 elseif glorbTransmuting == true then
                     glorbHolder[1].update(dt)
 
@@ -533,6 +600,24 @@ function GameState()
                         glorbHolder[1].clicked = false
                         glorbHolder[1].x = transmutationX + transmutationW / 2
                         glorbHolder[1].y = transmutationY + transmutationH / 2
+                    end
+
+                    if glorbHolder[1].hoveredOver == true or glorbHolder[1].clicked == true then
+                        previewDetails:set("Type: "..string.upper(glorbHolder[1].type).."\nDamage: "..tostring(glorbHolder[1].value))
+                        previewText:set(glorbHolder[1].letter)
+                        if glorbHolder[1].preview ~= nil then preview = glorbHolder[1].preview end
+                    end
+
+                    -- collision check 
+                    for _, l in ipairs(transmutationQueue) do
+                        if DistanceBetween(glorbHolder[1].x, glorbHolder[1].y, l.x, l.y) < glorbHolder[1].radius * 2 then
+                            local bumpX = (l.x - glorbHolder[1].x) / glorbHolder[1].radius
+                            local bumpY = (l.y - glorbHolder[1].y) / glorbHolder[1].radius
+                            l.x = l.x + bumpX
+                            l.y = l.y + bumpY
+                            glorbHolder[1].x = glorbHolder[1].x - bumpX
+                            glorbHolder[1].y = glorbHolder[1].y - bumpY
+                        end
                     end
 
                     -- boiler check
@@ -594,7 +679,7 @@ function GameState()
             love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
             love.graphics.setColor(1, 1, 1)
 
-            if glorbing == true and glorbTransmuting == false then
+            if (glorbing == true and glorbTransmuting == false) or glorbProcessing == true then
                 love.graphics.draw(i_glorbSelection, glorbingX, glorbingY, 0, 0.5, 0.5)
                 for i, v in ipairs(glorbSelection) do v.draw() end
             end

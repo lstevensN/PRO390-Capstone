@@ -20,6 +20,7 @@ function Letter(letter, xpos, ypos, type, trans)
 
     local setValue = function ()
         if self.type == "pierce" then self.canPierce = true end
+        if self.type == "glorb" then self.radius = 21 end
 
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
         elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'n' or letter == 'o' or letter == 't' then return (self.type == "iron" and 10 or 2)
