@@ -894,7 +894,11 @@ function GameState()
                                     end
                                 end
 
-                                if chamberCheck == false then table.insert(typedLetters, Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)) end
+                                if chamberCheck == false then
+                                    local newLetter = Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)
+                                    for _, l in ipairs(typedLetters) do if l.type == "pierce" then newLetter.canPierce = true break end end
+                                    table.insert(typedLetters, newLetter)
+                                end
                                 break
                             end
                         end

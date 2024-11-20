@@ -16,7 +16,7 @@ function Gun(xpos, ypos, mode)
     local next = next
 
     local blindSpots = function (enemy)
-        if enemy.x < 0 or enemy.x > love.graphics.getWidth() * 2 then return true
+        if enemy.x < 0 or enemy.x > 1200 then return true
         else return false end
     end
 

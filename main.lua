@@ -15,8 +15,6 @@ function love.load()
     state = GameState()
     state.load()
 
-    love.window.setTitle('PRO-390 Capstone')
-
     local _, _, flags = love.window.getMode()
 
     local width, height = love.window.getDesktopDimensions(flags.display)
