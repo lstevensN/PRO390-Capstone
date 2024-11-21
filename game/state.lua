@@ -34,7 +34,7 @@ function GameState()
             Letter('f', -100, -100, "iron"),
             Letter('a', -100, -100, "iron"),
             Letter('g', -100, -100, "iron"),
-            Letter('h', -100, -100, "iron"),
+            Letter('h', -100, -100, "jade"),
             Letter('i', -100, -100, "iron"),
             Letter('j', -100, -100, "iron"),
             Letter('k', -100, -100, "iron"),
@@ -52,8 +52,8 @@ function GameState()
         }
         Storage = {
             Letter('z', -100, -100, "pierce"),
-            Letter('r', -100, -100, "iron"),
-            Letter('s', -100, -100, "iron"),
+            Letter('r', -100, -100, "jade"),
+            Letter('s', -100, -100, "jade"),
             Letter('t', -100, -100, "iron"),
             Letter('?', -100, -100, "glorb"),
             Letter('?', -100, -100, "glorb")
@@ -463,7 +463,7 @@ function GameState()
 
                 -- set preview
                 if v.hoveredOver == true or v.clicked == true then
-                    if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                    if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
                     previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
@@ -498,7 +498,7 @@ function GameState()
                 end
 
                 if v.hoveredOver == true or v.clicked == true then
-                    if v.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                    if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
                     previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
@@ -587,7 +587,7 @@ function GameState()
                     end
 
                     if hoveredLetter ~= nil then
-                        if hoveredLetter.type == "pierce" then previewColorWhite = true else previewColorWhite = false end
+                        if hoveredLetter.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
                         previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nDamage: "..tostring(hoveredLetter.value))
                         previewText:set(string.upper(hoveredLetter.letter))
                         if hoveredLetter.preview ~= nil then preview = hoveredLetter.preview end

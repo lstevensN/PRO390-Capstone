@@ -7,6 +7,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
+    self.jaded = false
     self.radius = 24
     self.clicked = false
     self.hoveredOver = false
@@ -21,6 +22,7 @@ function Letter(letter, xpos, ypos, type, trans)
     local setValue = function ()
         if self.type == "pierce" then self.canPierce = true end
         if self.type == "glorb" then self.radius = 21 end
+        if self.type == "jade" then self.jaded = true end
 
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
         elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'n' or letter == 'o' or letter == 't' then return (self.type == "iron" and 10 or 2)
@@ -222,6 +224,86 @@ function Letter(letter, xpos, ypos, type, trans)
             preview = love.graphics.newImage("game/assets/previews/pierce/pierce_preview_tier5.png")
         end
 
+        if     self.type == "jade" and letter == 'a' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_a.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier1.png")
+        elseif self.type == "jade" and letter == 'b' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_b.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'c' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_c.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'd' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_d.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'e' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_e.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier1.png")
+        elseif self.type == "jade" and letter == 'f' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_f.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier4.png")
+        elseif self.type == "jade" and letter == 'g' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_g.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'h' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_h.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'i' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_i.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier1.png")
+        elseif self.type == "jade" and letter == 'j' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_j.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier5.png")
+        elseif self.type == "jade" and letter == 'k' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_k.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier4.png")
+        elseif self.type == "jade" and letter == 'l' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_l.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'm' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_m.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'n' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_n.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'o' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_o.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'p' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_p.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'q' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_q.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier5.png")
+        elseif self.type == "jade" and letter == 'r' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_r.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier1.png")
+        elseif self.type == "jade" and letter == 's' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_s.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier1.png")
+        elseif self.type == "jade" and letter == 't' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_t.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier2.png")
+        elseif self.type == "jade" and letter == 'u' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_u.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier3.png")
+        elseif self.type == "jade" and letter == 'v' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_v.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier4.png")
+        elseif self.type == "jade" and letter == 'w' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_w.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier4.png")
+        elseif self.type == "jade" and letter == 'x' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_x.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier5.png")
+        elseif self.type == "jade" and letter == 'y' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_y.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier4.png")
+        elseif self.type == "jade" and letter == 'z' then
+            image = love.graphics.newImage("game/assets/letters/jades/jade_letter_z.png")
+            preview = love.graphics.newImage("game/assets/previews/jade/jade_preview_tier5.png")
+        end
+
         if self.type == "glorb" then
             image = love.graphics.newImage("game/assets/letters/glorb.png")
             preview = love.graphics.newImage("game/assets/previews/glorb_preview.png")
@@ -260,13 +342,19 @@ function Letter(letter, xpos, ypos, type, trans)
     end
 
     self.draw = function ()
-        --[[
-        if self.canPierce == true then
-            love.graphics.setColor(138/255, 43/255, 226/255)
-            love.graphics.circle("line", self.x, self.y, self.radius + 1)
-            love.graphics.setColor(1, 1, 1)
+        if self.transmuteMode == false then
+            --[
+            if self.canPierce == true then
+                love.graphics.setColor(138/255, 43/255, 226/255)
+                love.graphics.circle("line", self.x, self.y, self.radius + 1)
+                love.graphics.setColor(1, 1, 1)
+            elseif self.jaded == true then
+                love.graphics.setColor(25/255, 140/255, 39/255)
+                love.graphics.circle("line", self.x, self.y, self.radius + 1)
+                love.graphics.setColor(1, 1, 1)
+            end
+            --]]
         end
-        ]]
 
         if self.image ~= nil then love.graphics.draw(self.image, self.x, self.y, 0, 0.125, 0.125, 200, 200) end
     end
