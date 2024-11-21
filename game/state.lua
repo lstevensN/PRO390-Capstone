@@ -25,39 +25,36 @@ function GameState()
         local buttonSettings = Button(290, 480, 300, 100, function () end)
         local buttonQuit = Button(290, 680, 300, 100, function () love.event.quit() end)  -- DON'T FORGET TO ADD SAVING
 
-        Deck = {
-            Letter('a', -100, -100, "pierce"),
-            Letter('b', -100, -100, "pierce"),
-            Letter('c', -100, -100, "iron"),
-            Letter('d', -100, -100, "iron"),
-            Letter('e', -100, -100, "iron"),
-            Letter('f', -100, -100, "iron"),
-            Letter('a', -100, -100, "iron"),
-            Letter('g', -100, -100, "iron"),
-            Letter('h', -100, -100, "jade"),
-            Letter('i', -100, -100, "iron"),
-            Letter('j', -100, -100, "iron"),
-            Letter('k', -100, -100, "iron"),
-            Letter('l', -100, -100, "iron"),
-            Letter('m', -100, -100, "iron"),
-            Letter('n', -100, -100, "iron"),
-            Letter('o', -100, -100, "pierce"),
-            Letter('p', -100, -100, "iron"),
-            Letter('q', -100, -100, "iron"),
-            Letter('u', -100, -100, "iron"),
-            Letter('v', -100, -100, "iron"),
-            Letter('w', -100, -100, "iron"),
-            Letter('x', -100, -100, "iron"),
-            Letter('y', -100, -100, "pierce"),
-        }
-        Storage = {
-            Letter('z', -100, -100, "pierce"),
-            Letter('r', -100, -100, "jade"),
-            Letter('s', -100, -100, "jade"),
-            Letter('t', -100, -100, "iron"),
-            Letter('?', -100, -100, "glorb"),
-            Letter('?', -100, -100, "glorb")
-        }
+        if Deck == nil then
+            Deck = {
+                Letter('a', -100, -100, "iron"),
+                Letter('e', -100, -100, "iron"),
+                Letter('i', -100, -100, "iron"),
+                Letter('r', -100, -100, "iron"),
+                Letter('s', -100, -100, "iron"),
+
+                Letter('d', -100, -100, "iron"),
+                Letter('n', -100, -100, "iron"),
+                Letter('o', -100, -100, "iron"),
+                Letter('t', -100, -100, "iron"),
+
+                Letter('b', -100, -100, "iron"),
+                Letter('c', -100, -100, "iron"),
+                Letter('u', -100, -100, "iron"),
+                Letter('m', -100, -100, "iron"),
+
+                Letter('f', -100, -100, "iron"),
+                Letter('k', -100, -100, "iron"),
+                Letter('y', -100, -100, "iron")
+            }
+        end
+        if Storage == nil then
+            Storage = {
+                Letter('g', -100, -100, "iron"),
+                Letter('v', -100, -100, "iron"),
+                Letter('q', -100, -100, "iron")
+            }
+        end
 
 
         -- Start State Loop
@@ -118,6 +115,7 @@ function GameState()
 
         local hoveredAct = Act
 
+        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = start end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
         local back = false
 
 
@@ -154,6 +152,8 @@ function GameState()
             elseif Difficulty == 2 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(2 * hoveredAct).." GLORBS" or "???")
             elseif Difficulty == 3 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(3 * hoveredAct).." GLORBS" or "???")
             elseif Difficulty == 4 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(4 * hoveredAct).." GLORBS" or "???") end
+
+            backButton.update(dt)
         end
 
 
@@ -193,6 +193,8 @@ function GameState()
             love.graphics.draw(rewardText, 1180 - rewardText:getWidth(), 728, 0)
             love.graphics.setColor(1, 1, 1)
             love.graphics.draw(descriptionText, 50, 790, 0)
+
+            backButton.draw()
         end
     end
 
@@ -1067,6 +1069,7 @@ function GameState()
 
             gun.draw()
 
+            --[[
             love.graphics.setColor(0, 0, 0)
             love.graphics.draw(wordFoundText, 1000, 490, 0)
             love.graphics.draw(wordValueText, 1000, 510, 0)
@@ -1074,6 +1077,7 @@ function GameState()
             love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
             love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)
             love.graphics.setColor(1, 1, 1)
+            ]]
 
             for _, s in ipairs(Level.sandwiches) do s.draw() end
         end
@@ -1093,7 +1097,7 @@ function GameState()
 
                 -- Put dropped Glorbs into Storage
                 local glorbReward = Act * Difficulty
-                for i = 0, glorbReward do
+                for i = 1, glorbReward do
                     if #Storage ~= 25 then
                         table.insert(Storage, Letter("?", 0, 0, "glorb"))
                     else break end

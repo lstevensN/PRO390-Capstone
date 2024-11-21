@@ -16,10 +16,17 @@ function Enemy(xpos, ypos, t)
     end
 
     self.speed, self.radius, self.health = initialize()
+    local maxHP = self.health
 
     self.draw = function ()
         love.graphics.setColor(0, 0, 0)
         love.graphics.circle("fill", self.x, self.y, self.radius)
+
+        love.graphics.setColor(0.75, 0, 0)
+        love.graphics.rectangle("fill", self.x - 20, self.y + 35, 40, 6)
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", self.x - 20, self.y + 35, 40 * (self.health / maxHP), 6)
+
         love.graphics.setColor(1, 1, 1)
     end
 

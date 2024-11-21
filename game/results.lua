@@ -15,8 +15,8 @@ function Results()
 
         -- 175 character limit
         if num == 1 then
-            title = "Jade Letters"
-            tip = "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a piss"
+            title = "Tip"
+            tip = "simple dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a piss"
         end
 
         return {title, tip}
