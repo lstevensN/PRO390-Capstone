@@ -7,7 +7,6 @@ function Letter(letter, xpos, ypos, type, trans)
     self.yvel = 0
     self.type = type or "blank"
     self.canPierce = false
-    self.jaded = false
     self.radius = 24
     self.clicked = false
     self.hoveredOver = false
@@ -16,14 +15,13 @@ function Letter(letter, xpos, ypos, type, trans)
     self.transmuting = false
     self.locked = false
     self.stored = false
-
+    
     local firstClick = false
-
+    
     local setValue = function ()
         if self.type == "pierce" then self.canPierce = true end
         if self.type == "glorb" then self.radius = 21 end
-        if self.type == "jade" then self.jaded = true end
-
+        
         if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
         elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'n' or letter == 'o' or letter == 't' then return (self.type == "iron" and 10 or 2)
         elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
@@ -32,10 +30,10 @@ function Letter(letter, xpos, ypos, type, trans)
         elseif self.type == "glorb" then return "?"
         else return 0 end
     end
-
+    
     local setImage = function ()
         local image, preview
-
+        
         if     self.type == "blank" and letter == 'a' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_a.png")
         elseif self.type == "blank" and letter == 'b' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_b.png")
         elseif self.type == "blank" and letter == 'c' then image = love.graphics.newImage("game/assets/letters/blanks/blank_letter_c.png")
@@ -315,6 +313,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.image, self.preview = setImage()
     self.letter = letter
     self.value = setValue()
+    self.jadeMultiplier = (self.type == "jade" and 5 / self.value or 0) + 1
 
     self.update = function(dt)
         if self.transmuteMode == true then
@@ -348,7 +347,7 @@ function Letter(letter, xpos, ypos, type, trans)
                 love.graphics.setColor(138/255, 43/255, 226/255)
                 love.graphics.circle("line", self.x, self.y, self.radius + 1)
                 love.graphics.setColor(1, 1, 1)
-            elseif self.jaded == true then
+            elseif self.jadeMultiplier > 1 then
                 love.graphics.setColor(25/255, 140/255, 39/255)
                 love.graphics.circle("line", self.x, self.y, self.radius + 1)
                 love.graphics.setColor(1, 1, 1)

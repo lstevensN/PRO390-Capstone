@@ -289,12 +289,14 @@ function GameState()
                     glorbProcessing = true
 
                     letterType = transmutationQueue[1].type
-                    if letterType == "iron" then opType1 = "pierce"
-                    elseif letterType == "pierce" then opType1 = "iron"
+                    if letterType == "iron" then opType1 = "pierce" opType2 = "jade"
+                    elseif letterType == "pierce" then opType1 = "jade" opType2 = "iron"
+                    elseif letterType == "jade" then opType1 = "iron" opType2 = "pierce"
                     end
 
                     glorbSelection = {}
                     table.insert(glorbSelection, Letter(transmutationQueue[1].letter, glorbingX + 100, glorbingY + 45, opType1, true))
+                    table.insert(glorbSelection, Letter(transmutationQueue[1].letter, glorbingX + 200, glorbingY + 45, opType2, true))
                 end
             elseif #transmutationQueue == 2 then
                 local value1, value2 = transmutationQueue[1].value, transmutationQueue[2].value
@@ -305,15 +307,18 @@ function GameState()
                 elseif value1 == 10 and value2 == 10 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier3Letter
                 elseif value1 == 15 and value2 == 15 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier4Letter
                 elseif value1 == 20 and value2 == 20 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier5Letter
+                elseif value1 == 25 and value2 == 25 and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier1Letter letterType = "jade"
                 elseif ((value1 == 25 and value2 == 5) or (value1 == 5 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier1Letter letterType = "pierce"
                 elseif ((value1 == 25 and value2 == 10) or (value1 == 10 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier2Letter letterType = "pierce"
                 elseif ((value1 == 25 and value2 == 15) or (value1 == 15 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier3Letter letterType = "pierce"
                 elseif ((value1 == 25 and value2 == 20) or (value1 == 20 and value2 == 25)) and type1 == "iron" and type2 == "iron" then valid = true letterFunction = randomTier4Letter letterType = "pierce"
                 -- pierce combining
-                elseif value1 == 1 and value2 == 1 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier2Letter letterType = "pierce"
-                elseif value1 == 2 and value2 == 2 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier3Letter letterType = "pierce"
-                elseif value1 == 3 and value2 == 3 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier4Letter letterType = "pierce"
                 elseif value1 == 4 and value2 == 4 and type1 == "pierce" and type2 == "pierce" then valid = true letterFunction = randomTier5Letter letterType = "pierce"
+                -- jade combining
+                elseif value1 == 1 and value2 == 1 and type1 == "jade" and type2 == "jade" then valid = true letterFunction = randomTier2Letter letterType = "jade"
+                elseif value1 == 2 and value2 == 2 and type1 == "jade" and type2 == "jade" then valid = true letterFunction = randomTier3Letter letterType = "jade"
+                elseif value1 == 3 and value2 == 3 and type1 == "jade" and type2 == "jade" then valid = true letterFunction = randomTier4Letter letterType = "jade"
+                elseif value1 == 4 and value2 == 4 and type1 == "jade" and type2 == "jade" then valid = true letterFunction = randomTier5Letter letterType = "jade"
                 end
 
                 if valid == true then
@@ -339,6 +344,12 @@ function GameState()
                 elseif value == 3 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier3Letter
                 elseif value == 2 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier2Letter
                 elseif value == 1 and type == "pierce" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier1Letter
+                -- jade splitting
+                elseif value == 5 and type == "jade" then valid = true letterFunction = randomTier4Letter letterFunction2 = randomTier4Letter letterType = "jade"
+                elseif value == 4 and type == "jade" then valid = true letterFunction = randomTier3Letter letterFunction2 = randomTier3Letter letterType = "jade"
+                elseif value == 3 and type == "jade" then valid = true letterFunction = randomTier2Letter letterFunction2 = randomTier2Letter letterType = "jade"
+                elseif value == 2 and type == "jade" then valid = true letterFunction = randomTier1Letter letterFunction2 = randomTier1Letter letterType = "jade"
+                elseif value == 1 and type == "jade" then valid = true letterFunction = randomTier5Letter letterFunction2 = randomTier5Letter
                 end
 
                 if valid == true then
@@ -587,7 +598,7 @@ function GameState()
                     end
 
                     if hoveredLetter ~= nil then
-                        if hoveredLetter.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
+                        if hoveredLetter.type == "pierce" or hoveredLetter.type == "jade" then previewColorWhite = true else previewColorWhite = false end
                         previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nDamage: "..tostring(hoveredLetter.value))
                         previewText:set(string.upper(hoveredLetter.letter))
                         if hoveredLetter.preview ~= nil then preview = hoveredLetter.preview end
@@ -816,9 +827,12 @@ function GameState()
                     table.remove(typedLetters, #typedLetters)
 
                     local containsPierce = false
-
                     for _, l in ipairs(typedLetters) do if l.type == "pierce" then containsPierce = true break end end
                     if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false end end
+
+                    local containsJade = false
+                    for _, l in ipairs(typedLetters) do if l.type == "jade" then containsJade = true break end end
+                    if containsJade == false then for _, l in ipairs(typedLetters) do l.jadeMultiplier = 1 end end
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     wordValue = 0
@@ -844,7 +858,7 @@ function GameState()
                             value.xvel = 0
                             value.yvel = 0
 
-                            wordValue = wordValue + value.value
+                            wordValue = wordValue + value.value * value.jadeMultiplier
                             table.insert(submittedLetters, value)
                             table.insert(lettersInWord, submittedLetters[#submittedLetters])
                         end
@@ -888,6 +902,7 @@ function GameState()
                                         v.locked = true
 
                                         if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true end end
+                                        if v.type == "jade" then for _, l in ipairs(typedLetters) do if l.jadeMultiplier < v.jadeMultiplier then l.jadeMultiplier = v.jadeMultiplier end end end
 
                                         table.insert(typedLetters, v)
                                         break
@@ -897,6 +912,7 @@ function GameState()
                                 if chamberCheck == false then
                                     local newLetter = Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)
                                     for _, l in ipairs(typedLetters) do if l.type == "pierce" then newLetter.canPierce = true break end end
+                                    for _, l in ipairs(typedLetters) do if l.type == "jade" then if l.jadeMultiplier > newLetter.jadeMultiplier then newLetter.jadeMultiplier = l.jadeMultiplier end break end end
                                     table.insert(typedLetters, newLetter)
                                 end
                                 break
@@ -936,7 +952,7 @@ function GameState()
                             if alreadyHitBy == false then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
                         break
                     end
                 end
@@ -964,7 +980,7 @@ function GameState()
                             if alreadyHitBy == false then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
                         break
                     end
                 end
@@ -992,7 +1008,7 @@ function GameState()
                             if alreadyHitBy == false then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value end
+                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
                         break
                     end
                 end
@@ -1105,13 +1121,16 @@ function GameState()
         local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
 
         local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
-        local bestWordText = love.graphics.newText(resultFont, "("..tostring(gameResults.bestValue)..")")
+        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.floor(gameResults.bestValue))..")")
 
 
 
         for i, l in ipairs(gameResults.bestWord) do
             l.y =  425
             l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
+
+            if l.canPierce == true then for _, v in ipairs(gameResults.bestWord) do v.canPierce = true end end
+            if l.jadeMultiplier > 1 then for _, v in ipairs(gameResults.bestWord) do if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end end end
         end
 
 
