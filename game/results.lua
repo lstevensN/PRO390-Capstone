@@ -1,5 +1,6 @@
 function Results()
     local self = {}
+    self.time = 0
     self.wordsUsed = 0
     self.totalEnemies = 0
     self.enemies = 0
@@ -9,7 +10,16 @@ function Results()
     self.stolenSandwiches = 0
 
     local generateTip = function ()
-        return ""
+        local title, tip = "title", "tip"
+        local num = math.random(1, 1)
+
+        -- 175 character limit
+        if num == 1 then
+            title = "Jade Letters"
+            tip = "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a piss"
+        end
+
+        return {title, tip}
     end
 
     self.tip = generateTip()

@@ -1046,6 +1046,7 @@ function GameState()
             end
 
             gameResults.stolenSandwiches = successfullyStolenSandwiches
+            gameResults.time = gameResults.time + dt
         end
 
 
@@ -1109,12 +1110,15 @@ function GameState()
             -- Reset Deck/Storage
         end end
 
-        local nextButton = Button(600, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
+        local nextButton = Button(350, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
 
         local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
         local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
 
-        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ", 50)
+        local timeTitle = love.graphics.newText(resultBoldFont, "Time:  ")
+        local timeText = love.graphics.newText(resultFont, string.format("%i:%i", gameResults.time / 60, math.fmod(gameResults.time, 60)))
+
+        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ")
         local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
 
         local enemiesTitle = love.graphics.newText(resultBoldFont, "Squids Repelled:  ")
@@ -1123,10 +1127,18 @@ function GameState()
         local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
         local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.floor(gameResults.bestValue))..")")
 
-
+        local tipLargeFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
+        local tipFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
+        
+        local w, tText = tipFont:getWrap(gameResults.tip[2], 375)
+        local tipString = ""
+        for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
+        
+        local tipTitle = love.graphics.newText(tipLargeFont, string.upper(gameResults.tip[1]))
+        local tipText = love.graphics.newText(tipFont, tipString)
 
         for i, l in ipairs(gameResults.bestWord) do
-            l.y =  425
+            l.y =  515
             l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
 
             if l.canPierce == true then for _, v in ipairs(gameResults.bestWord) do v.canPierce = true end end
@@ -1144,16 +1156,22 @@ function GameState()
         drawState = function ()
             love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
 
-            love.graphics.draw(sandwichTitle, 100, 210, 0)
-            love.graphics.draw(sandwichText, 100 + sandwichTitle:getWidth(), 210, 0)
+            love.graphics.draw(tipTitle, 900 - tipTitle:getWidth() / 2, 115)
+            love.graphics.draw(tipText, 700, 170)
 
-            love.graphics.draw(enemiesTitle, 100, 300, 0)
-            love.graphics.draw(enemiesText, 100 + enemiesTitle:getWidth(), 300, 0)
+            love.graphics.draw(timeTitle, 100, 210, 0)
+            love.graphics.draw(timeText, 100 + timeTitle:getWidth(), 210, 0)
+
+            love.graphics.draw(sandwichTitle, 100, 300, 0)
+            love.graphics.draw(sandwichText, 100 + sandwichTitle:getWidth(), 300, 0)
+
+            love.graphics.draw(enemiesTitle, 100, 390, 0)
+            love.graphics.draw(enemiesText, 100 + enemiesTitle:getWidth(), 390, 0)
 
             if #gameResults.bestWord > 2 then
-                love.graphics.draw(bestWordTitle, 100, 390, 0)
+                love.graphics.draw(bestWordTitle, 100, 480, 0)
                 for _, l in ipairs(gameResults.bestWord) do l.draw() end
-                love.graphics.draw(bestWordText, gameResults.bestWord[#gameResults.bestWord].x + gameResults.bestWord[#gameResults.bestWord].radius * 2, 390, 0)
+                love.graphics.draw(bestWordText, gameResults.bestWord[#gameResults.bestWord].x + gameResults.bestWord[#gameResults.bestWord].radius * 2, 480, 0)
             end
 
             nextButton.draw()
