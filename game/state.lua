@@ -27,25 +27,25 @@ function GameState()
 
         if Deck == nil then
             Deck = {
-                Letter('a', -100, -100, "iron"),
-                Letter('e', -100, -100, "iron"),
-                Letter('i', -100, -100, "iron"),
-                Letter('r', -100, -100, "iron"),
-                Letter('s', -100, -100, "iron"),
+                Letter('a', -100, -100, "pierce"),
+                Letter('e', -100, -100, "pierce"),
+                Letter('i', -100, -100, "pierce"),
+                Letter('r', -100, -100, "pierce"),
+                Letter('s', -100, -100, "pierce"),
 
-                Letter('d', -100, -100, "iron"),
-                Letter('n', -100, -100, "iron"),
-                Letter('o', -100, -100, "iron"),
-                Letter('t', -100, -100, "iron"),
+                Letter('d', -100, -100, "pierce"),
+                Letter('n', -100, -100, "pierce"),
+                Letter('o', -100, -100, "pierce"),
+                Letter('t', -100, -100, "pierce"),
 
-                Letter('b', -100, -100, "iron"),
-                Letter('c', -100, -100, "iron"),
-                Letter('u', -100, -100, "iron"),
-                Letter('m', -100, -100, "iron"),
+                Letter('b', -100, -100, "pierce"),
+                Letter('c', -100, -100, "pierce"),
+                Letter('u', -100, -100, "pierce"),
+                Letter('m', -100, -100, "pierce"),
 
-                Letter('f', -100, -100, "iron"),
-                Letter('k', -100, -100, "iron"),
-                Letter('y', -100, -100, "iron")
+                Letter('f', -100, -100, "pierce"),
+                Letter('k', -100, -100, "pierce"),
+                Letter('y', -100, -100, "pierce")
             }
         end
         if Storage == nil then
@@ -807,6 +807,10 @@ function GameState()
         gameResults = Results()
         gameResults.totalSandwiches = #Level.sandwiches
 
+        local VFX = {}
+        local dNumFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
+        local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 35)
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -830,7 +834,7 @@ function GameState()
 
                     local containsPierce = false
                     for _, l in ipairs(typedLetters) do if l.type == "pierce" then containsPierce = true break end end
-                    if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false end end
+                    if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false l.pierceCount = 0 end end
 
                     local containsJade = false
                     for _, l in ipairs(typedLetters) do if l.type == "jade" then containsJade = true break end end
@@ -903,7 +907,7 @@ function GameState()
                                         v.y = inputY + inputH / 2
                                         v.locked = true
 
-                                        if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true end end
+                                        if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true if l.pierceCount < v.pierceCount then l.pierceCount = v.pierceCount end end end
                                         if v.type == "jade" then for _, l in ipairs(typedLetters) do if l.jadeMultiplier < v.jadeMultiplier then l.jadeMultiplier = v.jadeMultiplier end end end
 
                                         table.insert(typedLetters, v)
@@ -913,8 +917,8 @@ function GameState()
 
                                 if chamberCheck == false then
                                     local newLetter = Letter(key, inputX + 30 + #typedLetters * 20 * 2.25, inputY + inputH / 2)
-                                    for _, l in ipairs(typedLetters) do if l.type == "pierce" then newLetter.canPierce = true break end end
-                                    for _, l in ipairs(typedLetters) do if l.type == "jade" then if l.jadeMultiplier > newLetter.jadeMultiplier then newLetter.jadeMultiplier = l.jadeMultiplier end break end end
+                                    for _, l in ipairs(typedLetters) do if l.type == "pierce" then newLetter.canPierce = true if l.pierceCount > newLetter.pierceCount then newLetter.pierceCount = l.pierceCount end end end
+                                    for _, l in ipairs(typedLetters) do if l.type == "jade" then if l.jadeMultiplier > newLetter.jadeMultiplier then newLetter.jadeMultiplier = l.jadeMultiplier end end end
                                     table.insert(typedLetters, newLetter)
                                 end
                                 break
@@ -946,15 +950,19 @@ function GameState()
             for i, v in ipairs(line.riders) do
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
-                        local alreadyHitBy = false
+                        local hitByCount = 0
                     
                         if letter.canPierce == false then table.remove(submittedLetters, index)
                         else
-                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
-                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                            for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
+                            if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
+                        if hitByCount ~= letter.pierceCount then
+                            v.health = v.health - letter.value * letter.jadeMultiplier
+                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                        end
                         break
                     end
                 end
@@ -965,7 +973,7 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
-                    gameResults.enemies = gameResults.enemies + 1
+                    if v.type ~= "blank" and v.type ~= "empty" then gameResults.enemies = gameResults.enemies + 1 end
                     table.remove(line.riders, i)
                     gun.removeEnemy(v)
                 end
@@ -974,15 +982,19 @@ function GameState()
             for i, v in ipairs(line2.riders) do
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
-                        local alreadyHitBy = false
+                        local hitByCount = 0
                     
                         if letter.canPierce == false then table.remove(submittedLetters, index)
                         else
-                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
-                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                            for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
+                            if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
+                        if hitByCount ~= letter.pierceCount then
+                            v.health = v.health - letter.value * letter.jadeMultiplier
+                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                        end
                         break
                     end
                 end
@@ -993,7 +1005,7 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
-                    gameResults.enemies = gameResults.enemies + 1
+                    if v.type ~= "blank" and v.type ~= "empty" then gameResults.enemies = gameResults.enemies + 1 end
                     table.remove(line2.riders, i)
                     gun.removeEnemy(v)
                 end
@@ -1002,15 +1014,19 @@ function GameState()
             for i, v in ipairs(line3.riders) do
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
-                        local alreadyHitBy = false
+                        local hitByCount = 0
                     
                         if letter.canPierce == false then table.remove(submittedLetters, index)
                         else
-                            for _, l in ipairs(v.hitBy) do if l == letter then alreadyHitBy = true break end end
-                            if alreadyHitBy == false then table.insert(v.hitBy, letter) end
+                            for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
+                            if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if alreadyHitBy == false then v.health = v.health - letter.value * letter.jadeMultiplier end
+                        if hitByCount ~= letter.pierceCount then
+                            v.health = v.health - letter.value * letter.jadeMultiplier
+                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                        end
                         break
                     end
                 end
@@ -1021,11 +1037,13 @@ function GameState()
 
                 if v.health <= 0 then
                     if v.sandwichHeld ~= nil then v.sandwichHeld.stolen = false v.sandwichHeld = nil end
-                    gameResults.enemies = gameResults.enemies + 1
+                    if v.type ~= "blank" and v.type ~= "empty" then gameResults.enemies = gameResults.enemies + 1 end
                     table.remove(line3.riders, i)
                     gun.removeEnemy(v)
                 end
             end
+
+            for i, v in ipairs(VFX) do v.update(dt) if v.gone == true then table.remove(VFX, i) end end
             
             wordText:set(word)
             wordFoundText:set("Word found: "..tostring(wordFound))
@@ -1080,6 +1098,8 @@ function GameState()
             ]]
 
             for _, s in ipairs(Level.sandwiches) do s.draw() end
+
+            for _, v in ipairs(VFX) do v.draw() end
         end
     end
 
@@ -1160,8 +1180,8 @@ function GameState()
         drawState = function ()
             love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
 
-            love.graphics.draw(tipTitle, 900 - tipTitle:getWidth() / 2, 115)
-            love.graphics.draw(tipText, 700, 170)
+            love.graphics.draw(tipTitle, 900 - tipTitle:getWidth() / 2, 100)
+            love.graphics.draw(tipText, 700, 155)
 
             love.graphics.draw(timeTitle, 100, 210, 0)
             love.graphics.draw(timeText, 100 + timeTitle:getWidth(), 210, 0)
@@ -1195,6 +1215,8 @@ function GameState()
         require("game.fade")
         require("game.sandwich")
         require("game.results")
+
+        require("game.vfx.numbers")
 
         require("game.levels.test_level")
 

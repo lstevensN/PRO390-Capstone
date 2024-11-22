@@ -313,7 +313,8 @@ function Letter(letter, xpos, ypos, type, trans)
     self.image, self.preview = setImage()
     self.letter = letter
     self.value = setValue()
-    self.jadeMultiplier = (self.type == "jade" and 5 / self.value or 0) + 1
+    self.jadeMultiplier = (self.type == "jade" and self.value / 5 or 0) + 1
+    self.pierceCount = (self.type == "pierce" and self.value or 0)
 
     self.update = function(dt)
         if self.transmuteMode == true then
