@@ -981,7 +981,13 @@ function GameState()
                 end
 
                 if v.sandwichHeld == nil then
-                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                    for _, s in ipairs(Level.sandwiches) do
+                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                            s.stolen = true
+                            v.sandwichHeld = s
+                            if v.speed > 0 then v.speed = -v.speed end
+                        end
+                    end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
 
                 if v.health <= 0 then
@@ -1013,7 +1019,13 @@ function GameState()
                 end
 
                 if v.sandwichHeld == nil then
-                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                    for _, s in ipairs(Level.sandwiches) do
+                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                            s.stolen = true
+                            v.sandwichHeld = s
+                            if v.speed < 0 then v.speed = -v.speed end
+                        end
+                    end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
 
                 if v.health <= 0 then
@@ -1038,14 +1050,20 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             v.health = v.health - letter.value * letter.jadeMultiplier
                             local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
-                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font, 3))
                         end
                         break
                     end
                 end
 
                 if v.sandwichHeld == nil then
-                    for _, s in ipairs(Level.sandwiches) do if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then s.stolen = true v.sandwichHeld = s end end
+                    for _, s in ipairs(Level.sandwiches) do
+                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                            s.stolen = true
+                            v.sandwichHeld = s
+                            if v.speed > 0 then v.speed = -v.speed end
+                        end
+                    end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
 
                 if v.health <= 0 then
