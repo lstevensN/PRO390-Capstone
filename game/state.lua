@@ -27,25 +27,25 @@ function GameState()
 
         if Deck == nil then
             Deck = {
-                Letter('a', -100, -100, "pierce"),
-                Letter('e', -100, -100, "pierce"),
-                Letter('i', -100, -100, "pierce"),
-                Letter('r', -100, -100, "pierce"),
-                Letter('s', -100, -100, "pierce"),
+                Letter('a', -100, -100, "iron"),
+                Letter('e', -100, -100, "iron"),
+                Letter('i', -100, -100, "iron"),
+                Letter('r', -100, -100, "iron"),
+                Letter('s', -100, -100, "iron"),
 
-                Letter('d', -100, -100, "pierce"),
-                Letter('n', -100, -100, "pierce"),
-                Letter('o', -100, -100, "pierce"),
-                Letter('t', -100, -100, "pierce"),
+                Letter('d', -100, -100, "iron"),
+                Letter('n', -100, -100, "iron"),
+                Letter('o', -100, -100, "iron"),
+                Letter('t', -100, -100, "iron"),
 
-                Letter('b', -100, -100, "pierce"),
-                Letter('c', -100, -100, "pierce"),
-                Letter('u', -100, -100, "pierce"),
-                Letter('m', -100, -100, "pierce"),
+                Letter('b', -100, -100, "iron"),
+                Letter('c', -100, -100, "iron"),
+                Letter('u', -100, -100, "iron"),
+                Letter('m', -100, -100, "iron"),
 
-                Letter('f', -100, -100, "pierce"),
-                Letter('k', -100, -100, "pierce"),
-                Letter('y', -100, -100, "pierce")
+                Letter('f', -100, -100, "iron"),
+                Letter('k', -100, -100, "iron"),
+                Letter('y', -100, -100, "iron")
             }
         end
         if Storage == nil then
@@ -477,7 +477,7 @@ function GameState()
                 -- set preview
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                    previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
+                    previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
@@ -512,7 +512,7 @@ function GameState()
 
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                    previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
+                    previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
                     previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
@@ -549,7 +549,7 @@ function GameState()
 
                         if v.hoveredOver == true then
                             previewColorWhite = false
-                            previewDetails:set("Type: "..string.upper(v.type).."\nDamage: "..tostring(v.value))
+                            previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
                             previewText:set(string.upper(v.letter))
                             if v.preview ~= nil then preview = v.preview end
                         end
@@ -601,7 +601,7 @@ function GameState()
 
                     if hoveredLetter ~= nil then
                         if hoveredLetter.type == "pierce" or hoveredLetter.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                        previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nDamage: "..tostring(hoveredLetter.value))
+                        previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nPower: "..tostring(hoveredLetter.value))
                         previewText:set(string.upper(hoveredLetter.letter))
                         if hoveredLetter.preview ~= nil then preview = hoveredLetter.preview end
                     end
@@ -616,7 +616,7 @@ function GameState()
                     end
 
                     if glorbHolder[1].hoveredOver == true or glorbHolder[1].clicked == true then
-                        previewDetails:set("Type: "..string.upper(glorbHolder[1].type).."\nDamage: "..tostring(glorbHolder[1].value))
+                        previewDetails:set("Type: "..string.upper(glorbHolder[1].type).."\nPower: "..tostring(glorbHolder[1].value))
                         previewText:set(glorbHolder[1].letter)
                         if glorbHolder[1].preview ~= nil then preview = glorbHolder[1].preview end
                     end
@@ -834,7 +834,7 @@ function GameState()
 
                     local containsPierce = false
                     for _, l in ipairs(typedLetters) do if l.type == "pierce" then containsPierce = true break end end
-                    if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false l.pierceCount = 0 end end
+                    if containsPierce == false then for _, l in ipairs(typedLetters) do l.canPierce = false l.pierceCount = 1 end end
 
                     local containsJade = false
                     for _, l in ipairs(typedLetters) do if l.type == "jade" then containsJade = true break end end
@@ -864,7 +864,7 @@ function GameState()
                             value.xvel = 0
                             value.yvel = 0
 
-                            wordValue = wordValue + value.value * value.jadeMultiplier
+                            wordValue = wordValue + value.value * value.jadeMultiplier * value.pierceCount
                             table.insert(submittedLetters, value)
                             table.insert(lettersInWord, submittedLetters[#submittedLetters])
                         end
@@ -907,8 +907,21 @@ function GameState()
                                         v.y = inputY + inputH / 2
                                         v.locked = true
 
-                                        if v.type == "pierce" then for _, l in ipairs(typedLetters) do l.canPierce = true if l.pierceCount < v.pierceCount then l.pierceCount = v.pierceCount end end end
-                                        if v.type == "jade" then for _, l in ipairs(typedLetters) do if l.jadeMultiplier < v.jadeMultiplier then l.jadeMultiplier = v.jadeMultiplier end end end
+                                        if v.type == "pierce" then
+                                            for _, l in ipairs(typedLetters) do
+                                                l.canPierce = true
+                                                if l.pierceCount < v.pierceCount then l.pierceCount = v.pierceCount end
+                                                if l.pierceCount > v.pierceCount then v.pierceCount = l.pierceCount end
+                                                if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end
+                                            end
+                                        end
+                                        if v.type == "jade" then
+                                            for _, l in ipairs(typedLetters) do
+                                                if l.jadeMultiplier < v.jadeMultiplier then l.jadeMultiplier = v.jadeMultiplier end
+                                                if l.pierceCount > v.pierceCount then v.pierceCount = l.pierceCount end
+                                                if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end
+                                            end
+                                        end
 
                                         table.insert(typedLetters, v)
                                         break
@@ -958,7 +971,7 @@ function GameState()
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if hitByCount ~= letter.pierceCount then
+                        if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             v.health = v.health - letter.value * letter.jadeMultiplier
                             local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
@@ -990,7 +1003,7 @@ function GameState()
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if hitByCount ~= letter.pierceCount then
+                        if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             v.health = v.health - letter.value * letter.jadeMultiplier
                             local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
@@ -1022,7 +1035,7 @@ function GameState()
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
-                        if hitByCount ~= letter.pierceCount then
+                        if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             v.health = v.health - letter.value * letter.jadeMultiplier
                             local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
@@ -1081,21 +1094,19 @@ function GameState()
             line2.draw()
             line3.draw()
 
-            for i, v in ipairs(typedLetters) do v.draw() end
+            for i, v in ipairs(typedLetters) do
+                v.draw()
+                --[[
+                love.graphics.setColor(0, 0, 0)
+                local text = tostring(v.value * v.jadeMultiplier * v.pierceCount)
+                love.graphics.print(text, 900, 200 + (i - 1) * 30)
+                love.graphics.setColor(1, 1, 1)
+                ]]
+            end
             for i, v in ipairs(submittedLetters) do v.draw() end
             for i, v in ipairs(chambers) do v.draw() end
 
             gun.draw()
-
-            --[[
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.draw(wordFoundText, 1000, 490, 0)
-            love.graphics.draw(wordValueText, 1000, 510, 0)
-            love.graphics.print("Enemies: "..tostring(#gun.enemies), 1000, 530)
-            love.graphics.print("Gun Word Ammo: "..tostring(#gun.ammo), 1000, 550)
-            love.graphics.print("Submitted Letters: "..tostring(#submittedLetters), 1000, 570)
-            love.graphics.setColor(1, 1, 1)
-            ]]
 
             for _, s in ipairs(Level.sandwiches) do s.draw() end
 
@@ -1149,7 +1160,7 @@ function GameState()
         local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
 
         local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
-        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.floor(gameResults.bestValue))..")")
+        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.ceil(gameResults.bestValue))..")")
 
         local tipLargeFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
         local tipFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
