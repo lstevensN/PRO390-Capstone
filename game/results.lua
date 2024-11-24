@@ -11,18 +11,18 @@ function Results()
 
     local generateTip = function ()
         local title, tip = "title", "tip"
-        local num = 2 -- math.random(1, 3)
+        local num = math.random(1, 3)
 
         -- 175 character limit
         if num == 1 then
             title = "Iron Letters"
-            tip = "Primary squid deterrent.\n\nAEIRS - 5 power\nDGLONT - 10 power\nBCHMPU - 15 power\nFKVWY - 20 power\nJQXZ - 25 power"
+            tip = "Primary squid deterrent.\n\nA E I R S - 5 power\nD G L O N T - 10 power\nB C H M P U - 15 power\nF K V W Y - 20 power\nJ Q X Z - 25 power"
         elseif num == 2 then
             title = "Pierce Letters"
-            tip = "Enables powerful multi-hits.\n\nAEIRS - Hits multiple squids\nDGLONT - Hits squids 2x\nBCHMPU - Hits squids 3x\nFKVWY - Hits squids 4x\nJQXZ - Hits squids 5x"
+            tip = "Enables powerful multi-hits.\n\nA E I R S - Hits multiple squids\nD G L O N T - Hits squids 2x\nB C H M P U - Hits squids 3x\nF K V W Y - Hits squids 4x\nJ Q X Z - Hits squids 5x"
         elseif num == 3 then
             title = "Jade Letters"
-            tip = "Boosts word power.\n\nAEIRS - 1.2x multiplier\nDGLONT - 1.4x multiplier\nBCHMPU - 1.6x multiplier\nFKVWY - 1.8x multiplier\nJQXZ - 2.0x multiplier"
+            tip = "Boosts word power.\n\nA E I R S - 1.2x multiplier\nD G L O N T - 1.4x multiplier\nB C H M P U - 1.6x multiplier\nF K V W Y - 1.8x multiplier\nJ Q X Z - 2.0x multiplier"
         end
 
         return {title, tip}

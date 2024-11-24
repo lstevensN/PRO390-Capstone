@@ -1,8 +1,8 @@
-function Sandwich()
+function Sandwich(x, y)
     local self = {}
-    self.x = 1000
-    self.y = 430
-    self.image = nil
+    self.x = x or 1000
+    self.y = y or 430
+    self.image = love.graphics.newImage("game/assets/sandwich.png")
     self.stolen = false
 
     self.draw = function ()
@@ -10,7 +10,7 @@ function Sandwich()
             love.graphics.setColor(0, 1, 0)
             love.graphics.circle("fill", self.x, self.y, 20)
             love.graphics.setColor(1, 1, 1)
-        end
+        else love.graphics.draw(self.image, self.x, self.y, 0, 0.1) end
     end
 
     return self

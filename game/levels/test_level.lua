@@ -4,11 +4,15 @@ function TestLevel()
     self.spawnTimer = 2
     self.over = false
     self.sandwiches = {
-        Sandwich()
+        Sandwich(970, 430),
+        Sandwich(990, 430),
+        Sandwich(1010, 430)
     }
 
     local enemies = {
         --Enemy(0, 0, "blank")
+        Enemy(0, 0, "fast"),
+        Enemy(0, 0, "fast"),
         Enemy(0, 0, "fast"),
         Enemy(0, 0, "strong")
         --Enemy(0, 0, "blank"),

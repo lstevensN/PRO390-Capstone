@@ -34,27 +34,27 @@ function GameState()
                 Letter('s', -100, -100, "iron"),
 
                 Letter('d', -100, -100, "iron"),
+                Letter('g', -100, -100, "iron"),
+                Letter('l', -100, -100, "iron"),
                 Letter('n', -100, -100, "iron"),
                 Letter('o', -100, -100, "iron"),
                 Letter('t', -100, -100, "iron"),
 
                 Letter('b', -100, -100, "iron"),
                 Letter('c', -100, -100, "iron"),
-                Letter('u', -100, -100, "iron"),
+                Letter('h', -100, -100, "iron"),
                 Letter('m', -100, -100, "iron"),
+                Letter('p', -100, -100, "iron"),
+                Letter('u', -100, -100, "iron"),
 
                 Letter('f', -100, -100, "iron"),
                 Letter('k', -100, -100, "iron"),
+                Letter('v', -100, -100, "iron"),
+                Letter('w', -100, -100, "iron"),
                 Letter('y', -100, -100, "iron")
             }
         end
-        if Storage == nil then
-            Storage = {
-                Letter('g', -100, -100, "iron"),
-                Letter('v', -100, -100, "iron"),
-                Letter('q', -100, -100, "iron")
-            }
-        end
+        if Storage == nil then Storage = {} end
 
 
         -- Start State Loop
@@ -982,10 +982,11 @@ function GameState()
 
                 if v.sandwichHeld == nil then
                     for _, s in ipairs(Level.sandwiches) do
-                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                        if s.stolen == false and math.abs(v.x - s.x) < 20 and v.y == s.y and v.sandwichHeld == nil then
                             s.stolen = true
                             v.sandwichHeld = s
                             if v.speed > 0 then v.speed = -v.speed end
+                            break
                         end
                     end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
@@ -1020,10 +1021,11 @@ function GameState()
 
                 if v.sandwichHeld == nil then
                     for _, s in ipairs(Level.sandwiches) do
-                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                        if s.stolen == false and math.abs(v.x - s.x) < 20 and v.y == s.y and v.sandwichHeld == nil then
                             s.stolen = true
                             v.sandwichHeld = s
                             if v.speed < 0 then v.speed = -v.speed end
+                            break
                         end
                     end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
@@ -1058,10 +1060,11 @@ function GameState()
 
                 if v.sandwichHeld == nil then
                     for _, s in ipairs(Level.sandwiches) do
-                        if s.stolen == false and math.abs(v.x - s.x) < 10 and v.y == s.y and v.sandwichHeld == nil then
+                        if s.stolen == false and math.abs(v.x - s.x) < 20 and v.y == s.y and v.sandwichHeld == nil then
                             s.stolen = true
                             v.sandwichHeld = s
                             if v.speed > 0 then v.speed = -v.speed end
+                            break
                         end
                     end
                 else v.sandwichHeld.x = v.x v.sandwichHeld.y = v.y end
