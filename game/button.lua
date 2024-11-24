@@ -5,7 +5,7 @@ function Button(xpos, ypos, w, h, onclick, i, ip)
     self.width = w or 1
     self.height = h or 1
     self.pressed = false
-    -- Image Property?
+    self.selected = false
 
     local setImage = function () if i ~= nil then return love.graphics.newImage(i) else return nil end end
     local setImagePressed = function () if ip ~= nil then return love.graphics.newImage(ip) else return nil end end
@@ -39,8 +39,8 @@ function Button(xpos, ypos, w, h, onclick, i, ip)
             x = (x - XOffset) / ScaleFactor
             y = y / ScaleFactor
 
-            if self.imagePressed ~= nil and (x >= self.x - self.width / 2 and x <= self.x - self.width / 2 + self.width) and
-            (y >= self.y - self.height / 2 and y <= self.y - self.height / 2 + self.height) then
+            if self.imagePressed ~= nil and ((x >= self.x - self.width / 2 and x <= self.x - self.width / 2 + self.width) and
+            (y >= self.y - self.height / 2 and y <= self.y - self.height / 2 + self.height) or self.selected == true) then
                 love.graphics.draw(self.imagePressed, self.x - self.width / 2, self.y - self.height / 2, 0, 0.25, 0.25)
             else love.graphics.draw(self.image, self.x - self.width / 2, self.y - self.height / 2, 0, 0.25, 0.25) end
         end

@@ -21,9 +21,17 @@ function GameState()
         canPause = false
         math.randomseed(os.time())
 
-        local buttonStart = Button(290, 280, 300, 100, function () Fade.start(function () gameState = progress end) end)
-        local buttonSettings = Button(290, 480, 300, 100, function () end)
-        local buttonQuit = Button(290, 680, 300, 100, function () love.event.quit() end)  -- DON'T FORGET TO ADD SAVING
+        -- Image by pikisuperstar on Freepik
+        local i_background = love.graphics.newImage("game/assets/start UI.png")
+
+        local buttonStart = Button(340, 225, 620, 200, function () Fade.start(function () gameState = progress end) end,
+        "game/assets/start_selection_new.png", "game/assets/start_selection_new_selected.png")
+        local buttonSettings = Button(340, 450, 620, 200, function () end,
+        "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
+        local buttonQuit = Button(340, 675, 620, 200, function () love.event.quit() end,
+        "game/assets/start_selection_exit.png", "game/assets/start_selection_exit_selected.png")  -- DON'T FORGET TO ADD SAVING
+
+        buttonStart.selected = true
 
         if Deck == nil then
             Deck = {
@@ -62,20 +70,37 @@ function GameState()
             buttonStart.update(dt)
             buttonSettings.update(dt)
             buttonQuit.update(dt)
+
+            local x, y = love.mouse.getPosition()
+            x = (x - XOffset) / ScaleFactor
+            y = y / ScaleFactor
+
+            if (x >= buttonStart.x - buttonStart.width / 2 and x <= buttonStart.x - buttonStart.width / 2 + buttonStart.width) and
+            (y >= buttonStart.y - buttonStart.height / 2 and y <= buttonStart.y - buttonStart.height / 2 + buttonStart.height) then
+                buttonStart.selected = true
+                buttonSettings.selected = false
+                buttonQuit.selected = false
+            elseif (x >= buttonSettings.x - buttonSettings.width / 2 and x <= buttonSettings.x - buttonSettings.width / 2 + buttonSettings.width) and
+            (y >= buttonSettings.y - buttonSettings.height / 2 and y <= buttonSettings.y - buttonSettings.height / 2 + buttonSettings.height) then
+                buttonStart.selected = false
+                buttonSettings.selected = true
+                buttonQuit.selected = false
+            elseif (x >= buttonQuit.x - buttonQuit.width / 2 and x <= buttonQuit.x - buttonQuit.width / 2 + buttonQuit.width) and
+            (y >= buttonQuit.y - buttonQuit.height / 2 and y <= buttonQuit.y - buttonQuit.height / 2 + buttonQuit.height) then
+                buttonStart.selected = false
+                buttonSettings.selected = false
+                buttonQuit.selected = true
+            end
         end
 
 
         -- Start State Draw Instructions
         drawState = function ()
+            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+
             buttonStart.draw()
             buttonSettings.draw()
             buttonQuit.draw()
-
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.print("start", 290, 280)
-            love.graphics.print("settings", 290, 480)
-            love.graphics.print("quit", 290, 680)
-            love.graphics.setColor(255, 255, 255)
         end
     end
 
@@ -712,6 +737,7 @@ function GameState()
         local i_inputAndChambers = love.graphics.newImage("game/assets/input_and_chambers_2.png")
         local i_bench = love.graphics.newImage("game/assets/bench_2.png")
         local i_icon = love.graphics.newImage("game/assets/icon.png")
+        local i_sBox = love.graphics.newImage("game/assets/sandwich_box.png")
 
         local recentX, recentY, recentW, recentH = 355, 620, 175, 130
         local chambersX, chambersY, chambersW, chambersH = 572, 650, 425, 80
@@ -722,9 +748,9 @@ function GameState()
         local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
-        local line = Line(-100, 1300, 100, true)
+        local line = Line(-100, 1300, 100, false)
         local line2 = Line(-100, 1300, 265, false)
-        local line3 = Line(-100, 1000, 430, true, true)
+        local line3 = Line(-100, 1000, 430, false, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -972,9 +998,10 @@ function GameState()
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            v.health = v.health - letter.value * letter.jadeMultiplier
-                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
-                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                            local power = letter.value * letter.jadeMultiplier
+                            v.health = v.health - power
+                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
                         end
                         break
                     end
@@ -1011,9 +1038,10 @@ function GameState()
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            v.health = v.health - letter.value * letter.jadeMultiplier
-                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
-                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font))
+                            local power = letter.value * letter.jadeMultiplier
+                            v.health = v.health - power
+                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
                         end
                         break
                     end
@@ -1050,9 +1078,10 @@ function GameState()
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            v.health = v.health - letter.value * letter.jadeMultiplier
-                            local font = (letter.value * letter.jadeMultiplier >= 20 and dNumBFont or dNumFont)
-                            table.insert(VFX, DamageNumber(letter.value * letter.jadeMultiplier, v.x, v.y, font, 3))
+                            local power = letter.value * letter.jadeMultiplier
+                            v.health = v.health - power
+                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
                         end
                         break
                     end
@@ -1110,6 +1139,7 @@ function GameState()
             love.graphics.draw(i_bench, 18, 580, 0, 0.5, 0.5)
             love.graphics.draw(i_inputAndChambers, 8, 603, 0, 0.5, 0.5)
             love.graphics.draw(i_icon, 960, 660, 0, 0.5, 0.5)
+            love.graphics.draw(i_sBox, 963, 416, 0, 0.5, 0.5)
     
             line.draw()
             line2.draw()
