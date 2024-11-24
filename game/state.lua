@@ -1233,7 +1233,6 @@ function GameState()
 
     self.load = function ()
         require("game.input")
-        require("game.sprite")
         require("game.line")
         require("game.words")
         require("game.button")
@@ -1244,6 +1243,7 @@ function GameState()
         require("game.fade")
         require("game.sandwich")
         require("game.results")
+        require("game.animation")
 
         require("game.vfx.numbers")
 

@@ -7,6 +7,8 @@ function Enemy(xpos, ypos, t)
     self.hitBy = {}
     self.sandwichHeld = nil
 
+    self.sprite = nil
+
     local initialize = function ()
         if self.type == "empty" then return 0, 0, 1000
         elseif self.type == "basic" then return 150, 25, 30
@@ -18,9 +20,12 @@ function Enemy(xpos, ypos, t)
     self.speed, self.radius, self.health = initialize()
     local maxHP = self.health
 
+    self.update = function (dt) if self.sprite ~= nil then self.sprite.update(dt) end end
+
     self.draw = function ()
         love.graphics.setColor(0, 0, 0)
-        love.graphics.circle("fill", self.x, self.y, self.radius)
+        love.graphics.circle("line", self.x, self.y, self.radius)
+        if self.sprite ~= nil then self.sprite.draw(self.x - self.radius, self.y - self.radius) end
 
         love.graphics.setColor(0.75, 0, 0)
         love.graphics.rectangle("fill", self.x - 20, self.y + 35, 40, 6)

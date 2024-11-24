@@ -33,6 +33,8 @@ function Line(x1, x2, y, s, r)
 
     self.update = function (dt)
         for i, v in ipairs(self.riders) do
+            v.update(dt)
+
             v.x = v.x + v.speed * dt
             v.progress = v.progress + math.abs(v.speed) / 100
     
