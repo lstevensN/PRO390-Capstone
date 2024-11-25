@@ -412,6 +412,11 @@ function GameState()
         for i, v in ipairs(Storage) do v.transmuteMode = true end
         --table.sort(Storage, sortDeck)
 
+        if Deck[1].type == "pierce" or Deck[1].type == "jade" then previewColorWhite = true else previewColorWhite = false end
+        previewDetails:set("Type: "..string.upper(Deck[1].type).."\nPower: "..tostring(Deck[1].value))
+        previewText:set(string.upper(Deck[1].letter))
+        if Deck[1].preview ~= nil then preview = Deck[1].preview end
+
         local back = false
 
 
@@ -1081,7 +1086,7 @@ function GameState()
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
                             local font = (power >= 20 and dNumBFont or dNumFont)
-                            table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
+                            table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font, 3))
                         end
                         break
                     end
