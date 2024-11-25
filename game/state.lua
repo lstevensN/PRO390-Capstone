@@ -15,6 +15,9 @@ function GameState()
 
     local Fade
 
+    local sfx_confirm = love.audio.newSource("game/audio/confirm.wav", "static") sfx_confirm:setVolume(0.8 * SfxVolume * MainVolume)
+    local bgm_menu = love.audio.newSource("game/audio/Menu_Music.wav", "stream") bgm_menu:setVolume(0.4 * MusicVolume * MainVolume)
+
     -- START state
     start = function ()
         -- Initialize Start State
@@ -24,7 +27,7 @@ function GameState()
         -- Image by pikisuperstar on Freepik
         local i_background = love.graphics.newImage("game/assets/start UI.png")
 
-        local buttonStart = Button(340, 225, 620, 200, function () Fade.start(function () gameState = progress end) end,
+        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() Fade.start(function () gameState = progress end) end,
         "game/assets/start_selection_new.png", "game/assets/start_selection_new_selected.png")
         local buttonSettings = Button(340, 450, 620, 200, function () end,
         "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
@@ -55,14 +58,13 @@ function GameState()
                 Letter('p', -100, -100, "iron"),
                 Letter('u', -100, -100, "iron"),
 
-                Letter('f', -100, -100, "iron"),
-                Letter('k', -100, -100, "iron"),
-                Letter('v', -100, -100, "iron"),
-                Letter('w', -100, -100, "iron"),
-                Letter('y', -100, -100, "iron")
+                Letter('j', -100, -100, "iron"),
+                Letter('q', -100, -100, "iron"),
+                Letter('x', -100, -100, "iron"),
+                Letter('z', -100, -100, "iron")
             }
         end
-        if Storage == nil then Storage = {} end
+        if Storage == nil then Storage = { Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb") } end
 
 
         -- Start State Loop
@@ -91,6 +93,8 @@ function GameState()
                 buttonSettings.selected = false
                 buttonQuit.selected = true
             end
+
+            if not bgm_menu:isPlaying() then bgm_menu:play() end
         end
 
 
@@ -179,6 +183,8 @@ function GameState()
             elseif Difficulty == 4 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(4 * hoveredAct).." GLORBS" or "???") end
 
             backButton.update(dt)
+
+            if not bgm_menu:isPlaying() then bgm_menu:play() end
         end
 
 
@@ -229,6 +235,10 @@ function GameState()
         canPause = false
         pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
 
+        local sfx_bubbling = love.audio.newSource("game/audio/bubbling.wav", "stream") sfx_bubbling:setVolume(0.9 * SfxVolume * MainVolume)
+        local sfx_transCombine = love.audio.newSource("game/audio/transmute_combine.wav", "stream") sfx_transCombine:setVolume(SfxVolume * MainVolume)
+        local sfx_transBreak = love.audio.newSource("game/audio/transmute_break.wav", "stream") sfx_transBreak:setVolume(SfxVolume * MainVolume)
+
         local background = love.graphics.newImage("game/assets/transmute UI.png")
         
         local countFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
@@ -242,7 +252,7 @@ function GameState()
 
         local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
 
-        local goButton = Button(950, 770, 280, 170, function () Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
+        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -354,6 +364,8 @@ function GameState()
                     table.insert(Deck, letterFunction(letterType))
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
+
+                    if sfx_transCombine:isPlaying() then sfx_transCombine:stop() end sfx_transCombine:play()
                 end
             elseif #transmutationQueue == 1 then
                 local value = transmutationQueue[1].value
@@ -387,6 +399,8 @@ function GameState()
                     Deck[#Deck].x = Deck[#Deck].x + Deck[#Deck].radius * 2
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
+
+                    if sfx_transBreak:isPlaying() then sfx_transBreak:stop() end sfx_transBreak:play()
                 end
             end
         end
@@ -696,6 +710,9 @@ function GameState()
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
 
             boilerCount:set("Letters: "..tostring(#Deck))
+
+            if not sfx_bubbling:isPlaying() then sfx_bubbling:play() end
+            if not bgm_menu:isPlaying() then bgm_menu:play() end
         end
 
 
@@ -842,6 +859,20 @@ function GameState()
         local dNumFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
         local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 35)
 
+        local sfx_click = love.audio.newSource("game/audio/click.wav", "static")
+        sfx_click:setVolume(SfxVolume* MainVolume)
+
+        local sfx_click_undo = love.audio.newSource("game/audio/click.wav", "static")
+        sfx_click_undo:setVolume(SfxVolume * MainVolume)
+        sfx_click_undo:setPitch(0.8)
+
+        local sfx_hit = love.audio.newSource("game/audio/splat.mp3", "static")
+        sfx_hit:setVolume(0.7 * SfxVolume * MainVolume)
+        sfx_hit:setPitch(0.8)
+
+        local sfx_tick = love.audio.newSource("game/audio/tick.mp3", "static")
+        sfx_tick:setVolume(0 * SfxVolume * MainVolume)
+
 
         -- Game State Loop
         gameState = function (dt)
@@ -870,6 +901,8 @@ function GameState()
                     local containsJade = false
                     for _, l in ipairs(typedLetters) do if l.type == "jade" then containsJade = true break end end
                     if containsJade == false then for _, l in ipairs(typedLetters) do l.jadeMultiplier = 1 end end
+
+                    if sfx_click_undo:isPlaying() then sfx_click_undo:stop() end sfx_click_undo:play()
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     wordValue = 0
@@ -965,6 +998,8 @@ function GameState()
                                     for _, l in ipairs(typedLetters) do if l.type == "jade" then if l.jadeMultiplier > newLetter.jadeMultiplier then newLetter.jadeMultiplier = l.jadeMultiplier end end end
                                     table.insert(typedLetters, newLetter)
                                 end
+
+                                if sfx_click:isPlaying() then sfx_click:stop() end sfx_click:play()
                                 break
                             end
                         end
@@ -1007,6 +1042,9 @@ function GameState()
                             v.health = v.health - power
                             local font = (power >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
+
+                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
                     end
@@ -1047,6 +1085,9 @@ function GameState()
                             v.health = v.health - power
                             local font = (power >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
+
+                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
                     end
@@ -1087,6 +1128,9 @@ function GameState()
                             v.health = v.health - power
                             local font = (power >= 20 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font, 3))
+
+                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
                     end

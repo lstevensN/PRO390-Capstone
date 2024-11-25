@@ -10,20 +10,16 @@ function TestLevel()
     }
 
     local enemies = {
-        --Enemy(0, 0, "blank")
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "strong"),
         Enemy(0, 0, "fast"),
         Enemy(0, 0, "fast"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "strong")
-        --Enemy(0, 0, "blank"),
-        --Enemy(0, 0, "blank"),
-        --Enemy(0, 0, "fast"),
-        --Enemy(0, 0, "basic"),
-        --Enemy(0, 0, "fast"),
-        --Enemy(0, 0, "blank"),
-        --Enemy(0, 0, "basic"),
-        --Enemy(0, 0, "fast"),
-        --Enemy(0, 0, "strong")
+        Enemy(0, 0, "fast")
     }
     local spawnIndex = 1
 

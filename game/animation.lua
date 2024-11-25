@@ -1,4 +1,4 @@
-function Animation(i, w, h, d)
+function Animation(i, w, h, d, t)
     local self = {}
 
     self.sprite = love.graphics.newImage(i)
@@ -21,6 +21,12 @@ function Animation(i, w, h, d)
     local quads = setQuads()
     local spriteNum = 0
     local currentTime = 0
+    local type = t
+    local scale = 0
+
+    if type == "basic" then scale = 0.35 
+    elseif type == "fast" then scale = 0.25
+    elseif type == "strong" then scale = 0.5 end
 
     self.update = function (dt)
         currentTime = currentTime + dt
@@ -28,7 +34,10 @@ function Animation(i, w, h, d)
         spriteNum = math.floor(currentTime / self.duration * #quads) + 1
     end
 
-    self.draw = function (x, y) love.graphics.draw(self.sprite, quads[spriteNum], x, y, 0) end
+    self.draw = function (x, y)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(self.sprite, quads[spriteNum], x, y, 0, scale)
+    end
 
     return self
 end

@@ -13,6 +13,8 @@ function Gun(xpos, ypos, mode)
     local targetIndex = 1
     local bulletSpeed = 4000
 
+    local whoosh = love.audio.newSource("game/audio/whoosh.mp3", "static")
+
     local next = next
 
     local blindSpots = function (enemy)
@@ -54,6 +56,8 @@ function Gun(xpos, ypos, mode)
                 table.remove(self.ammo, 1)
                 letterIndex = 1
             end
+
+            if whoosh:isPlaying() then whoosh:stop() end whoosh:play()
         end
     end
 

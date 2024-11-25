@@ -5,6 +5,10 @@ local screenX, screenY = 1200, 900
 XOffset = 0
 ScaleFactor = 0
 
+MainVolume = 100 / 100
+MusicVolume = 100 / 100
+SfxVolume = 70 / 100
+
 local mouseX, mouseY = 0, 0
 
 function love.resize(w, h) end
@@ -47,9 +51,9 @@ function love.draw()
         state.draw()
 
         love.graphics.setColor(0, 0, 0)
-        love.graphics.print('Here goes nothing! (^v^)', 10, 10)
-        love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
-        love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
+        --love.graphics.print('Here goes nothing! (^v^)', 10, 10)
+        --love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
+        --love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
 
         -- love.graphics.print("offset x: "..tostring(XOffset), 10, 90)
         -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10, 110)
