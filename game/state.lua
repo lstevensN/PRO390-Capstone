@@ -31,7 +31,7 @@ function GameState()
         "game/assets/start_selection_new.png", "game/assets/start_selection_new_selected.png")
         local buttonSettings = Button(340, 450, 620, 200, function () end,
         "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
-        local buttonQuit = Button(340, 675, 620, 200, function () love.event.quit() end,
+        local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end,
         "game/assets/start_selection_exit.png", "game/assets/start_selection_exit_selected.png")  -- DON'T FORGET TO ADD SAVING
 
         buttonStart.selected = true
@@ -113,6 +113,9 @@ function GameState()
         -- Initialize Progress State
         canPause = false
 
+        local sfx_difficulty = love.audio.newSource("game/audio/submit.wav", "static")
+        sfx_difficulty:setVolume(SfxVolume * MainVolume)
+
         local i_background = love.graphics.newImage("game/assets/progress UI.png")
         local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
         local i_difficulty = love.graphics.newImage("game/assets/difficulty_selection.png")
@@ -121,15 +124,15 @@ function GameState()
         local i_hard = love.graphics.newImage("game/assets/difficulty_hard.png")
         local i_insane = love.graphics.newImage("game/assets/difficulty_insane.png")
 
-        local buttonAct1 = ButtonGear(150, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act1.png", "game/assets/gear_act1_back.png", "game/assets/gear_act1_back_hover.png")
-        local buttonAct2 = ButtonGear(450, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
-        local buttonAct3 = ButtonGear(750, 350, 100, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
-        local buttonAct4 = ButtonGear(1050, 350, 142, function () Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
+        local buttonAct1 = ButtonGear(150, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act1.png", "game/assets/gear_act1_back.png", "game/assets/gear_act1_back_hover.png")
+        local buttonAct2 = ButtonGear(450, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
+        local buttonAct3 = ButtonGear(750, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
+        local buttonAct4 = ButtonGear(1050, 350, 142, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
 
-        local buttonDifficultyEasy = Button(378, 632, 140, 50, function () Difficulty = 1 end, "game/assets/difficulty_easy_selected.png")
-        local buttonDifficultyNormal = Button(526, 632, 140, 50, function () Difficulty = 2 end, "game/assets/difficulty_normal_selected.png")
-        local buttonDifficultyHard = Button(676, 632, 140, 50, function () Difficulty = 3 end, "game/assets/difficulty_hard_selected.png")
-        local buttonDifficultyInsane = Button(824, 632, 140, 50, function () Difficulty = 4 end, "game/assets/difficulty_insane_selected.png")
+        local buttonDifficultyEasy = Button(378, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 1 end, "game/assets/difficulty_easy_selected.png")
+        local buttonDifficultyNormal = Button(526, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 2 end, "game/assets/difficulty_normal_selected.png")
+        local buttonDifficultyHard = Button(676, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 3 end, "game/assets/difficulty_hard_selected.png")
+        local buttonDifficultyInsane = Button(824, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 4 end, "game/assets/difficulty_insane_selected.png")
 
         if Act == 1 then buttonAct1.locked = false
         elseif Act == 2 then buttonAct2.locked = false
@@ -236,8 +239,7 @@ function GameState()
         pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
 
         local sfx_bubbling = love.audio.newSource("game/audio/bubbling.wav", "stream") sfx_bubbling:setVolume(0.9 * SfxVolume * MainVolume)
-        local sfx_transCombine = love.audio.newSource("game/audio/transmute_combine.wav", "stream") sfx_transCombine:setVolume(SfxVolume * MainVolume)
-        local sfx_transBreak = love.audio.newSource("game/audio/transmute_break.wav", "stream") sfx_transBreak:setVolume(SfxVolume * MainVolume)
+        local sfx_transmute = love.audio.newSource("game/audio/transmute_zap.wav", "stream") sfx_transmute:setVolume(0.7 * SfxVolume * MainVolume)
 
         local background = love.graphics.newImage("game/assets/transmute UI.png")
         
@@ -365,7 +367,7 @@ function GameState()
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
 
-                    if sfx_transCombine:isPlaying() then sfx_transCombine:stop() end sfx_transCombine:play()
+                    if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
                 end
             elseif #transmutationQueue == 1 then
                 local value = transmutationQueue[1].value
@@ -400,7 +402,7 @@ function GameState()
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
 
-                    if sfx_transBreak:isPlaying() then sfx_transBreak:stop() end sfx_transBreak:play()
+                    if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
                 end
             end
         end
@@ -607,6 +609,8 @@ function GameState()
     
                             glorbHolder = {}
                             glorbSelection = {}
+
+                            if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
                             break
                         end
                     end
@@ -639,6 +643,8 @@ function GameState()
                             transmutationQueue = {}
                             glorbHolder = {}
                             glorbSelection = {}
+
+                            if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
                             break
                         end
                     end
@@ -859,10 +865,11 @@ function GameState()
         local dNumFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
         local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 35)
 
-        local sfx_click = love.audio.newSource("game/audio/click.wav", "static")
-        sfx_click:setVolume(SfxVolume* MainVolume)
+        local sfx_click = love.audio.newSource("game/audio/typing.wav", "static")
+        sfx_click:setVolume(SfxVolume * MainVolume)
+        sfx_click:setPitch(0.8)
 
-        local sfx_click_undo = love.audio.newSource("game/audio/click.wav", "static")
+        local sfx_click_undo = love.audio.newSource("game/audio/typing2.wav", "static")
         sfx_click_undo:setVolume(SfxVolume * MainVolume)
         sfx_click_undo:setPitch(0.8)
 
@@ -872,6 +879,12 @@ function GameState()
 
         local sfx_tick = love.audio.newSource("game/audio/tick.mp3", "static")
         sfx_tick:setVolume(0 * SfxVolume * MainVolume)
+
+        local sfx_ding = love.audio.newSource("game/audio/chamber.wav", "static")
+        sfx_ding:setVolume(SfxVolume * MainVolume)
+
+        local sfx_wrong = love.audio.newSource("game/audio/wrong.wav", "static")
+        sfx_wrong:setVolume(SfxVolume * MainVolume)
 
 
         -- Game State Loop
@@ -949,10 +962,12 @@ function GameState()
 
                         for i, v in ipairs(chambers) do if v.locked == true then fillCheck = fillCheck + 1 end end
 
-                        if fillCheck == #chambers then chamberCount = chamberCount + 1 end
-                        --if chamberCount ~= 7 then chamberCount = chamberCount + 1 end
+                        if fillCheck == #chambers then
+                            chamberCount = chamberCount + 1
+                            if sfx_ding:isPlaying() then sfx_ding:stop() end sfx_ding:play()
+                        end
                         fillChambers()
-                    else resetChambers() end
+                    else if sfx_wrong:isPlaying() then sfx_wrong:stop() end sfx_wrong:play() resetChambers() end
                     
                     word = ''
                     typedLetters = {}
