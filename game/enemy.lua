@@ -1,4 +1,4 @@
-function Enemy(xpos, ypos, t)
+function Enemy(xpos, ypos, t, h)
     local self = {}
     self.x = xpos or 0
     self.y = ypos or 0
@@ -13,10 +13,12 @@ function Enemy(xpos, ypos, t)
         elseif self.type == "basic" then return 150, 35, 30, Animation("game/assets/squid_sprite.png", 280, 280, 0.35, "basic"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.35, "basic")
         elseif self.type == "fast" then return 250, 25, 20, Animation("game/assets/squid_sprite.png", 280, 280, 0.2, "fast"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.2, "fast")
         elseif self.type == "strong" then return 100, 50, 100, Animation("game/assets/squid_sprite.png", 280, 280, 0.5, "strong"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.5, "strong")
+        elseif self.type == "magala" then return 250, 50, 2500, Animation("game/assets/squid_magala.png", 560, 560, 0.2, "magala"), Animation("game/assets/squid_magala_flip.png", 560, 560, 0.2, "magala")
         elseif self.type == "blank" then return 0, 0, 0, nil end
     end
 
     self.speed, self.radius, self.health, self.sprite, self.sprite_flipped = initialize()
+    if h ~= nil then self.health = h end
     local maxHP = self.health
 
     self.update = function (dt) if self.sprite ~= nil then self.sprite.update(dt) end if self.sprite_flipped ~= nil then self.sprite_flipped.update(dt) end end

@@ -1,4 +1,4 @@
-function TestLevel()
+function Act1_Easy()
     local self = {}
     self.canSpawn = true
     self.spawnTimer = 2
@@ -10,7 +10,21 @@ function TestLevel()
     }
 
     local enemies = {
-        Enemy(0, 0, "blank")
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "blank"), -- break
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "blank"), -- break
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "blank"), -- break
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic"),
+        Enemy(0, 0, "basic")
     }
     local spawnIndex = 1
 

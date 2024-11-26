@@ -20,7 +20,8 @@ function DamageNumber(num, x, y, font, l)
     end
 
     self.draw = function()
-        if line == 3 then love.graphics.setColor(0.75, 0.75, 0, self.opacity)
+        if num > 30 then love.graphics.setColor(0.75, 0, 0, self.opacity)
+        elseif line == 3 then love.graphics.setColor(0.75, 0.75, 0, self.opacity)
         else love.graphics.setColor(1, 1, 0, self.opacity) end
 
         love.graphics.draw(text, self.x - text:getWidth(), self.y - text:getHeight())

@@ -12,6 +12,7 @@ function GameState()
     local Act, Difficulty = 1, 2
     local alive = true
     local gameResults
+    local started = false
 
     local Fade
 
@@ -27,8 +28,10 @@ function GameState()
         -- Image by pikisuperstar on Freepik
         local i_background = love.graphics.newImage("game/assets/start UI.png")
 
-        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() Fade.start(function () gameState = progress end) end,
-        "game/assets/start_selection_new.png", "game/assets/start_selection_new_selected.png")
+        local startPath = (started == true and "game/assets/start_selection_continue.png" or "game/assets/start_selection_new.png")
+        local startSelectedPath = (started == true and "game/assets/start_selection_continue_selected.png" or "game/assets/start_selection_new_selected.png")
+
+        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startPath, startSelectedPath)
         local buttonSettings = Button(340, 450, 620, 200, function () end,
         "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
         local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end,
@@ -772,7 +775,22 @@ function GameState()
         local inputX, inputY, inputW, inputH = 50, 770, 920, 80
 
         -- set Level based on Act/Difficulty
-        local Level = TestLevel()
+        local Level
+        local magalaManager = nil
+        if Act == 1 and Difficulty == 1 then Level = Act1_Easy()
+        elseif Act == 1 and Difficulty == 2 then Level = Act1_Normal()
+        elseif Act == 1 and Difficulty == 3 then Level = Act1_Hard()
+        elseif Act == 1 and Difficulty == 4 then Level = Act1_Insane()
+        elseif Act == 2 and Difficulty == 1 then Level = Act2_Easy()
+        elseif Act == 2 and Difficulty == 2 then Level = Act2_Normal()
+        elseif Act == 2 and Difficulty == 3 then Level = Act2_Hard()
+        elseif Act == 2 and Difficulty == 4 then Level = Act2_Insane()
+        elseif Act == 3 and Difficulty == 1 then Level = Act3_Easy()
+        elseif Act == 3 and Difficulty == 2 then Level = Act3_Normal()
+        elseif Act == 3 and Difficulty == 3 then Level = Act3_Hard()
+        elseif Act == 3 and Difficulty == 4 then Level = Act3_Insane() magalaManager = {}
+        else Level = TestLevel() end
+
         local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
@@ -863,7 +881,7 @@ function GameState()
 
         local VFX = {}
         local dNumFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
-        local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 35)
+        local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 65)
 
         local sfx_click = love.audio.newSource("game/audio/typing.wav", "static")
         sfx_click:setVolume(SfxVolume * MainVolume)
@@ -877,8 +895,8 @@ function GameState()
         sfx_hit:setVolume(0.7 * SfxVolume * MainVolume)
         sfx_hit:setPitch(0.8)
 
-        local sfx_tick = love.audio.newSource("game/audio/tick.mp3", "static")
-        sfx_tick:setVolume(0 * SfxVolume * MainVolume)
+        local sfx_bigHit = love.audio.newSource("game/audio/big_hit.wav", "static")
+        sfx_bigHit:setVolume(SfxVolume * MainVolume)
 
         local sfx_ding = love.audio.newSource("game/audio/chamber.wav", "static")
         sfx_ding:setVolume(SfxVolume * MainVolume)
@@ -1056,10 +1074,10 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
 
-                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
                             else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
@@ -1099,10 +1117,10 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
 
-                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
                             else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
@@ -1142,10 +1160,10 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 20 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and dNumBFont or dNumFont)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font, 3))
 
-                            if hitByCount > 1 then if sfx_tick:isPlaying() then sfx_tick:stop() end sfx_tick:play()
+                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
                             else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
                         end
                         break
@@ -1251,14 +1269,24 @@ function GameState()
                 end
                 
                 Act = Act + 1
-            else gameState = start end  -- Big Win
+            else -- Big Win
+                Fade.start(function () gameState = start end)
+                Act = 1
+                Difficulty = 2
+                started = false
+
+                Deck = nil
+            end
         end
         else nextFunc = function () -- Restart Game
             Fade.start(function () gameState = start end)
             alive = true
             Act = 1
             Difficulty = 2
-            -- Reset Deck/Storage
+            started = false
+
+            Deck = nil
+            Storage = nil
         end end
 
         local nextButton = Button(350, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
@@ -1266,8 +1294,11 @@ function GameState()
         local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
         local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
 
+        local timeFormat = "%i:%i"
+        if math.fmod(gameResults.time, 60) < 10 then timeFormat = "%i:0%i" end
+        
         local timeTitle = love.graphics.newText(resultBoldFont, "Time:  ")
-        local timeText = love.graphics.newText(resultFont, string.format("%i:%i", gameResults.time / 60, math.fmod(gameResults.time, 60)))
+        local timeText = love.graphics.newText(resultFont, string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
 
         local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ")
         local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
@@ -1345,6 +1376,14 @@ function GameState()
 
         require("game.vfx.numbers")
 
+        require("game.levels.act1_easy")
+        require("game.levels.act1_normal")
+        require("game.levels.act1_hard")
+        require("game.levels.act1_insane")
+        require("game.levels.act2_easy")
+        require("game.levels.act2_normal")
+        require("game.levels.act2_hard")
+        require("game.levels.act2_insane")
         require("game.levels.test_level")
 
         cron = require "cron"
