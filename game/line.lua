@@ -1,10 +1,10 @@
-function Line(x1, x2, y, s, r)
+function Line(x1, x2, y, l, r)
     local self = {}
     local startX = x1 or 0
     local endX = x2 or 0
     local locationY = y or 0
     local rebound = r or false
-    local shown = s or false
+    local line = l
     self.riders = {}
     self.prevLine = {}
     self.nextLine = {}
@@ -26,8 +26,9 @@ function Line(x1, x2, y, s, r)
         if     rebound == true and next(self.prevLine) ~= nil then self.prevLine.addRider(rider)
         elseif rider.speed > 0 and next(self.nextLine) ~= nil and next(self.prevLine) ~= nil then self.nextLine.addRider(rider)
         elseif rider.speed < 0 and next(self.prevLine) ~= nil then self.prevLine.addRider(rider)
-        elseif rider.speed < 0 and next(self.nextLine) ~= nil then self.nextLine.addRider(rider) end
-        
+        elseif rider.speed < 0 and next(self.nextLine) ~= nil then self.nextLine.addRider(rider)
+        else rider.escaped = true end
+
         table.remove(self.riders, riderIndex)
     end
 
@@ -45,14 +46,7 @@ function Line(x1, x2, y, s, r)
         end
     end
 
-    self.draw = function ()
-        if shown then
-            love.graphics.line(startX, locationY, endX, locationY)
-        end
-    
-        -- Draw Riders
-        for i, v in ipairs(self.riders) do v.draw() end
-    end
+    self.draw = function () for i, v in ipairs(self.riders) do v.draw() end end
 
     return self
 end

@@ -32,6 +32,7 @@ function Animation(i, w, h, d, t)
         currentTime = currentTime + dt
         if currentTime >= self.duration then currentTime = currentTime - self.duration end
         spriteNum = math.floor(currentTime / self.duration * #quads) + 1
+        if spriteNum > #quads then spriteNum = #quads end
     end
 
     self.draw = function (x, y)

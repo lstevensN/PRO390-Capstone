@@ -711,7 +711,7 @@ function GameState()
 
             boilerCount:set("Letters: "..tostring(#Deck))
 
-            if not sfx_bubbling:isPlaying() then sfx_bubbling:play() end
+            --if not sfx_bubbling:isPlaying() then sfx_bubbling:play() end
             if not bgm_menu:isPlaying() then bgm_menu:play() end
         end
 
@@ -770,9 +770,9 @@ function GameState()
         local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
-        local line = Line(-100, 1300, 100, false)
-        local line2 = Line(-100, 1300, 265, false)
-        local line3 = Line(-100, 1000, 430, false, true)
+        local line = Line(-100, 1300, 100, 1)
+        local line2 = Line(-100, 1300, 265, 2)
+        local line3 = Line(-100, 1000, 430, 3, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -1017,6 +1017,7 @@ function GameState()
 
             gun.aim()
             fireTimer:update(dt, dt)
+            gun.update(dt)
 
             for i, v in ipairs(submittedLetters) do
                 if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then

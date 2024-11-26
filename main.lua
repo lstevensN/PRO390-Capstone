@@ -5,9 +5,9 @@ local screenX, screenY = 1200, 900
 XOffset = 0
 ScaleFactor = 0
 
-MainVolume = 100 / 100
+MainVolume = 0 / 100
 MusicVolume = 100 / 100
-SfxVolume = 70 / 100
+SfxVolume = 100 / 100
 
 local mouseX, mouseY = 0, 0
 

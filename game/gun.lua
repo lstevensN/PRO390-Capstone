@@ -11,9 +11,11 @@ function Gun(xpos, ypos, mode)
     local canShoot = false
     local letterIndex = 1
     local targetIndex = 1
-    local bulletSpeed = 4000
+    local bulletSpeed = 3000
 
-    local whoosh = love.audio.newSource("game/audio/whoosh.mp3", "static")
+    local whoosh = love.audio.newSource("game/audio/whoosh.wav", "static")
+    whoosh:setVolume(0.4 * SfxVolume * MainVolume)
+    whoosh:setPitch(1.2)
 
     local next = next
 
@@ -75,12 +77,17 @@ function Gun(xpos, ypos, mode)
                 end
             end
 
-            dx = self.enemies[targetIndex].x - x
+            local offset = 0
+            if self.enemies[targetIndex].speed ~= nil and self.enemies[targetIndex].speed < 0 then offset = -20 else offset = 20 end
+
+            dx = self.enemies[targetIndex].x - x + offset
             dy = -(self.enemies[targetIndex].y - y)
 
             if targetIndex ~= 1 then canShoot = true else canShoot = false end
         end
     end
+
+    self.update = function(dt) for i, v in ipairs(self.enemies) do if v.escaped == true then self.removeEnemy(v) end end end
 
     self.draw = function ()
         love.graphics.draw(image, x, y, math.atan2(dx, dy), 0.5, 0.5, 205, 325)

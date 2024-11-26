@@ -6,6 +6,7 @@ function Enemy(xpos, ypos, t)
     self.type = t or "empty"
     self.hitBy = {}
     self.sandwichHeld = nil
+    self.escaped = false
 
     local initialize = function ()
         if self.type == "empty" then return 0, 0, 1000, nil
@@ -21,8 +22,6 @@ function Enemy(xpos, ypos, t)
     self.update = function (dt) if self.sprite ~= nil then self.sprite.update(dt) end if self.sprite_flipped ~= nil then self.sprite_flipped.update(dt) end end
 
     self.draw = function ()
-        --love.graphics.setColor(0, 0, 0)
-        --love.graphics.circle("line", self.x, self.y, self.radius)
         if self.sprite ~= nil and self.speed > 0 then
             if self.type == "fast" then self.sprite.draw(self.x - 35, self.y - 35)
             elseif self.type == "basic" then self.sprite.draw(self.x - 50, self.y - 50)
