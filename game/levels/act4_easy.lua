@@ -1,8 +1,9 @@
-function Act3_Easy()
+function Act4_Easy()
     local self = {}
     self.canSpawn = true
     self.spawnTimer = 2
     self.over = false
+    self.music = love.audio.newSource("game/audio/TheShowdown_Music.wav", "stream")
     self.sandwiches = {
         Sandwich(970, 430),
         Sandwich(990, 430),
@@ -10,33 +11,7 @@ function Act3_Easy()
     }
 
     local enemies = {
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "blank"), -- break
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong"),
-        Enemy(0, 0, "blank"), -- break
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "blank"), -- break
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "fast"),
-        Enemy(0, 0, "basic"),
-        Enemy(0, 0, "strong")
+        Enemy(0, 0, "magala", 1000)
     }
     local spawnIndex = 1
 

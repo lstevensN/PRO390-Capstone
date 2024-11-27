@@ -34,7 +34,7 @@ function Enemy(xpos, ypos, t, h)
             if self.type == "fast" then self.sprite_flipped.draw(self.x - 35, self.y - 35)
             elseif self.type == "basic" then self.sprite_flipped.draw(self.x - 50, self.y - 50)
             elseif self.type == "strong" then self.sprite_flipped.draw(self.x - 70, self.y - 70)
-            elseif self.type == "magala" then self.sprite_flipped.draw(self.x - 100, self.y - 100)
+            elseif self.type == "magala" then self.sprite_flipped.draw(self.x - 140, self.y - 140)
             end
         end
 

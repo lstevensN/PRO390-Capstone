@@ -13,6 +13,7 @@ function GameState()
     local alive = true
     local gameResults
     local started = false
+    local unlocked = false
 
     local Fade
 
@@ -27,6 +28,10 @@ function GameState()
 
         -- Image by pikisuperstar on Freepik
         local i_background = love.graphics.newImage("game/assets/start UI.png")
+        local i_logo = love.graphics.newImage("game/assets/logo.png")
+        local i_howToPlay = love.graphics.newImage("game/assets/how_to_play.png")
+
+        local showTutorial = false
 
         local startPath = (started == true and "game/assets/start_selection_continue.png" or "game/assets/start_selection_new.png")
         local startSelectedPath = (started == true and "game/assets/start_selection_continue_selected.png" or "game/assets/start_selection_new_selected.png")
@@ -36,6 +41,7 @@ function GameState()
         "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
         local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end,
         "game/assets/start_selection_exit.png", "game/assets/start_selection_exit_selected.png")  -- DON'T FORGET TO ADD SAVING
+        local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = true end, "game/assets/info.png")
 
         buttonStart.selected = true
 
@@ -72,9 +78,13 @@ function GameState()
 
         -- Start State Loop
         gameState = function (dt)
+            if GetKeyPressed() == "escape" then showTutorial = false ResetKeyPressed() end
+
             buttonStart.update(dt)
             buttonSettings.update(dt)
             buttonQuit.update(dt)
+
+            buttonInfo.update(dt)
 
             local x, y = love.mouse.getPosition()
             x = (x - XOffset) / ScaleFactor
@@ -105,9 +115,22 @@ function GameState()
         drawState = function ()
             love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
 
+            love.graphics.setColor(0.9, 0.9, 0.9)
+            love.graphics.circle("fill", 900, 400, 200)
+            love.graphics.setColor(0, 0, 0)
+            love.graphics.setLineWidth(10)
+            love.graphics.circle("line", 900, 400, 200)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.setLineWidth(1)
+            love.graphics.draw(i_logo, 735, 235, 0, 0.5, 0.5)
+
             buttonStart.draw()
             buttonSettings.draw()
             buttonQuit.draw()
+
+            buttonInfo.draw()
+
+            if showTutorial == true then love.graphics.draw(i_howToPlay, 350, 50, 0, 0.5) end
         end
     end
 
@@ -178,8 +201,10 @@ function GameState()
 
             if hoveredAct == 1 then descriptionText:set((Act >= hoveredAct) and "The Hunger" or "???")
             elseif hoveredAct == 2 then descriptionText:set((Act >= hoveredAct) and "The Battle" or "???")
-            elseif hoveredAct == 3 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
-            elseif hoveredAct == 4 then descriptionText:set((Act >= hoveredAct) and "The Party" or "???") end
+            elseif hoveredAct == 3 and Difficulty == 4 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
+            elseif hoveredAct == 3 then descriptionText:set((Act >= hoveredAct) and "The War" or "???")
+            elseif hoveredAct == 4 and Difficulty == 4 and unlocked == true then descriptionText:set((Act >= hoveredAct) and "The Party" or "???")
+            elseif hoveredAct == 4 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???") end
 
             if Act == 4 and hoveredAct == 4 then rewardText:set("REWARD: ???")
             elseif Difficulty == 1 and hoveredAct == 1 then rewardText:set("REWARD: 1 GLORB")
@@ -777,7 +802,7 @@ function GameState()
         -- set Level based on Act/Difficulty
         local Level
         local magalaManager = nil
-        if Act == 1 and Difficulty == 1 then Level = TestLevel() --Act1_Easy()
+        if Act == 1 and Difficulty == 1 then Level = Act1_Easy()
         elseif Act == 1 and Difficulty == 2 then Level = Act1_Normal()
         elseif Act == 1 and Difficulty == 3 then Level = Act1_Hard()
         elseif Act == 1 and Difficulty == 4 then Level = Act1_Insane()
@@ -789,6 +814,11 @@ function GameState()
         elseif Act == 3 and Difficulty == 2 then Level = Act3_Normal()
         elseif Act == 3 and Difficulty == 3 then Level = Act3_Hard()
         elseif Act == 3 and Difficulty == 4 then Level = Act3_Insane() magalaManager = {}
+        elseif Act == 4 and Difficulty == 1 then Level = Act4_Easy() magalaManager = {}
+        elseif Act == 4 and Difficulty == 2 then Level = Act4_Normal() magalaManager = {}
+        elseif Act == 4 and Difficulty == 3 then Level = Act4_Hard() magalaManager = {}
+        elseif Act == 4 and Difficulty == 4 and unlocked == true then Level = Act4_Party() magalaManager = {}
+        elseif Act == 4 and Difficulty == 4 then Level = Act4_Insane() magalaManager = {}
         else Level = TestLevel() end
 
         if Level.music ~= nil then Level.music:play() end
@@ -798,7 +828,7 @@ function GameState()
         
         local line = Line(-100, 1300, 100, 1)
         local line2 = Line(-100, 1300, 265, 2)
-        local line3 = Line(-100, 1000, 430, 3, true)
+        local line3 = Line(-100, 1050, 430, 3, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -1313,34 +1343,39 @@ function GameState()
         end
 
         local nextFunc
-        if alive == true then nextFunc = function ()
-            if Act ~= 4 then
-                Fade.start(function () gameState = progress end)
+        if alive == true then
+            nextFunc = function ()
+                if Act ~= 4 then -- Normal Progression
+                    Fade.start(function () gameState = progress end)
 
-                -- Put dropped Glorbs into Storage
-                local glorbReward = Act * Difficulty
-                for i = 1, glorbReward do
-                    if #Storage ~= 25 then
-                        table.insert(Storage, Letter("?", 0, 0, "glorb"))
-                    else break end
+                    -- Put dropped Glorbs into Storage
+                    local glorbReward = Act * Difficulty
+                    for i = 1, glorbReward do
+                        if #Storage ~= 25 then
+                            table.insert(Storage, Letter("?", 0, 0, "glorb"))
+                        else break end
+                    end
+
+                    if Act == 3 and Difficulty == 4 then unlocked = true end
+
+                    Act = Act + 1
+                else -- Big Win
+                    Fade.start(function () gameState = start end)
+                    Act = 1
+                    Difficulty = 2
+                    started = false
+                    unlocked = false
+
+                    Deck = nil
                 end
-                
-                Act = Act + 1
-            else -- Big Win
-                Fade.start(function () gameState = start end)
-                Act = 1
-                Difficulty = 2
-                started = false
-
-                Deck = nil
             end
-        end
         else nextFunc = function () -- Restart Game
             Fade.start(function () gameState = start end)
             alive = true
             Act = 1
             Difficulty = 2
             started = false
+            unlocked = false
 
             Deck = nil
             Storage = nil
@@ -1409,6 +1444,11 @@ function GameState()
         require("game.levels.act3_normal")
         require("game.levels.act3_hard")
         require("game.levels.act3_insane")
+        require("game.levels.act4_easy")
+        require("game.levels.act4_normal")
+        require("game.levels.act4_hard")
+        require("game.levels.act4_insane")
+        require("game.levels.act4_party")
         require("game.levels.test_level")
 
         cron = require "cron"
