@@ -7,11 +7,8 @@ function Button(xpos, ypos, w, h, onclick, i, ip)
     self.pressed = false
     self.selected = false
 
-    local setImage = function () if i ~= nil then return love.graphics.newImage(i) else return nil end end
-    local setImagePressed = function () if ip ~= nil then return love.graphics.newImage(ip) else return nil end end
-
-    self.image = setImage() or nil
-    self.imagePressed = setImagePressed() or nil
+    self.image = i or nil
+    self.imagePressed = ip or nil
 
     local firstClick = false
 
@@ -59,24 +56,9 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
     self.locked = true
     -- Image Property?
 
-    local setFront = function ()
-        if f ~= nil then return love.graphics.newImage(f)
-        else return nil end
-    end
-
-    local setBack = function ()
-        if b ~= nil then return love.graphics.newImage(b)
-        else return nil end
-    end
-
-    local setBackHovered = function ()
-        if bh ~= nil then return love.graphics.newImage(bh)
-        else return nil end
-    end
-
-    self.front = setFront() or nil
-    self.back = setBack() or nil
-    self.backHovered = setBackHovered() or nil
+    self.front = f or nil
+    self.back = b or nil
+    self.backHovered = bh or nil
 
     local firstClick = false
     local rotation = 0

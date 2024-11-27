@@ -82,7 +82,7 @@ function Act4_Party()
         Enemy(0, 0, "basic"),
         Enemy(0, 0, "strong"),
     }
-    local spawnIndex = 50
+    local spawnIndex = 1
     local time = 0
 
     self.spawnEnemy = function ()

@@ -17,8 +17,131 @@ function GameState()
 
     local Fade
 
-    local sfx_confirm = love.audio.newSource("game/audio/confirm.wav", "static") sfx_confirm:setVolume(0.8 * SfxVolume * MainVolume)
-    local bgm_menu = love.audio.newSource("game/audio/Menu_Music.wav", "stream") bgm_menu:setVolume(MusicVolume * MainVolume)
+    --#region ASSETS
+        -- START
+        local i_start_background = love.graphics.newImage("game/assets/start UI.png") -- Image by pikisuperstar on Freepik
+        local i_start_logo = love.graphics.newImage("game/assets/logo.png")
+        local i_start_howToPlay = love.graphics.newImage("game/assets/how_to_play.png")
+
+        local i_b_start_new = love.graphics.newImage("game/assets/start_selection_new.png")
+        local i_b_start_newSelected = love.graphics.newImage("game/assets/start_selection_new_selected.png")
+        local i_b_start_continue = love.graphics.newImage("game/assets/start_selection_continue.png")
+        local i_b_start_continueSelected = love.graphics.newImage("game/assets/start_selection_continue_selected.png")
+        local i_b_start_settings = love.graphics.newImage("game/assets/start_selection_settings.png")
+        local i_b_start_settingsSelected = love.graphics.newImage("game/assets/start_selection_settings_selected.png")
+        local i_b_start_quit = love.graphics.newImage("game/assets/start_selection_exit.png")
+        local i_b_start_quitSelected = love.graphics.newImage("game/assets/start_selection_exit_selected.png")
+        local i_b_start_info = love.graphics.newImage("game/assets/info.png")
+
+
+        -- PROGRESS
+        local i_progress_background = love.graphics.newImage("game/assets/progress UI.png")
+        local i_progress_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
+        local i_progress_difficulty = love.graphics.newImage("game/assets/difficulty_selection.png")
+        local i_progress_easy = love.graphics.newImage("game/assets/difficulty_easy.png")
+        local i_progress_normal = love.graphics.newImage("game/assets/difficulty_normal.png")
+        local i_progress_hard = love.graphics.newImage("game/assets/difficulty_hard.png")
+        local i_progress_insane = love.graphics.newImage("game/assets/difficulty_insane.png")
+
+        local i_b_progress_act1Front = love.graphics.newImage("game/assets/gear_act1.png")
+        local i_b_progress_act1Back = love.graphics.newImage("game/assets/gear_act1_back.png")
+        local i_b_progress_act1BackHovered = love.graphics.newImage("game/assets/gear_act1_back_hover.png")
+        local i_b_progress_act2Front = love.graphics.newImage("game/assets/gear_act2.png")
+        local i_b_progress_act2Back = love.graphics.newImage("game/assets/gear_act2_back.png")
+        local i_b_progress_act2BackHovered = love.graphics.newImage("game/assets/gear_act2_back_hover.png")
+        local i_b_progress_act3Front = love.graphics.newImage("game/assets/gear_act3.png")
+        local i_b_progress_act3Back = love.graphics.newImage("game/assets/gear_act3_back.png")
+        local i_b_progress_act3BackHovered = love.graphics.newImage("game/assets/gear_act3_back_hover.png")
+        local i_b_progress_act4Front = love.graphics.newImage("game/assets/gear_act4.png")
+        local i_b_progress_act4Back = love.graphics.newImage("game/assets/gear_act4_back.png")
+        local i_b_progress_act4BackHovered = love.graphics.newImage("game/assets/gear_act4_back_hover.png")
+        local i_b_progress_difficultyEasy = love.graphics.newImage("game/assets/difficulty_easy_selected.png")
+        local i_b_progress_difficultyNormal = love.graphics.newImage("game/assets/difficulty_normal_selected.png")
+        local i_b_progress_difficultyHard = love.graphics.newImage("game/assets/difficulty_hard_selected.png")
+        local i_b_progress_difficultyInsane = love.graphics.newImage("game/assets/difficulty_insane_selected.png")
+
+        local f_progress_titleFont = love.graphics.newFont("game/assets/fonts/mixolydian titling bd.otf", 36)
+        local f_progress_descriptionFont = love.graphics.newFont("game/assets/fonts/NotoSerif-Regular.ttf", 28)
+        
+        local t_progress_titleText = love.graphics.newText(f_progress_titleFont)
+        local t_progress_descriptionText = love.graphics.newText(f_progress_descriptionFont, "Hello")
+        local t_progress_rewardText = love.graphics.newText(f_progress_descriptionFont, "Hello")
+
+        local sfx_progress_difficulty = love.audio.newSource("game/audio/submit.wav", "static")
+
+
+        -- PREP
+        local i_prep_background = love.graphics.newImage("game/assets/transmute UI.png")
+        local i_prep_glorbSelection = love.graphics.newImage("game/assets/glorb_selection.png")
+
+        local i_b_prep_go = love.graphics.newImage("game/assets/go_button.png")
+        local i_b_prep_goHovered = love.graphics.newImage("game/assets/go_button_pressed.png")
+        local i_b_prep_transmute = love.graphics.newImage("game/assets/transmute_button.png")
+        local i_b_prep_transmuteHovered = love.graphics.newImage("game/assets/transmute_button_pressed.png")
+
+        local f_prep_countFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
+        local f_prep_previewFont = love.graphics.newFont("game/assets/fonts/WC_RoughTrad.ttf", 80)
+        
+        local t_prep_previewText = love.graphics.newText(f_prep_previewFont)
+        local t_prep_previewDetails = love.graphics.newText(f_prep_countFont)
+        local t_prep_boilerCount = love.graphics.newText(f_prep_countFont)
+
+        local sfx_prep_bubbling = love.audio.newSource("game/audio/bubbling.wav", "stream")
+        local sfx_prep_transmute = love.audio.newSource("game/audio/transmute_zap.wav", "stream")
+
+
+        -- GAME
+        local i_game_background = love.graphics.newImage("game/assets/beach.png")
+        local i_game_inputAndChambers = love.graphics.newImage("game/assets/input_and_chambers_2.png")
+        local i_game_bench = love.graphics.newImage("game/assets/bench_2.png")
+        local i_game_icon = love.graphics.newImage("game/assets/icon.png")
+        local i_game_sBox = love.graphics.newImage("game/assets/sandwich_box.png")
+
+        local f_game_powerNum = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
+        local f_game_powerBigNum = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 65)
+
+        local t_game_wordText = love.graphics.newText(love.graphics.getFont())
+        local t_game_wordFoundText = love.graphics.newText(love.graphics.getFont())
+        local t_game_wordValueText = love.graphics.newText(love.graphics.getFont())
+
+        local sfx_game_click = love.audio.newSource("game/audio/typing.wav", "static")
+        local sfx_game_clickUndo = love.audio.newSource("game/audio/typing2.wav", "static")
+        local sfx_game_hit = love.audio.newSource("game/audio/splat.mp3", "static")
+        local sfx_game_bigHit = love.audio.newSource("game/audio/big_hit.wav", "static")
+        local sfx_game_ding = love.audio.newSource("game/audio/chamber.wav", "static")
+        local sfx_game_wrong = love.audio.newSource("game/audio/wrong.wav", "static")
+
+
+        -- RESULT
+        local i_result_background = love.graphics.newImage("game/assets/results UI.png")
+
+        local i_b_result_next = love.graphics.newImage("game/assets/next_button.png")
+        local i_b_result_nextHovered = love.graphics.newImage("game/assets/next_button_hover.png")
+
+        local f_result_infoBold = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
+        local f_result_info = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
+        local f_result_tipTitle = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
+        local f_result_tip = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
+
+        local t_result_timeTitle = love.graphics.newText(f_result_infoBold)
+        local t_result_time = love.graphics.newText(f_result_info)
+        local t_result_sandwichTitle = love.graphics.newText(f_result_infoBold)
+        local t_result_sandwich = love.graphics.newText(f_result_info)
+        local t_result_enemiesTitle = love.graphics.newText(f_result_infoBold)
+        local t_result_enemies = love.graphics.newText(f_result_info)
+        local t_result_bestWordTitle = love.graphics.newText(f_result_infoBold)
+        local t_result_bestWord = love.graphics.newText(f_result_info)
+        local t_result_tipTitle = love.graphics.newText(f_result_tipTitle)
+        local t_result_tip = love.graphics.newText(f_result_tip)
+
+
+        -- ALL
+        local i_b_back = love.graphics.newImage("game/assets/back_button.png")
+        local i_b_backHovered = love.graphics.newImage("game/assets/back_button.png")
+
+        local sfx_confirm = love.audio.newSource("game/audio/confirm.wav", "static") sfx_confirm:setVolume(0.8 * SfxVolume * MainVolume)
+        local bgm_menu = love.audio.newSource("game/audio/Menu_Music.wav", "stream") bgm_menu:setVolume(MusicVolume * MainVolume)
+    --#endregion
 
     -- START state
     start = function ()
@@ -26,22 +149,15 @@ function GameState()
         canPause = false
         math.randomseed(os.time())
 
-        -- Image by pikisuperstar on Freepik
-        local i_background = love.graphics.newImage("game/assets/start UI.png")
-        local i_logo = love.graphics.newImage("game/assets/logo.png")
-        local i_howToPlay = love.graphics.newImage("game/assets/how_to_play.png")
-
         local showTutorial = false
 
-        local startPath = (started == true and "game/assets/start_selection_continue.png" or "game/assets/start_selection_new.png")
-        local startSelectedPath = (started == true and "game/assets/start_selection_continue_selected.png" or "game/assets/start_selection_new_selected.png")
+        local startImage = (started == true and i_b_start_continue or i_b_start_new)
+        local startSelectedImage = (started == true and i_b_start_continueSelected or i_b_start_newSelected)
 
-        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startPath, startSelectedPath)
-        local buttonSettings = Button(340, 450, 620, 200, function () end,
-        "game/assets/start_selection_settings.png", "game/assets/start_selection_settings_selected.png")
-        local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end,
-        "game/assets/start_selection_exit.png", "game/assets/start_selection_exit_selected.png")  -- DON'T FORGET TO ADD SAVING
-        local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = true end, "game/assets/info.png")
+        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startImage, startSelectedImage)
+        local buttonSettings = Button(340, 450, 620, 200, function () end, i_b_start_settings, i_b_start_settingsSelected)
+        local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end, i_b_start_quit, i_b_start_quitSelected)  -- DON'T FORGET TO ADD SAVING
+        local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = true end, i_b_start_info)
 
         buttonStart.selected = true
 
@@ -113,7 +229,7 @@ function GameState()
 
         -- Start State Draw Instructions
         drawState = function ()
-            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_start_background, 0, 0, 0, 0.5, 0.5)
 
             love.graphics.setColor(0.9, 0.9, 0.9)
             love.graphics.circle("fill", 900, 400, 200)
@@ -122,7 +238,7 @@ function GameState()
             love.graphics.circle("line", 900, 400, 200)
             love.graphics.setColor(1, 1, 1)
             love.graphics.setLineWidth(1)
-            love.graphics.draw(i_logo, 735, 235, 0, 0.5, 0.5)
+            love.graphics.draw(i_start_logo, 735, 235, 0, 0.5, 0.5)
 
             buttonStart.draw()
             buttonSettings.draw()
@@ -130,7 +246,7 @@ function GameState()
 
             buttonInfo.draw()
 
-            if showTutorial == true then love.graphics.draw(i_howToPlay, 350, 50, 0, 0.5) end
+            if showTutorial == true then love.graphics.draw(i_start_howToPlay, 350, 50, 0, 0.5) end
         end
     end
 
@@ -139,41 +255,26 @@ function GameState()
         -- Initialize Progress State
         canPause = false
 
-        local sfx_difficulty = love.audio.newSource("game/audio/submit.wav", "static")
-        sfx_difficulty:setVolume(SfxVolume * MainVolume)
+        sfx_progress_difficulty:setVolume(SfxVolume * MainVolume)
 
-        local i_background = love.graphics.newImage("game/assets/progress UI.png")
-        local i_tooltip = love.graphics.newImage("game/assets/tooltip_bar.png")
-        local i_difficulty = love.graphics.newImage("game/assets/difficulty_selection.png")
-        local i_easy = love.graphics.newImage("game/assets/difficulty_easy.png")
-        local i_normal = love.graphics.newImage("game/assets/difficulty_normal.png")
-        local i_hard = love.graphics.newImage("game/assets/difficulty_hard.png")
-        local i_insane = love.graphics.newImage("game/assets/difficulty_insane.png")
+        local buttonAct1 = ButtonGear(150, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act1Front, i_b_progress_act1Back, i_b_progress_act1BackHovered)
+        local buttonAct2 = ButtonGear(450, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act2Front, i_b_progress_act2Back, i_b_progress_act2BackHovered)
+        local buttonAct3 = ButtonGear(750, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act3Front, i_b_progress_act3Back, i_b_progress_act3BackHovered)
+        local buttonAct4 = ButtonGear(1050, 350, 142, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act4Front, i_b_progress_act4Back, i_b_progress_act4BackHovered)
 
-        local buttonAct1 = ButtonGear(150, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act1.png", "game/assets/gear_act1_back.png", "game/assets/gear_act1_back_hover.png")
-        local buttonAct2 = ButtonGear(450, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act2.png", "game/assets/gear_act2_back.png", "game/assets/gear_act2_back_hover.png")
-        local buttonAct3 = ButtonGear(750, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act3.png", "game/assets/gear_act3_back.png", "game/assets/gear_act3_back_hover.png")
-        local buttonAct4 = ButtonGear(1050, 350, 142, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, "game/assets/gear_act4.png", "game/assets/gear_act4_back.png", "game/assets/gear_act4_back_hover.png")
-
-        local buttonDifficultyEasy = Button(378, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 1 end, "game/assets/difficulty_easy_selected.png")
-        local buttonDifficultyNormal = Button(526, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 2 end, "game/assets/difficulty_normal_selected.png")
-        local buttonDifficultyHard = Button(676, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 3 end, "game/assets/difficulty_hard_selected.png")
-        local buttonDifficultyInsane = Button(824, 632, 140, 50, function () if sfx_difficulty:isPlaying() then sfx_difficulty:stop() end sfx_difficulty:play() Difficulty = 4 end, "game/assets/difficulty_insane_selected.png")
+        local buttonDifficultyEasy = Button(378, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 1 end, i_b_progress_difficultyEasy)
+        local buttonDifficultyNormal = Button(526, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 2 end, i_b_progress_difficultyNormal)
+        local buttonDifficultyHard = Button(676, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 3 end, i_b_progress_difficultyHard)
+        local buttonDifficultyInsane = Button(824, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 4 end, i_b_progress_difficultyInsane)
 
         if Act == 1 then buttonAct1.locked = false
         elseif Act == 2 then buttonAct2.locked = false
         elseif Act == 3 then buttonAct3.locked = false
         elseif Act == 4 then buttonAct4.locked = false end
 
-        local titleFont = love.graphics.newFont("game/assets/fonts/mixolydian titling bd.otf", 36)
-        local titleText = love.graphics.newText(titleFont)
-        local descriptionFont = love.graphics.newFont("game/assets/fonts/NotoSerif-Regular.ttf", 28)
-        local descriptionText = love.graphics.newText(descriptionFont, "Hello")
-        local rewardText = love.graphics.newText(descriptionFont, "Hello")
-
         local hoveredAct = Act
 
-        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = start end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
+        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = start end) end, i_b_back, i_b_backHovered)
         local back = false
 
 
@@ -197,21 +298,21 @@ function GameState()
             elseif buttonAct4.hoveredOver == true then hoveredAct = 4 end
 
             local completeStatus = (Act > hoveredAct) and " - COMPLETED!" or ""
-            titleText:set("[ACT "..tostring(hoveredAct).."]"..completeStatus)
+            t_progress_titleText:set("[ACT "..tostring(hoveredAct).."]"..completeStatus)
 
-            if hoveredAct == 1 then descriptionText:set((Act >= hoveredAct) and "The Hunger" or "???")
-            elseif hoveredAct == 2 then descriptionText:set((Act >= hoveredAct) and "The Battle" or "???")
-            elseif hoveredAct == 3 and Difficulty == 4 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
-            elseif hoveredAct == 3 then descriptionText:set((Act >= hoveredAct) and "The War" or "???")
-            elseif hoveredAct == 4 and Difficulty == 4 and unlocked == true then descriptionText:set((Act >= hoveredAct) and "The Party" or "???")
-            elseif hoveredAct == 4 then descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???") end
+            if hoveredAct == 1 then t_progress_descriptionText:set((Act >= hoveredAct) and "The Hunger" or "???")
+            elseif hoveredAct == 2 then t_progress_descriptionText:set((Act >= hoveredAct) and "The Battle" or "???")
+            elseif hoveredAct == 3 and Difficulty == 4 then t_progress_descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???")
+            elseif hoveredAct == 3 then t_progress_descriptionText:set((Act >= hoveredAct) and "The War" or "???")
+            elseif hoveredAct == 4 and Difficulty == 4 and unlocked == true then t_progress_descriptionText:set((Act >= hoveredAct) and "The Party" or "???")
+            elseif hoveredAct == 4 then t_progress_descriptionText:set((Act >= hoveredAct) and "The Showdown" or "???") end
 
-            if Act == 4 and hoveredAct == 4 then rewardText:set("REWARD: ???")
-            elseif Difficulty == 1 and hoveredAct == 1 then rewardText:set("REWARD: 1 GLORB")
-            elseif Difficulty == 1 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(1 * hoveredAct).." GLORBS" or "???")
-            elseif Difficulty == 2 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(2 * hoveredAct).." GLORBS" or "???")
-            elseif Difficulty == 3 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(3 * hoveredAct).." GLORBS" or "???")
-            elseif Difficulty == 4 then rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(4 * hoveredAct).." GLORBS" or "???") end
+            if Act == 4 and hoveredAct == 4 then t_progress_rewardText:set("REWARD: ???")
+            elseif Difficulty == 1 and hoveredAct == 1 then t_progress_rewardText:set("REWARD: 1 GLORB")
+            elseif Difficulty == 1 then t_progress_rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(1 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 2 then t_progress_rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(2 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 3 then t_progress_rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(3 * hoveredAct).." GLORBS" or "???")
+            elseif Difficulty == 4 then t_progress_rewardText:set((Act >= hoveredAct) and "REWARD: "..tostring(4 * hoveredAct).." GLORBS" or "???") end
 
             backButton.update(dt)
 
@@ -221,7 +322,7 @@ function GameState()
 
         -- Progress State Draw Instructions
         drawState = function ()
-            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_progress_background, 0, 0, 0, 0.5, 0.5)
 
             if Act > 1 then love.graphics.setColor(0.5, 0.5, 0.5) end
             buttonAct1.draw()
@@ -236,12 +337,12 @@ function GameState()
             buttonAct4.draw()
             love.graphics.setColor(1, 1, 1)
 
-            love.graphics.draw(i_difficulty, 300, 600, 0, 0.5, 0.5)
+            love.graphics.draw(i_progress_difficulty, 300, 600, 0, 0.5, 0.5)
             love.graphics.setColor(0.5, 0.5, 0.5)
-            love.graphics.draw(i_easy, 308, 607, 0, 0.25, 0.25)
-            love.graphics.draw(i_normal, 456, 607, 0, 0.25, 0.25)
-            love.graphics.draw(i_hard, 606, 607, 0, 0.25, 0.25)
-            love.graphics.draw(i_insane, 754, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_progress_easy, 308, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_progress_normal, 456, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_progress_hard, 606, 607, 0, 0.25, 0.25)
+            love.graphics.draw(i_progress_insane, 754, 607, 0, 0.25, 0.25)
             love.graphics.setColor(1, 1, 1)
 
             if Difficulty == 1 then buttonDifficultyEasy.draw()
@@ -249,12 +350,12 @@ function GameState()
             elseif Difficulty == 3 then buttonDifficultyHard.draw()
             elseif Difficulty == 4 then buttonDifficultyInsane.draw() end
 
-            love.graphics.draw(i_tooltip, 0, 720, 0, 0.5, 0.5)
+            love.graphics.draw(i_progress_tooltip, 0, 720, 0, 0.5, 0.5)
             love.graphics.setColor(0, 0, 0)
-            love.graphics.draw(titleText, 50, 726, 0)
-            love.graphics.draw(rewardText, 1180 - rewardText:getWidth(), 728, 0)
+            love.graphics.draw(t_progress_titleText, 50, 726, 0)
+            love.graphics.draw(t_progress_rewardText, 1180 - t_progress_rewardText:getWidth(), 728, 0)
             love.graphics.setColor(1, 1, 1)
-            love.graphics.draw(descriptionText, 50, 790, 0)
+            love.graphics.draw(t_progress_descriptionText, 50, 790, 0)
 
             backButton.draw()
         end
@@ -266,23 +367,15 @@ function GameState()
         canPause = false
         pauseDrawState = function () love.graphics.rectangle("fill", 450, 200, 300, 400) end
 
-        local sfx_bubbling = love.audio.newSource("game/audio/bubbling.wav", "stream") sfx_bubbling:setVolume(0.9 * SfxVolume * MainVolume)
-        local sfx_transmute = love.audio.newSource("game/audio/transmute_zap.wav", "stream") sfx_transmute:setVolume(0.7 * SfxVolume * MainVolume)
-
-        local background = love.graphics.newImage("game/assets/transmute UI.png")
+        sfx_prep_bubbling:setVolume(0.9 * SfxVolume * MainVolume)
+        sfx_prep_transmute:setVolume(0.7 * SfxVolume * MainVolume)
         
-        local countFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
-        local boilerCount = love.graphics.newText(countFont)
-        
-        local previewFont = love.graphics.newFont("game/assets/fonts/WC_RoughTrad.ttf", 80)
-        local previewText = love.graphics.newText(previewFont)
-        local previewDetails = love.graphics.newText(countFont)
         local previewColorWhite = false
         local preview = nil
 
-        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
+        local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, i_b_back, i_b_backHovered)
 
-        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end, bgm_menu) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
+        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end, bgm_menu) end, i_b_prep_go, i_b_prep_goHovered)
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -297,7 +390,6 @@ function GameState()
         local glorbTransmuting = false
         local glorbProcessing = false
         local glorbingX, glorbingY = 0, 0
-        local i_glorbSelection = love.graphics.newImage("game/assets/glorb_selection.png")
         
         local transmutationQueue = {}
         local randomTier1Letter = function (type)
@@ -395,7 +487,7 @@ function GameState()
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
 
-                    if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
+                    if sfx_prep_transmute:isPlaying() then sfx_prep_transmute:stop() end sfx_prep_transmute:play()
                 end
             elseif #transmutationQueue == 1 then
                 local value = transmutationQueue[1].value
@@ -430,12 +522,12 @@ function GameState()
                     transmutationQueue = {}
                     table.sort(Deck, sortDeck)
 
-                    if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
+                    if sfx_prep_transmute:isPlaying() then sfx_prep_transmute:stop() end sfx_prep_transmute:play()
                 end
             end
         end
 
-        transmuteButton = Button(605, 450, 300, 100, transmute, "game/assets/transmute_button.png", "game/assets/transmute_button_pressed.png")
+        transmuteButton = Button(605, 450, 300, 100, transmute, i_b_prep_transmute, i_b_prep_transmuteHovered)
 
         for i, v in ipairs(Deck) do
             v.transmuteMode = true
@@ -457,8 +549,8 @@ function GameState()
         --table.sort(Storage, sortDeck)
 
         if Deck[1].type == "pierce" or Deck[1].type == "jade" then previewColorWhite = true else previewColorWhite = false end
-        previewDetails:set("Type: "..string.upper(Deck[1].type).."\nPower: "..tostring(Deck[1].value))
-        previewText:set(string.upper(Deck[1].letter))
+        t_prep_previewDetails:set("Type: "..string.upper(Deck[1].type).."\nPower: "..tostring(Deck[1].value))
+        t_prep_previewText:set(string.upper(Deck[1].letter))
         if Deck[1].preview ~= nil then preview = Deck[1].preview end
 
         local back = false
@@ -551,8 +643,8 @@ function GameState()
                 -- set preview
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                    previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
-                    previewText:set(string.upper(v.letter))
+                    t_prep_previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
+                    t_prep_previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
             end
@@ -586,8 +678,8 @@ function GameState()
 
                 if v.hoveredOver == true or v.clicked == true then
                     if v.type == "pierce" or v.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                    previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
-                    previewText:set(string.upper(v.letter))
+                    t_prep_previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
+                    t_prep_previewText:set(string.upper(v.letter))
                     if v.preview ~= nil then preview = v.preview end
                 end
             end
@@ -623,8 +715,8 @@ function GameState()
 
                         if v.hoveredOver == true then
                             previewColorWhite = false
-                            previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
-                            previewText:set(string.upper(v.letter))
+                            t_prep_previewDetails:set("Type: "..string.upper(v.type).."\nPower: "..tostring(v.value))
+                            t_prep_previewText:set(string.upper(v.letter))
                             if v.preview ~= nil then preview = v.preview end
                         end
     
@@ -638,7 +730,7 @@ function GameState()
                             glorbHolder = {}
                             glorbSelection = {}
 
-                            if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
+                            if sfx_prep_transmute:isPlaying() then sfx_prep_transmute:stop() end sfx_prep_transmute:play()
                             break
                         end
                     end
@@ -672,15 +764,15 @@ function GameState()
                             glorbHolder = {}
                             glorbSelection = {}
 
-                            if sfx_transmute:isPlaying() then sfx_transmute:stop() end sfx_transmute:play()
+                            if sfx_prep_transmute:isPlaying() then sfx_prep_transmute:stop() end sfx_prep_transmute:play()
                             break
                         end
                     end
 
                     if hoveredLetter ~= nil then
                         if hoveredLetter.type == "pierce" or hoveredLetter.type == "jade" then previewColorWhite = true else previewColorWhite = false end
-                        previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nPower: "..tostring(hoveredLetter.value))
-                        previewText:set(string.upper(hoveredLetter.letter))
+                        t_prep_previewDetails:set("Type: "..string.upper(hoveredLetter.type).."\nPower: "..tostring(hoveredLetter.value))
+                        t_prep_previewText:set(string.upper(hoveredLetter.letter))
                         if hoveredLetter.preview ~= nil then preview = hoveredLetter.preview end
                     end
                 elseif glorbTransmuting == true then
@@ -694,8 +786,8 @@ function GameState()
                     end
 
                     if glorbHolder[1].hoveredOver == true or glorbHolder[1].clicked == true then
-                        previewDetails:set("Type: "..string.upper(glorbHolder[1].type).."\nPower: "..tostring(glorbHolder[1].value))
-                        previewText:set(glorbHolder[1].letter)
+                        t_prep_previewDetails:set("Type: "..string.upper(glorbHolder[1].type).."\nPower: "..tostring(glorbHolder[1].value))
+                        t_prep_previewText:set(glorbHolder[1].letter)
                         if glorbHolder[1].preview ~= nil then preview = glorbHolder[1].preview end
                     end
 
@@ -743,16 +835,15 @@ function GameState()
 
             for i, v in ipairs(transmutationQueue) do if v.locked == false then table.remove(transmutationQueue, i) end end
 
-            boilerCount:set("Letters: "..tostring(#Deck))
+            t_prep_boilerCount:set("Letters: "..tostring(#Deck))
 
-            --if not sfx_bubbling:isPlaying() then sfx_bubbling:play() end
             if not bgm_menu:isPlaying() then bgm_menu:play() end
         end
 
 
         -- Prep State Draw Instructions
         drawState = function ()
-            love.graphics.draw(background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_prep_background, 0, 0, 0, 0.5, 0.5)
 
             backButton.draw()
             goButton.draw()
@@ -763,18 +854,18 @@ function GameState()
             for i, v in ipairs(glorbHolder) do v.draw() end
 
             if #Deck == 15 then love.graphics.setColor(1, 0, 0) end
-            love.graphics.draw(boilerCount, 237 - boilerCount:getWidth() / 2, 857, 0)
+            love.graphics.draw(t_prep_boilerCount, 237 - t_prep_boilerCount:getWidth() / 2, 857, 0)
             love.graphics.setColor(1, 1, 1)
 
             if preview ~= nil then love.graphics.draw(preview, 830, 175, 0, 0.25, 0.25) end
             love.graphics.setColor(0, 0, 0)
-            love.graphics.draw(previewDetails, 975, 200, 0)
+            love.graphics.draw(t_prep_previewDetails, 975, 200, 0)
             if previewColorWhite == true then love.graphics.setColor(1, 1, 1) end
-            love.graphics.draw(previewText, 889 - previewText:getWidth() / 2, 180, 0)
+            love.graphics.draw(t_prep_previewText, 889 - t_prep_previewText:getWidth() / 2, 180, 0)
             love.graphics.setColor(1, 1, 1)
 
             if (glorbing == true and glorbTransmuting == false) or glorbProcessing == true then
-                love.graphics.draw(i_glorbSelection, glorbingX, glorbingY, 0, 0.5, 0.5)
+                love.graphics.draw(i_prep_glorbSelection, glorbingX, glorbingY, 0, 0.5, 0.5)
                 for i, v in ipairs(glorbSelection) do v.draw() end
             end
 
@@ -787,13 +878,6 @@ function GameState()
         -- Initialize Game State
         canPause = true
         math.randomseed(os.time())
-
-        -- assets
-        local i_background = love.graphics.newImage("game/assets/beach.png")
-        local i_inputAndChambers = love.graphics.newImage("game/assets/input_and_chambers_2.png")
-        local i_bench = love.graphics.newImage("game/assets/bench_2.png")
-        local i_icon = love.graphics.newImage("game/assets/icon.png")
-        local i_sBox = love.graphics.newImage("game/assets/sandwich_box.png")
 
         local recentX, recentY, recentW, recentH = 355, 620, 175, 130
         local chambersX, chambersY, chambersW, chambersH = 572, 650, 425, 80
@@ -861,10 +945,6 @@ function GameState()
         local done = false
         local successfullyStolenSandwiches = 0
 
-        local wordText = love.graphics.newText(love.graphics.getFont())
-        local wordFoundText = love.graphics.newText(love.graphics.getFont())
-        local wordValueText = love.graphics.newText(love.graphics.getFont())
-
         local resetChambers = function ()
             for i, v in ipairs(chambers) do
                 v.locked = false
@@ -913,29 +993,16 @@ function GameState()
         gameResults.totalSandwiches = #Level.sandwiches
 
         local VFX = {}
-        local dNumFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 25)
-        local dNumBFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 65)
 
-        local sfx_click = love.audio.newSource("game/audio/typing.wav", "static")
-        sfx_click:setVolume(SfxVolume * MainVolume)
-        sfx_click:setPitch(0.8)
-
-        local sfx_click_undo = love.audio.newSource("game/audio/typing2.wav", "static")
-        sfx_click_undo:setVolume(SfxVolume * MainVolume)
-        sfx_click_undo:setPitch(0.8)
-
-        local sfx_hit = love.audio.newSource("game/audio/splat.mp3", "static")
-        sfx_hit:setVolume(0.7 * SfxVolume * MainVolume)
-        sfx_hit:setPitch(0.8)
-
-        local sfx_bigHit = love.audio.newSource("game/audio/big_hit.wav", "static")
-        sfx_bigHit:setVolume(SfxVolume * MainVolume)
-
-        local sfx_ding = love.audio.newSource("game/audio/chamber.wav", "static")
-        sfx_ding:setVolume(SfxVolume * MainVolume)
-
-        local sfx_wrong = love.audio.newSource("game/audio/wrong.wav", "static")
-        sfx_wrong:setVolume(SfxVolume * MainVolume)
+        sfx_game_click:setVolume(SfxVolume * MainVolume)
+        sfx_game_click:setPitch(0.8)
+        sfx_game_clickUndo:setVolume(SfxVolume * MainVolume)
+        sfx_game_clickUndo:setPitch(0.8)
+        sfx_game_hit:setVolume(0.7 * SfxVolume * MainVolume)
+        sfx_game_hit:setPitch(0.8)
+        sfx_game_bigHit:setVolume(SfxVolume * MainVolume)
+        sfx_game_ding:setVolume(SfxVolume * MainVolume)
+        sfx_game_wrong:setVolume(SfxVolume * MainVolume)
 
 
         -- Game State Loop
@@ -966,7 +1033,7 @@ function GameState()
                     for _, l in ipairs(typedLetters) do if l.type == "jade" then containsJade = true break end end
                     if containsJade == false then for _, l in ipairs(typedLetters) do l.jadeMultiplier = 1 end end
 
-                    if sfx_click_undo:isPlaying() then sfx_click_undo:stop() end sfx_click_undo:play()
+                    if sfx_game_clickUndo:isPlaying() then sfx_game_clickUndo:stop() end sfx_game_clickUndo:play()
                 elseif key == 'return' then
                     wordFound = ValidateWord(word)
                     wordValue = 0
@@ -1015,10 +1082,10 @@ function GameState()
 
                         if fillCheck == #chambers then
                             chamberCount = chamberCount + 1
-                            if sfx_ding:isPlaying() then sfx_ding:stop() end sfx_ding:play()
+                            if sfx_game_ding:isPlaying() then sfx_game_ding:stop() end sfx_game_ding:play()
                         end
                         fillChambers()
-                    else if sfx_wrong:isPlaying() then sfx_wrong:stop() end sfx_wrong:play() resetChambers() end
+                    else if sfx_game_wrong:isPlaying() then sfx_game_wrong:stop() end sfx_game_wrong:play() resetChambers() end
                     
                     word = ''
                     typedLetters = {}
@@ -1065,7 +1132,7 @@ function GameState()
                                     table.insert(typedLetters, newLetter)
                                 end
 
-                                if sfx_click:isPlaying() then sfx_click:stop() end sfx_click:play()
+                                if sfx_game_click:isPlaying() then sfx_game_click:stop() end sfx_game_click:play()
                                 break
                             end
                         end
@@ -1107,11 +1174,11 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 30 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
 
-                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
-                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
+                            if power > 30 then if sfx_game_bigHit:isPlaying() then sfx_game_bigHit:stop() end sfx_game_bigHit:play()
+                            else if sfx_game_hit:isPlaying() then sfx_game_hit:stop() end sfx_game_hit:play() end
                         end
                         break
                     end
@@ -1150,11 +1217,11 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 30 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
 
-                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
-                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
+                            if power > 30 then if sfx_game_bigHit:isPlaying() then sfx_game_bigHit:stop() end sfx_game_bigHit:play()
+                            else if sfx_game_hit:isPlaying() then sfx_game_hit:stop() end sfx_game_hit:play() end
                         end
                         break
                     end
@@ -1193,11 +1260,11 @@ function GameState()
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
                             local power = letter.value * letter.jadeMultiplier
                             v.health = v.health - power
-                            local font = (power >= 30 and dNumBFont or dNumFont)
+                            local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font, 3))
 
-                            if power > 30 then if sfx_bigHit:isPlaying() then sfx_bigHit:stop() end sfx_bigHit:play()
-                            else if sfx_hit:isPlaying() then sfx_hit:stop() end sfx_hit:play() end
+                            if power > 30 then if sfx_game_bigHit:isPlaying() then sfx_game_bigHit:stop() end sfx_game_bigHit:play()
+                            else if sfx_game_hit:isPlaying() then sfx_game_hit:stop() end sfx_game_hit:play() end
                         end
                         break
                     end
@@ -1224,9 +1291,9 @@ function GameState()
 
             for i, v in ipairs(VFX) do v.update(dt) if v.gone == true then table.remove(VFX, i) end end
             
-            wordText:set(word)
-            wordFoundText:set("Word found: "..tostring(wordFound))
-            wordValueText:set("Word value: "..tostring(wordValue))
+            t_game_wordText:set(word)
+            t_game_wordFoundText:set("Word found: "..tostring(wordFound))
+            t_game_wordValueText:set("Word value: "..tostring(wordValue))
 
             successfullyStolenSandwiches = 0
             for _, s in ipairs(Level.sandwiches) do if s.stolen == true and s.x < 0 and s.y < 200 then successfullyStolenSandwiches = successfullyStolenSandwiches + 1 end end
@@ -1264,11 +1331,11 @@ function GameState()
 
         -- Game State Draw Instructions
         drawState = function ()
-            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
-            love.graphics.draw(i_bench, 18, 580, 0, 0.5, 0.5)
-            love.graphics.draw(i_inputAndChambers, 8, 603, 0, 0.5, 0.5)
-            love.graphics.draw(i_icon, 960, 660, 0, 0.5, 0.5)
-            love.graphics.draw(i_sBox, 963, 416, 0, 0.5, 0.5)
+            love.graphics.draw(i_game_background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_game_bench, 18, 580, 0, 0.5, 0.5)
+            love.graphics.draw(i_game_inputAndChambers, 8, 603, 0, 0.5, 0.5)
+            love.graphics.draw(i_game_icon, 960, 660, 0, 0.5, 0.5)
+            love.graphics.draw(i_game_sBox, 963, 416, 0, 0.5, 0.5)
     
             line.draw()
             line2.draw()
@@ -1299,44 +1366,34 @@ function GameState()
         -- Initialize Result State
         canPause = false
 
-        local i_background = love.graphics.newImage("game/assets/results UI.png")
-
-        local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
-        local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
-
         local timeFormat = "%i:%i"
         if math.fmod(gameResults.time, 60) < 10 then timeFormat = "%i:0%i" end
-        
-        local timeTitle = love.graphics.newText(resultBoldFont, "Time:  ")
-        local timeText = love.graphics.newText(resultFont, string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
 
-        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ")
-        local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
+        t_result_timeTitle:set("Time:  ")
+        t_result_time:set(string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
 
-        local enemiesTitle = love.graphics.newText(resultBoldFont, "Squids Repelled:  ")
-        local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
-
-        local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
-        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.ceil(gameResults.bestValue))..")")
-
-        local tipLargeFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
-        local tipFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
-        
-        local w, tText = tipFont:getWrap(gameResults.tip[2], 375)
-        local tipString = ""
-        for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
-        
-        local tipTitle = love.graphics.newText(tipLargeFont, string.upper(gameResults.tip[1]))
-        local tipText = love.graphics.newText(tipFont, tipString)
+        t_result_sandwichTitle:set("Sandwiches Lost:  ")
+        t_result_sandwich:set(tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
+        t_result_enemiesTitle:set("Squids Repelled:  ")
+        t_result_enemies:set(tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
+        t_result_bestWordTitle:set("Best Word:  ")
+        t_result_bestWord:set("("..tostring(math.ceil(gameResults.bestValue))..")")
 
         if Act == 4 and alive == true then
-            tipTitle:set("You Won!")
-            tipText:set("Thanks for playing this demo! (^v^)\nYou are awesome.\nSorry, it's a bit of a mess.\nDevelopment is still in progress.\nCongratulations on making it \nhere regardless!\nPlay again now if you want to \nkeep everything in your Storage \nfor next run.")
+            t_result_tipTitle:set("You Won!")
+            t_result_tip:set("Thanks for playing this demo! (^v^)\nYou are awesome.\nSorry, it's a bit of a mess.\nDevelopment is still in progress.\nCongratulations on making it \nhere regardless!\nPlay again now if you want to \nkeep everything in your Storage \nfor next run.")
+        else
+            local w, tText = f_result_tip:getWrap(gameResults.tip[2], 375)
+            local tipString = ""
+            for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
+    
+            t_result_tipTitle:set(string.upper(gameResults.tip[1]))
+            t_result_tip:set(tipString)
         end
 
         for i, l in ipairs(gameResults.bestWord) do
             l.y =  515
-            l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
+            l.x = 100 + t_result_bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
 
             if l.canPierce == true then for _, v in ipairs(gameResults.bestWord) do v.canPierce = true end end
             if l.jadeMultiplier > 1 then for _, v in ipairs(gameResults.bestWord) do if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end end end
@@ -1381,7 +1438,7 @@ function GameState()
             Storage = nil
         end end
 
-        local nextButton = Button(350, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
+        local nextButton = Button(350, 700, 470, 175, nextFunc, i_b_result_next, i_b_result_nextHovered)
 
 
         -- Result State Loop
@@ -1392,24 +1449,21 @@ function GameState()
 
         -- Result State Draw Instructions
         drawState = function ()
-            love.graphics.draw(i_background, 0, 0, 0, 0.5, 0.5)
+            love.graphics.draw(i_result_background, 0, 0, 0, 0.5, 0.5)
 
-            love.graphics.draw(tipTitle, 900 - tipTitle:getWidth() / 2, 100)
-            love.graphics.draw(tipText, 700, 155)
-
-            love.graphics.draw(timeTitle, 100, 210, 0)
-            love.graphics.draw(timeText, 100 + timeTitle:getWidth(), 210, 0)
-
-            love.graphics.draw(sandwichTitle, 100, 300, 0)
-            love.graphics.draw(sandwichText, 100 + sandwichTitle:getWidth(), 300, 0)
-
-            love.graphics.draw(enemiesTitle, 100, 390, 0)
-            love.graphics.draw(enemiesText, 100 + enemiesTitle:getWidth(), 390, 0)
+            love.graphics.draw(t_result_tipTitle, 900 - t_result_tipTitle:getWidth() / 2, 100)
+            love.graphics.draw(t_result_tip, 700, 155)
+            love.graphics.draw(t_result_timeTitle, 100, 210, 0)
+            love.graphics.draw(t_result_time, 100 + t_result_timeTitle:getWidth(), 210, 0)
+            love.graphics.draw(t_result_sandwichTitle, 100, 300, 0)
+            love.graphics.draw(t_result_sandwich, 100 + t_result_sandwichTitle:getWidth(), 300, 0)
+            love.graphics.draw(t_result_enemiesTitle, 100, 390, 0)
+            love.graphics.draw(t_result_enemies, 100 + t_result_enemiesTitle:getWidth(), 390, 0)
 
             if #gameResults.bestWord > 2 then
-                love.graphics.draw(bestWordTitle, 100, 480, 0)
+                love.graphics.draw(t_result_bestWordTitle, 100, 480, 0)
                 for _, l in ipairs(gameResults.bestWord) do l.draw() end
-                love.graphics.draw(bestWordText, gameResults.bestWord[#gameResults.bestWord].x + gameResults.bestWord[#gameResults.bestWord].radius * 2, 480, 0)
+                love.graphics.draw(t_result_bestWord, gameResults.bestWord[#gameResults.bestWord].x + gameResults.bestWord[#gameResults.bestWord].radius * 2, 480, 0)
             end
 
             nextButton.draw()
