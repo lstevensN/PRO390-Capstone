@@ -3,6 +3,7 @@ function TestLevel()
     self.canSpawn = true
     self.spawnTimer = 2
     self.over = false
+    self.music = love.audio.newSource("game/audio/splat.mp3", "static")
     self.sandwiches = {
         Sandwich(970, 430),
         Sandwich(990, 430),

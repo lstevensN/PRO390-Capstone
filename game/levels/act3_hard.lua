@@ -3,6 +3,7 @@ function Act3_Hard()
     self.canSpawn = true
     self.spawnTimer = 1.5
     self.over = false
+    self.music = love.audio.newSource("game/audio/TheShowdown_Music.wav", "stream")
     self.sandwiches = {
         Sandwich(970, 430),
         Sandwich(990, 430),

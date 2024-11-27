@@ -24,9 +24,9 @@ function Animation(i, w, h, d, t)
     local type = t
     local scale = 0
 
-    if type == "basic" then scale = 0.35 
+    if type == "basic" then scale = 0.35
     elseif type == "fast" then scale = 0.25
-    elseif type == "strong" then scale = 0.5 end
+    elseif type == "strong" or type == "magala" then scale = 0.5 end
 
     self.update = function (dt)
         currentTime = currentTime + dt

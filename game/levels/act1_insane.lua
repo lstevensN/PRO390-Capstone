@@ -3,6 +3,7 @@ function Act1_Insane()
     self.canSpawn = true
     self.spawnTimer = 1.25
     self.over = false
+    self.music = love.audio.newSource("game/audio/TheHunger_Music.wav", "stream")
     self.sandwiches = {
         Sandwich(970, 430),
         Sandwich(990, 430),

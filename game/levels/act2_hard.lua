@@ -3,6 +3,7 @@ function Act2_Hard()
     self.canSpawn = true
     self.spawnTimer = 1.75
     self.over = false
+    self.music = love.audio.newSource("game/audio/TheBattle_Music.wav", "stream")
     self.sandwiches = {
         Sandwich(970, 430),
         Sandwich(990, 430),

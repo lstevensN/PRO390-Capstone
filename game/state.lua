@@ -17,7 +17,7 @@ function GameState()
     local Fade
 
     local sfx_confirm = love.audio.newSource("game/audio/confirm.wav", "static") sfx_confirm:setVolume(0.8 * SfxVolume * MainVolume)
-    local bgm_menu = love.audio.newSource("game/audio/Menu_Music.wav", "stream") bgm_menu:setVolume(0.4 * MusicVolume * MainVolume)
+    local bgm_menu = love.audio.newSource("game/audio/Menu_Music.wav", "stream") bgm_menu:setVolume(MusicVolume * MainVolume)
 
     -- START state
     start = function ()
@@ -257,7 +257,7 @@ function GameState()
 
         local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, "game/assets/back_button.png", "game/assets/back_button_hover.png")
 
-        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
+        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end, bgm_menu) end, "game/assets/go_button.png", "game/assets/go_button_pressed.png")
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -777,7 +777,7 @@ function GameState()
         -- set Level based on Act/Difficulty
         local Level
         local magalaManager = nil
-        if Act == 1 and Difficulty == 1 then Level = Act1_Easy()
+        if Act == 1 and Difficulty == 1 then Level = TestLevel() --Act1_Easy()
         elseif Act == 1 and Difficulty == 2 then Level = Act1_Normal()
         elseif Act == 1 and Difficulty == 3 then Level = Act1_Hard()
         elseif Act == 1 and Difficulty == 4 then Level = Act1_Insane()
@@ -790,6 +790,8 @@ function GameState()
         elseif Act == 3 and Difficulty == 3 then Level = Act3_Hard()
         elseif Act == 3 and Difficulty == 4 then Level = Act3_Insane() magalaManager = {}
         else Level = TestLevel() end
+
+        if Level.music ~= nil then Level.music:play() end
 
         local gun = Gun(140, 680, "first")
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
@@ -812,6 +814,7 @@ function GameState()
                 if enemy.type ~= "blank" and enemy.type ~= "empty" then gameResults.totalEnemies = gameResults.totalEnemies + 1 end
                 line.addRider(enemy)
                 gun.addEnemy(enemy)
+                if magalaManager ~= nil and enemy.type == "magala" then table.insert(magalaManager, enemy) end
             end
         end)
 
@@ -1198,17 +1201,30 @@ function GameState()
             successfullyStolenSandwiches = 0
             for _, s in ipairs(Level.sandwiches) do if s.stolen == true and s.x < 0 and s.y < 200 then successfullyStolenSandwiches = successfullyStolenSandwiches + 1 end end
             
+            if magalaManager ~= nil then
+                for _, m in ipairs(magalaManager) do
+                    if m.escaped == true then
+                        m.escaped = false
+                        m.sandwichHeld.x = -200
+                        m.sandwichHeld = nil
+
+                        line.addRider(m)
+                        gun.addEnemy(m)
+                    end
+                end
+            end
+
             -- Win Condition
             if done == false and Level.over == true and #gun.enemies == 1 then
                 done = true
-                Fade.start(function () gameState = result end)
+                Fade.start(function () gameState = result end, Level.music, bgm_menu)
             end
 
             -- Lose Condition
             if done == false and successfullyStolenSandwiches == #Level.sandwiches then
                 done = true
                 alive = false
-                Fade.start(function () gameState = result end)
+                Fade.start(function () gameState = result end, Level.music, bgm_menu)
             end
 
             gameResults.stolenSandwiches = successfullyStolenSandwiches
@@ -1255,6 +1271,47 @@ function GameState()
 
         local i_background = love.graphics.newImage("game/assets/results UI.png")
 
+        local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
+        local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
+
+        local timeFormat = "%i:%i"
+        if math.fmod(gameResults.time, 60) < 10 then timeFormat = "%i:0%i" end
+        
+        local timeTitle = love.graphics.newText(resultBoldFont, "Time:  ")
+        local timeText = love.graphics.newText(resultFont, string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
+
+        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ")
+        local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
+
+        local enemiesTitle = love.graphics.newText(resultBoldFont, "Squids Repelled:  ")
+        local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
+
+        local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
+        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.ceil(gameResults.bestValue))..")")
+
+        local tipLargeFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
+        local tipFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
+        
+        local w, tText = tipFont:getWrap(gameResults.tip[2], 375)
+        local tipString = ""
+        for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
+        
+        local tipTitle = love.graphics.newText(tipLargeFont, string.upper(gameResults.tip[1]))
+        local tipText = love.graphics.newText(tipFont, tipString)
+
+        if Act == 4 and alive == true then
+            tipTitle:set("You Won!")
+            tipText:set("Thanks for playing this demo! (^v^)\nYou are awesome.\nSorry, it's a bit of a mess.\nDevelopment is still in progress.\nCongratulations on making it \nhere regardless!\nPlay again now if you want to \nkeep everything in your Storage \nfor next run.")
+        end
+
+        for i, l in ipairs(gameResults.bestWord) do
+            l.y =  515
+            l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
+
+            if l.canPierce == true then for _, v in ipairs(gameResults.bestWord) do v.canPierce = true end end
+            if l.jadeMultiplier > 1 then for _, v in ipairs(gameResults.bestWord) do if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end end end
+        end
+
         local nextFunc
         if alive == true then nextFunc = function ()
             if Act ~= 4 then
@@ -1290,42 +1347,6 @@ function GameState()
         end end
 
         local nextButton = Button(350, 700, 470, 175, nextFunc, "game/assets/next_button.png", "game/assets/next_button_hover.png")
-
-        local resultBoldFont = love.graphics.newFont("game/assets/fonts/Manuale-Bold.ttf", 50)
-        local resultFont = love.graphics.newFont("game/assets/fonts/Manuale-Regular.ttf", 50)
-
-        local timeFormat = "%i:%i"
-        if math.fmod(gameResults.time, 60) < 10 then timeFormat = "%i:0%i" end
-        
-        local timeTitle = love.graphics.newText(resultBoldFont, "Time:  ")
-        local timeText = love.graphics.newText(resultFont, string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
-
-        local sandwichTitle = love.graphics.newText(resultBoldFont, "Sandwiches Lost:  ")
-        local sandwichText = love.graphics.newText(resultFont, tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
-
-        local enemiesTitle = love.graphics.newText(resultBoldFont, "Squids Repelled:  ")
-        local enemiesText = love.graphics.newText(resultFont, tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
-
-        local bestWordTitle = love.graphics.newText(resultBoldFont, "Best Word:  ")
-        local bestWordText = love.graphics.newText(resultFont, "("..tostring(math.ceil(gameResults.bestValue))..")")
-
-        local tipLargeFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 50)
-        local tipFont = love.graphics.newFont("game/assets/fonts/Irregularis-raa9.ttf", 35)
-        
-        local w, tText = tipFont:getWrap(gameResults.tip[2], 375)
-        local tipString = ""
-        for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
-        
-        local tipTitle = love.graphics.newText(tipLargeFont, string.upper(gameResults.tip[1]))
-        local tipText = love.graphics.newText(tipFont, tipString)
-
-        for i, l in ipairs(gameResults.bestWord) do
-            l.y =  515
-            l.x = 100 + bestWordTitle:getWidth() - l.radius + l.radius * i * 2 + 5
-
-            if l.canPierce == true then for _, v in ipairs(gameResults.bestWord) do v.canPierce = true end end
-            if l.jadeMultiplier > 1 then for _, v in ipairs(gameResults.bestWord) do if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end end end
-        end
 
 
         -- Result State Loop
@@ -1384,6 +1405,10 @@ function GameState()
         require("game.levels.act2_normal")
         require("game.levels.act2_hard")
         require("game.levels.act2_insane")
+        require("game.levels.act3_easy")
+        require("game.levels.act3_normal")
+        require("game.levels.act3_hard")
+        require("game.levels.act3_insane")
         require("game.levels.test_level")
 
         cron = require "cron"

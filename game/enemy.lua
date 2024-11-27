@@ -13,7 +13,7 @@ function Enemy(xpos, ypos, t, h)
         elseif self.type == "basic" then return 150, 35, 30, Animation("game/assets/squid_sprite.png", 280, 280, 0.35, "basic"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.35, "basic")
         elseif self.type == "fast" then return 250, 25, 20, Animation("game/assets/squid_sprite.png", 280, 280, 0.2, "fast"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.2, "fast")
         elseif self.type == "strong" then return 100, 50, 100, Animation("game/assets/squid_sprite.png", 280, 280, 0.5, "strong"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.5, "strong")
-        elseif self.type == "magala" then return 250, 50, 2500, Animation("game/assets/squid_magala.png", 560, 560, 0.2, "magala"), Animation("game/assets/squid_magala_flip.png", 560, 560, 0.2, "magala")
+        elseif self.type == "magala" then return 200, 100, 2500, Animation("game/assets/squid_magala.png", 560, 560, 0.5, "magala"), Animation("game/assets/squid_magala_flip.png", 560, 560, 0.5, "magala")
         elseif self.type == "blank" then return 0, 0, 0, nil end
     end
 
@@ -28,18 +28,20 @@ function Enemy(xpos, ypos, t, h)
             if self.type == "fast" then self.sprite.draw(self.x - 35, self.y - 35)
             elseif self.type == "basic" then self.sprite.draw(self.x - 50, self.y - 50)
             elseif self.type == "strong" then self.sprite.draw(self.x - 70, self.y - 70)
+            elseif self.type == "magala" then self.sprite.draw(self.x - 100, self.y - 100)
             end
         elseif self.sprite_flipped ~= nil and self.speed < 0 then
             if self.type == "fast" then self.sprite_flipped.draw(self.x - 35, self.y - 35)
             elseif self.type == "basic" then self.sprite_flipped.draw(self.x - 50, self.y - 50)
             elseif self.type == "strong" then self.sprite_flipped.draw(self.x - 70, self.y - 70)
+            elseif self.type == "magala" then self.sprite_flipped.draw(self.x - 100, self.y - 100)
             end
         end
 
         love.graphics.setColor(0.75, 0, 0)
-        love.graphics.rectangle("fill", self.x - maxHP / 2, self.y + 10 + self.radius, maxHP, 6)
+        love.graphics.rectangle("fill", self.x - (self.type == "magala" and 0.1 or 1) * maxHP / 2, self.y + 10 + self.radius, (self.type == "magala" and 0.1 or 1) * maxHP, 6)
         love.graphics.setColor(1, 0, 0)
-        love.graphics.rectangle("fill", self.x - maxHP / 2, self.y + 10 + self.radius, maxHP * (self.health / maxHP), 6)
+        love.graphics.rectangle("fill", self.x - (self.type == "magala" and 0.1 or 1) * maxHP / 2, self.y + 10 + self.radius, (self.type == "magala" and 0.1 or 1) * maxHP * (self.health / maxHP), 6)
 
         love.graphics.setColor(1, 1, 1)
     end
