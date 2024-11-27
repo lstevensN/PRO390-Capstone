@@ -154,9 +154,9 @@ function GameState()
         local startImage = (started == true and i_b_start_continue or i_b_start_new)
         local startSelectedImage = (started == true and i_b_start_continueSelected or i_b_start_newSelected)
 
-        local buttonStart = Button(340, 225, 620, 200, function () sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startImage, startSelectedImage)
+        local buttonStart = Button(340, 225, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startImage, startSelectedImage)
         local buttonSettings = Button(340, 450, 620, 200, function () end, i_b_start_settings, i_b_start_settingsSelected)
-        local buttonQuit = Button(340, 675, 620, 200, function () sfx_confirm:play() Fade.start(function () love.event.quit() end) end, i_b_start_quit, i_b_start_quitSelected)  -- DON'T FORGET TO ADD SAVING
+        local buttonQuit = Button(340, 675, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () love.event.quit() end) end, i_b_start_quit, i_b_start_quitSelected)  -- DON'T FORGET TO ADD SAVING
         local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = true end, i_b_start_info)
 
         buttonStart.selected = true
@@ -231,11 +231,12 @@ function GameState()
         drawState = function ()
             love.graphics.draw(i_start_background, 0, 0, 0, 0.5, 0.5)
 
-            love.graphics.setColor(0.9, 0.9, 0.9)
+            love.graphics.setColor(216/255, 190/255, 103/255)
             love.graphics.circle("fill", 900, 400, 200)
-            love.graphics.setColor(0, 0, 0)
+            love.graphics.setColor(155/255, 125/255, 65/255)
             love.graphics.setLineWidth(10)
             love.graphics.circle("line", 900, 400, 200)
+            --love.graphics.draw(i_game_icon, 680, 180, 0, 1.25)
             love.graphics.setColor(1, 1, 1)
             love.graphics.setLineWidth(1)
             love.graphics.draw(i_start_logo, 735, 235, 0, 0.5, 0.5)
@@ -257,10 +258,10 @@ function GameState()
 
         sfx_progress_difficulty:setVolume(SfxVolume * MainVolume)
 
-        local buttonAct1 = ButtonGear(150, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act1Front, i_b_progress_act1Back, i_b_progress_act1BackHovered)
-        local buttonAct2 = ButtonGear(450, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act2Front, i_b_progress_act2Back, i_b_progress_act2BackHovered)
-        local buttonAct3 = ButtonGear(750, 350, 100, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act3Front, i_b_progress_act3Back, i_b_progress_act3BackHovered)
-        local buttonAct4 = ButtonGear(1050, 350, 142, function () sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act4Front, i_b_progress_act4Back, i_b_progress_act4BackHovered)
+        local buttonAct1 = ButtonGear(150, 350, 100, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act1Front, i_b_progress_act1Back, i_b_progress_act1BackHovered)
+        local buttonAct2 = ButtonGear(450, 350, 100, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act2Front, i_b_progress_act2Back, i_b_progress_act2BackHovered)
+        local buttonAct3 = ButtonGear(750, 350, 100, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act3Front, i_b_progress_act3Back, i_b_progress_act3BackHovered)
+        local buttonAct4 = ButtonGear(1050, 350, 142, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () gameState = prep end) end, i_b_progress_act4Front, i_b_progress_act4Back, i_b_progress_act4BackHovered)
 
         local buttonDifficultyEasy = Button(378, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 1 end, i_b_progress_difficultyEasy)
         local buttonDifficultyNormal = Button(526, 632, 140, 50, function () if sfx_progress_difficulty:isPlaying() then sfx_progress_difficulty:stop() end sfx_progress_difficulty:play() Difficulty = 2 end, i_b_progress_difficultyNormal)
@@ -375,7 +376,7 @@ function GameState()
 
         local backButton = Button(1150, 50, 70, 70, function () Fade.start(function () gameState = progress end) end, i_b_back, i_b_backHovered)
 
-        local goButton = Button(950, 770, 280, 170, function () sfx_confirm:play() Fade.start(function () gameState = game end, bgm_menu) end, i_b_prep_go, i_b_prep_goHovered)
+        local goButton = Button(950, 770, 280, 170, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () gameState = game end, bgm_menu) end, i_b_prep_go, i_b_prep_goHovered)
         local transmuteButton
 
         local boilerX, boilerY, boilerW, boilerH = 52, 155, 371, 690
@@ -660,7 +661,9 @@ function GameState()
                 if selected[1] ~= v then v.clicked = false end
 
                 if v.x - v.radius >= boilerX and v.x + v.radius <= boilerX + boilerW and
-                v.y - v.radius >= boilerY and v.y + v.radius <= boilerY + boilerH then
+                v.y - v.radius >= boilerY and v.y + v.radius <= boilerY + boilerH or
+                (v.type ~= "glorb" and v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and
+                v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH) then
                     v.stored = false
                     if v.type == "glorb" then table.insert(glorbHolder, v) else table.insert(Deck, v) end
                     table.remove(Storage, i)
@@ -1399,9 +1402,8 @@ function GameState()
             if l.jadeMultiplier > 1 then for _, v in ipairs(gameResults.bestWord) do if l.jadeMultiplier > v.jadeMultiplier then v.jadeMultiplier = l.jadeMultiplier end end end
         end
 
-        local nextFunc
-        if alive == true then
-            nextFunc = function ()
+        local nextFunc = function ()
+            if alive == true then
                 if Act ~= 4 then -- Normal Progression
                     Fade.start(function () gameState = progress end)
 
@@ -1425,18 +1427,21 @@ function GameState()
 
                     Deck = nil
                 end
-            end
-        else nextFunc = function () -- Restart Game
-            Fade.start(function () gameState = start end)
-            alive = true
-            Act = 1
-            Difficulty = 2
-            started = false
-            unlocked = false
+            else -- Restart Game
+                Fade.start(function () gameState = start end)
+                alive = true
+                Act = 1
+                Difficulty = 2
+                started = false
+                unlocked = false
 
-            Deck = nil
-            Storage = nil
-        end end
+                Deck = nil
+                Storage = nil
+
+            end
+            
+            if sfx_confirm:isPlaying() then sfx_confirm:stop() end
+        end
 
         local nextButton = Button(350, 700, 470, 175, nextFunc, i_b_result_next, i_b_result_nextHovered)
 

@@ -8,8 +8,9 @@ function DamageNumber(num, x, y, font, l)
     self.gone = false
 
     local number = num
-    local text = love.graphics.newText(font, tostring(math.ceil(number)))
     local line = l or 0
+
+    local text = love.graphics.newText(font, tostring(math.ceil(number)))
 
     self.update = function(dt)
         self.opacity = self.opacity - self.fadeRate * dt

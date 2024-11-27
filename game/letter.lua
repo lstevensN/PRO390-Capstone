@@ -138,9 +138,131 @@
     local i_glorb_preview = love.graphics.newImage("game/assets/previews/glorb_preview.png")
 --#endregion
 
-function Letter(letter, xpos, ypos, type, trans)
+local setBlank = function (l)
+    if     l.type == "blank" and l.letter == 'a' then l.image = i_blank_a
+    elseif l.type == "blank" and l.letter == 'b' then l.image = i_blank_b
+    elseif l.type == "blank" and l.letter == 'c' then l.image = i_blank_c
+    elseif l.type == "blank" and l.letter == 'd' then l.image = i_blank_d
+    elseif l.type == "blank" and l.letter == 'e' then l.image = i_blank_e
+    elseif l.type == "blank" and l.letter == 'f' then l.image = i_blank_f
+    elseif l.type == "blank" and l.letter == 'g' then l.image = i_blank_g
+    elseif l.type == "blank" and l.letter == 'h' then l.image = i_blank_h
+    elseif l.type == "blank" and l.letter == 'i' then l.image = i_blank_i
+    elseif l.type == "blank" and l.letter == 'j' then l.image = i_blank_j
+    elseif l.type == "blank" and l.letter == 'k' then l.image = i_blank_k
+    elseif l.type == "blank" and l.letter == 'l' then l.image = i_blank_l
+    elseif l.type == "blank" and l.letter == 'm' then l.image = i_blank_m
+    elseif l.type == "blank" and l.letter == 'n' then l.image = i_blank_n
+    elseif l.type == "blank" and l.letter == 'o' then l.image = i_blank_o
+    elseif l.type == "blank" and l.letter == 'p' then l.image = i_blank_p
+    elseif l.type == "blank" and l.letter == 'q' then l.image = i_blank_q
+    elseif l.type == "blank" and l.letter == 'r' then l.image = i_blank_r
+    elseif l.type == "blank" and l.letter == 's' then l.image = i_blank_s
+    elseif l.type == "blank" and l.letter == 't' then l.image = i_blank_t
+    elseif l.type == "blank" and l.letter == 'u' then l.image = i_blank_u
+    elseif l.type == "blank" and l.letter == 'v' then l.image = i_blank_v
+    elseif l.type == "blank" and l.letter == 'w' then l.image = i_blank_w
+    elseif l.type == "blank" and l.letter == 'x' then l.image = i_blank_x
+    elseif l.type == "blank" and l.letter == 'y' then l.image = i_blank_y
+    elseif l.type == "blank" and l.letter == 'z' then l.image = i_blank_z
+    end
+end
+
+local setIron = function(l)
+    if     l.type == "iron" and l.letter == 'a' then l.image = i_iron_a l.preview = i_iron_teir1
+    elseif l.type == "iron" and l.letter == 'b' then l.image = i_iron_b l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'c' then l.image = i_iron_c l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'd' then l.image = i_iron_d l.preview = i_iron_teir2
+    elseif l.type == "iron" and l.letter == 'e' then l.image = i_iron_e l.preview = i_iron_teir1
+    elseif l.type == "iron" and l.letter == 'f' then l.image = i_iron_f l.preview = i_iron_teir4
+    elseif l.type == "iron" and l.letter == 'g' then l.image = i_iron_g l.preview = i_iron_teir2
+    elseif l.type == "iron" and l.letter == 'h' then l.image = i_iron_h l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'i' then l.image = i_iron_i l.preview = i_iron_teir1
+    elseif l.type == "iron" and l.letter == 'j' then l.image = i_iron_j l.preview = i_iron_teir5
+    elseif l.type == "iron" and l.letter == 'k' then l.image = i_iron_k l.preview = i_iron_teir4
+    elseif l.type == "iron" and l.letter == 'l' then l.image = i_iron_l l.preview = i_iron_teir2
+    elseif l.type == "iron" and l.letter == 'm' then l.image = i_iron_m l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'n' then l.image = i_iron_n l.preview = i_iron_teir2
+    elseif l.type == "iron" and l.letter == 'o' then l.image = i_iron_o l.preview = i_iron_teir2
+    elseif l.type == "iron" and l.letter == 'p' then l.image = i_iron_p l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'q' then l.image = i_iron_q l.preview = i_iron_teir5
+    elseif l.type == "iron" and l.letter == 'r' then l.image = i_iron_r l.preview = i_iron_teir1
+    elseif l.type == "iron" and l.letter == 's' then l.image = i_iron_s l.preview = i_iron_teir1
+    elseif l.type == "iron" and l.letter == 't' then l.image = i_iron_t l.preview = i_iron_teir5
+    elseif l.type == "iron" and l.letter == 'u' then l.image = i_iron_u l.preview = i_iron_teir3
+    elseif l.type == "iron" and l.letter == 'v' then l.image = i_iron_v l.preview = i_iron_teir4
+    elseif l.type == "iron" and l.letter == 'w' then l.image = i_iron_w l.preview = i_iron_teir4
+    elseif l.type == "iron" and l.letter == 'x' then l.image = i_iron_x l.preview = i_iron_teir5
+    elseif l.type == "iron" and l.letter == 'y' then l.image = i_iron_y l.preview = i_iron_teir4
+    elseif l.type == "iron" and l.letter == 'z' then l.image = i_iron_z l.preview = i_iron_teir5
+    end
+end
+
+local setPierce = function (l)
+    if     l.type == "pierce" and l.letter == 'a' then l.image = i_pierce_a l.preview = i_pierce_teir1
+    elseif l.type == "pierce" and l.letter == 'b' then l.image = i_pierce_b l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'c' then l.image = i_pierce_c l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'd' then l.image = i_pierce_d l.preview = i_pierce_teir2
+    elseif l.type == "pierce" and l.letter == 'e' then l.image = i_pierce_e l.preview = i_pierce_teir1
+    elseif l.type == "pierce" and l.letter == 'f' then l.image = i_pierce_f l.preview = i_pierce_teir4
+    elseif l.type == "pierce" and l.letter == 'g' then l.image = i_pierce_g l.preview = i_pierce_teir2
+    elseif l.type == "pierce" and l.letter == 'h' then l.image = i_pierce_h l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'i' then l.image = i_pierce_i l.preview = i_pierce_teir1
+    elseif l.type == "pierce" and l.letter == 'j' then l.image = i_pierce_j l.preview = i_pierce_teir5
+    elseif l.type == "pierce" and l.letter == 'k' then l.image = i_pierce_k l.preview = i_pierce_teir4
+    elseif l.type == "pierce" and l.letter == 'l' then l.image = i_pierce_l l.preview = i_pierce_teir2
+    elseif l.type == "pierce" and l.letter == 'm' then l.image = i_pierce_m l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'n' then l.image = i_pierce_n l.preview = i_pierce_teir2
+    elseif l.type == "pierce" and l.letter == 'o' then l.image = i_pierce_o l.preview = i_pierce_teir2
+    elseif l.type == "pierce" and l.letter == 'p' then l.image = i_pierce_p l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'q' then l.image = i_pierce_q l.preview = i_pierce_teir5
+    elseif l.type == "pierce" and l.letter == 'r' then l.image = i_pierce_r l.preview = i_pierce_teir1
+    elseif l.type == "pierce" and l.letter == 's' then l.image = i_pierce_s l.preview = i_pierce_teir1
+    elseif l.type == "pierce" and l.letter == 't' then l.image = i_pierce_t l.preview = i_pierce_teir5
+    elseif l.type == "pierce" and l.letter == 'u' then l.image = i_pierce_u l.preview = i_pierce_teir3
+    elseif l.type == "pierce" and l.letter == 'v' then l.image = i_pierce_v l.preview = i_pierce_teir4
+    elseif l.type == "pierce" and l.letter == 'w' then l.image = i_pierce_w l.preview = i_pierce_teir4
+    elseif l.type == "pierce" and l.letter == 'x' then l.image = i_pierce_x l.preview = i_pierce_teir5
+    elseif l.type == "pierce" and l.letter == 'y' then l.image = i_pierce_y l.preview = i_pierce_teir4
+    elseif l.type == "pierce" and l.letter == 'z' then l.image = i_pierce_z l.preview = i_pierce_teir5
+    end
+end
+
+local setJade = function (l)
+    if     l.type == "jade" and l.letter == 'a' then l.image = i_jade_a l.preview = i_jade_teir1
+    elseif l.type == "jade" and l.letter == 'b' then l.image = i_jade_b l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'c' then l.image = i_jade_c l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'd' then l.image = i_jade_d l.preview = i_jade_teir2
+    elseif l.type == "jade" and l.letter == 'e' then l.image = i_jade_e l.preview = i_jade_teir1
+    elseif l.type == "jade" and l.letter == 'f' then l.image = i_jade_f l.preview = i_jade_teir4
+    elseif l.type == "jade" and l.letter == 'g' then l.image = i_jade_g l.preview = i_jade_teir2
+    elseif l.type == "jade" and l.letter == 'h' then l.image = i_jade_h l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'i' then l.image = i_jade_i l.preview = i_jade_teir1
+    elseif l.type == "jade" and l.letter == 'j' then l.image = i_jade_j l.preview = i_jade_teir5
+    elseif l.type == "jade" and l.letter == 'k' then l.image = i_jade_k l.preview = i_jade_teir4
+    elseif l.type == "jade" and l.letter == 'l' then l.image = i_jade_l l.preview = i_jade_teir2
+    elseif l.type == "jade" and l.letter == 'm' then l.image = i_jade_m l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'n' then l.image = i_jade_n l.preview = i_jade_teir2
+    elseif l.type == "jade" and l.letter == 'o' then l.image = i_jade_o l.preview = i_jade_teir2
+    elseif l.type == "jade" and l.letter == 'p' then l.image = i_jade_p l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'q' then l.image = i_jade_q l.preview = i_jade_teir5
+    elseif l.type == "jade" and l.letter == 'r' then l.image = i_jade_r l.preview = i_jade_teir1
+    elseif l.type == "jade" and l.letter == 's' then l.image = i_jade_s l.preview = i_jade_teir1
+    elseif l.type == "jade" and l.letter == 't' then l.image = i_jade_t l.preview = i_jade_teir5
+    elseif l.type == "jade" and l.letter == 'u' then l.image = i_jade_u l.preview = i_jade_teir3
+    elseif l.type == "jade" and l.letter == 'v' then l.image = i_jade_v l.preview = i_jade_teir4
+    elseif l.type == "jade" and l.letter == 'w' then l.image = i_jade_w l.preview = i_jade_teir4
+    elseif l.type == "jade" and l.letter == 'x' then l.image = i_jade_x l.preview = i_jade_teir5
+    elseif l.type == "jade" and l.letter == 'y' then l.image = i_jade_y l.preview = i_jade_teir4
+    elseif l.type == "jade" and l.letter == 'z' then l.image = i_jade_z l.preview = i_jade_teir5
+    end
+end
+
+local setGlorb = function (l) if l.type == "glorb" then l.image = i_glorb l.preview = i_glorb_preview end end
+
+function Letter(l, xpos, ypos, type, trans)
     local self = {}
-    
+
     self.x = xpos or 0
     self.y = ypos or 0
     self.xvel = 0
@@ -155,6 +277,7 @@ function Letter(letter, xpos, ypos, type, trans)
     self.transmuting = false
     self.locked = false
     self.stored = false
+    self.letter = l
     
     local firstClick = false
     
@@ -162,137 +285,24 @@ function Letter(letter, xpos, ypos, type, trans)
         if self.type == "pierce" then self.canPierce = true end
         if self.type == "glorb" then self.radius = 21 end
         
-        if     letter == 'a' or letter == 'e' or letter == 'i' or letter == 'r' or letter == 's' then return (self.type == "iron" and 5 or 1)
-        elseif letter == 'd' or letter == 'g' or letter == 'l' or letter == 'n' or letter == 'o' or letter == 't' then return (self.type == "iron" and 10 or 2)
-        elseif letter == 'b' or letter == 'c' or letter == 'h' or letter == 'm' or letter == 'p' or letter == 'u' then return (self.type == "iron" and 15 or 3)
-        elseif letter == 'f' or letter == 'k' or letter == 'v' or letter == 'w' or letter == 'y' then return (self.type == "iron" and 20 or 4)
-        elseif letter == 'j' or letter == 'q' or letter == 'x' or letter == 'z' then return (self.type == "iron" and 25 or 5)
+        if     self.letter == 'a' or self.letter == 'e' or self.letter == 'i' or self.letter == 'r' or self.letter == 's' then return (self.type == "iron" and 5 or 1)
+        elseif self.letter == 'd' or self.letter == 'g' or self.letter == 'l' or self.letter == 'n' or self.letter == 'o' or self.letter == 't' then return (self.type == "iron" and 10 or 2)
+        elseif self.letter == 'b' or self.letter == 'c' or self.letter == 'h' or self.letter == 'm' or self.letter == 'p' or self.letter == 'u' then return (self.type == "iron" and 15 or 3)
+        elseif self.letter == 'f' or self.letter == 'k' or self.letter == 'v' or self.letter == 'w' or self.letter == 'y' then return (self.type == "iron" and 20 or 4)
+        elseif self.letter == 'j' or self.letter == 'q' or self.letter == 'x' or self.letter == 'z' then return (self.type == "iron" and 25 or 5)
         elseif self.type == "glorb" then return "?"
         else return 0 end
     end
     
-    local setImage = function ()
-        local image, preview
-        
-        if     self.type == "blank" and letter == 'a' then image = i_blank_a
-        elseif self.type == "blank" and letter == 'b' then image = i_blank_b
-        elseif self.type == "blank" and letter == 'c' then image = i_blank_c
-        elseif self.type == "blank" and letter == 'd' then image = i_blank_d
-        elseif self.type == "blank" and letter == 'e' then image = i_blank_e
-        elseif self.type == "blank" and letter == 'f' then image = i_blank_f
-        elseif self.type == "blank" and letter == 'g' then image = i_blank_g
-        elseif self.type == "blank" and letter == 'h' then image = i_blank_h
-        elseif self.type == "blank" and letter == 'i' then image = i_blank_i
-        elseif self.type == "blank" and letter == 'j' then image = i_blank_j
-        elseif self.type == "blank" and letter == 'k' then image = i_blank_k
-        elseif self.type == "blank" and letter == 'l' then image = i_blank_l
-        elseif self.type == "blank" and letter == 'm' then image = i_blank_m
-        elseif self.type == "blank" and letter == 'n' then image = i_blank_n
-        elseif self.type == "blank" and letter == 'o' then image = i_blank_o
-        elseif self.type == "blank" and letter == 'p' then image = i_blank_p
-        elseif self.type == "blank" and letter == 'q' then image = i_blank_q
-        elseif self.type == "blank" and letter == 'r' then image = i_blank_r
-        elseif self.type == "blank" and letter == 's' then image = i_blank_s
-        elseif self.type == "blank" and letter == 't' then image = i_blank_t
-        elseif self.type == "blank" and letter == 'u' then image = i_blank_u
-        elseif self.type == "blank" and letter == 'v' then image = i_blank_v
-        elseif self.type == "blank" and letter == 'w' then image = i_blank_w
-        elseif self.type == "blank" and letter == 'x' then image = i_blank_x
-        elseif self.type == "blank" and letter == 'y' then image = i_blank_y
-        elseif self.type == "blank" and letter == 'z' then image = i_blank_z
-        end
-
-        if     self.type == "iron" and letter == 'a' then image = i_iron_a preview = i_iron_teir1
-        elseif self.type == "iron" and letter == 'b' then image = i_iron_b preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'c' then image = i_iron_c preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'd' then image = i_iron_d preview = i_iron_teir2
-        elseif self.type == "iron" and letter == 'e' then image = i_iron_e preview = i_iron_teir1
-        elseif self.type == "iron" and letter == 'f' then image = i_iron_f preview = i_iron_teir4
-        elseif self.type == "iron" and letter == 'g' then image = i_iron_g preview = i_iron_teir2
-        elseif self.type == "iron" and letter == 'h' then image = i_iron_h preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'i' then image = i_iron_i preview = i_iron_teir1
-        elseif self.type == "iron" and letter == 'j' then image = i_iron_j preview = i_iron_teir5
-        elseif self.type == "iron" and letter == 'k' then image = i_iron_k preview = i_iron_teir4
-        elseif self.type == "iron" and letter == 'l' then image = i_iron_l preview = i_iron_teir2
-        elseif self.type == "iron" and letter == 'm' then image = i_iron_m preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'n' then image = i_iron_n preview = i_iron_teir2
-        elseif self.type == "iron" and letter == 'o' then image = i_iron_o preview = i_iron_teir2
-        elseif self.type == "iron" and letter == 'p' then image = i_iron_p preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'q' then image = i_iron_q preview = i_iron_teir5
-        elseif self.type == "iron" and letter == 'r' then image = i_iron_r preview = i_iron_teir1
-        elseif self.type == "iron" and letter == 's' then image = i_iron_s preview = i_iron_teir1
-        elseif self.type == "iron" and letter == 't' then image = i_iron_t preview = i_iron_teir5
-        elseif self.type == "iron" and letter == 'u' then image = i_iron_u preview = i_iron_teir3
-        elseif self.type == "iron" and letter == 'v' then image = i_iron_v preview = i_iron_teir4
-        elseif self.type == "iron" and letter == 'w' then image = i_iron_w preview = i_iron_teir4
-        elseif self.type == "iron" and letter == 'x' then image = i_iron_x preview = i_iron_teir5
-        elseif self.type == "iron" and letter == 'y' then image = i_iron_y preview = i_iron_teir4
-        elseif self.type == "iron" and letter == 'z' then image = i_iron_z preview = i_iron_teir5
-        end
-
-        if     self.type == "pierce" and letter == 'a' then image = i_pierce_a preview = i_pierce_teir1
-        elseif self.type == "pierce" and letter == 'b' then image = i_pierce_b preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'c' then image = i_pierce_c preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'd' then image = i_pierce_d preview = i_pierce_teir2
-        elseif self.type == "pierce" and letter == 'e' then image = i_pierce_e preview = i_pierce_teir1
-        elseif self.type == "pierce" and letter == 'f' then image = i_pierce_f preview = i_pierce_teir4
-        elseif self.type == "pierce" and letter == 'g' then image = i_pierce_g preview = i_pierce_teir2
-        elseif self.type == "pierce" and letter == 'h' then image = i_pierce_h preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'i' then image = i_pierce_i preview = i_pierce_teir1
-        elseif self.type == "pierce" and letter == 'j' then image = i_pierce_j preview = i_pierce_teir5
-        elseif self.type == "pierce" and letter == 'k' then image = i_pierce_k preview = i_pierce_teir4
-        elseif self.type == "pierce" and letter == 'l' then image = i_pierce_l preview = i_pierce_teir2
-        elseif self.type == "pierce" and letter == 'm' then image = i_pierce_m preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'n' then image = i_pierce_n preview = i_pierce_teir2
-        elseif self.type == "pierce" and letter == 'o' then image = i_pierce_o preview = i_pierce_teir2
-        elseif self.type == "pierce" and letter == 'p' then image = i_pierce_p preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'q' then image = i_pierce_q preview = i_pierce_teir5
-        elseif self.type == "pierce" and letter == 'r' then image = i_pierce_r preview = i_pierce_teir1
-        elseif self.type == "pierce" and letter == 's' then image = i_pierce_s preview = i_pierce_teir1
-        elseif self.type == "pierce" and letter == 't' then image = i_pierce_t preview = i_pierce_teir5
-        elseif self.type == "pierce" and letter == 'u' then image = i_pierce_u preview = i_pierce_teir3
-        elseif self.type == "pierce" and letter == 'v' then image = i_pierce_v preview = i_pierce_teir4
-        elseif self.type == "pierce" and letter == 'w' then image = i_pierce_w preview = i_pierce_teir4
-        elseif self.type == "pierce" and letter == 'x' then image = i_pierce_x preview = i_pierce_teir5
-        elseif self.type == "pierce" and letter == 'y' then image = i_pierce_y preview = i_pierce_teir4
-        elseif self.type == "pierce" and letter == 'z' then image = i_pierce_z preview = i_pierce_teir5
-        end
-
-        if     self.type == "jade" and letter == 'a' then image = i_jade_a preview = i_jade_teir1
-        elseif self.type == "jade" and letter == 'b' then image = i_jade_b preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'c' then image = i_jade_c preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'd' then image = i_jade_d preview = i_jade_teir2
-        elseif self.type == "jade" and letter == 'e' then image = i_jade_e preview = i_jade_teir1
-        elseif self.type == "jade" and letter == 'f' then image = i_jade_f preview = i_jade_teir4
-        elseif self.type == "jade" and letter == 'g' then image = i_jade_g preview = i_jade_teir2
-        elseif self.type == "jade" and letter == 'h' then image = i_jade_h preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'i' then image = i_jade_i preview = i_jade_teir1
-        elseif self.type == "jade" and letter == 'j' then image = i_jade_j preview = i_jade_teir5
-        elseif self.type == "jade" and letter == 'k' then image = i_jade_k preview = i_jade_teir4
-        elseif self.type == "jade" and letter == 'l' then image = i_jade_l preview = i_jade_teir2
-        elseif self.type == "jade" and letter == 'm' then image = i_jade_m preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'n' then image = i_jade_n preview = i_jade_teir2
-        elseif self.type == "jade" and letter == 'o' then image = i_jade_o preview = i_jade_teir2
-        elseif self.type == "jade" and letter == 'p' then image = i_jade_p preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'q' then image = i_jade_q preview = i_jade_teir5
-        elseif self.type == "jade" and letter == 'r' then image = i_jade_r preview = i_jade_teir1
-        elseif self.type == "jade" and letter == 's' then image = i_jade_s preview = i_jade_teir1
-        elseif self.type == "jade" and letter == 't' then image = i_jade_t preview = i_jade_teir5
-        elseif self.type == "jade" and letter == 'u' then image = i_jade_u preview = i_jade_teir3
-        elseif self.type == "jade" and letter == 'v' then image = i_jade_v preview = i_jade_teir4
-        elseif self.type == "jade" and letter == 'w' then image = i_jade_w preview = i_jade_teir4
-        elseif self.type == "jade" and letter == 'x' then image = i_jade_x preview = i_jade_teir5
-        elseif self.type == "jade" and letter == 'y' then image = i_jade_y preview = i_jade_teir4
-        elseif self.type == "jade" and letter == 'z' then image = i_jade_z preview = i_jade_teir5
-        end
-
-        if self.type == "glorb" then image = i_glorb preview = i_glorb_preview end
-
-        return image, preview
+    self.image, self.preview = nil, nil
+    
+    if self.type == "blank" then setBlank(self)
+    elseif self.type == "iron" then setIron(self)
+    elseif self.type == "pierce" then setPierce(self)
+    elseif self.type == "jade" then setJade(self)
+    elseif self.type == "glorb" then setGlorb(self)
     end
 
-    self.image, self.preview = setImage()
-    self.letter = letter
     self.value = setValue()
     self.jadeMultiplier = (self.type == "jade" and self.value / 5 or 0) + 1
     self.pierceCount = (self.type == "pierce" and self.value or 1)

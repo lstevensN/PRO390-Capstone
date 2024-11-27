@@ -11,6 +11,8 @@ SfxVolume = 100 / 100
 
 local mouseX, mouseY = 0, 0
 
+local f_debug = love.graphics.newFont("game/assets/fonts/NotoSerif-Regular.ttf", 15)
+
 function love.resize(w, h) end
 
 function love.load()
@@ -25,6 +27,8 @@ function love.load()
 
     if screenX > width or screenY > height then love.window.setMode(width, height, {resizable = true})
     else love.window.setMode(screenX, screenY, {resizable = true, minwidth = 1200, minheight = 900}) end
+
+    
 end
 
 -- Main Game Loop
@@ -51,6 +55,7 @@ function love.draw()
         state.draw()
 
         love.graphics.setColor(0, 0, 0, 0.35)
+        love.graphics.setFont(f_debug)
         --love.graphics.print('Here goes nothing! (^v^)', 10, 10)
         --love.graphics.print("mouse x: "..tostring(mouseX), 10, 40)
         --love.graphics.print("mouse y: "..tostring(mouseY), 10, 60)
@@ -58,7 +63,7 @@ function love.draw()
         -- love.graphics.print("offset x: "..tostring(XOffset), 10, 90)
         -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10, 110)
 
-        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1090, 10)
+        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1080, 10)
     love.graphics.pop()
 
     love.graphics.setColor(0, 0, 0)

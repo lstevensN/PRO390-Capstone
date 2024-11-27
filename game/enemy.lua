@@ -1,3 +1,9 @@
+-- ASSETS
+    local i_squid_basic = love.graphics.newImage("game/assets/squid_sprite.png")
+    local i_squid_basic_flipped = love.graphics.newImage("game/assets/squid_sprite_flip.png")
+    local i_magala = love.graphics.newImage("game/assets/squid_magala.png")
+    local i_magala_flipped = love.graphics.newImage("game/assets/squid_magala_flip.png")
+
 function Enemy(xpos, ypos, t, h)
     local self = {}
     self.x = xpos or 0
@@ -10,10 +16,10 @@ function Enemy(xpos, ypos, t, h)
 
     local initialize = function ()
         if self.type == "empty" then return 0, 0, 1000, nil
-        elseif self.type == "basic" then return 150, 35, 30, Animation("game/assets/squid_sprite.png", 280, 280, 0.35, "basic"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.35, "basic")
-        elseif self.type == "fast" then return 250, 25, 20, Animation("game/assets/squid_sprite.png", 280, 280, 0.2, "fast"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.2, "fast")
-        elseif self.type == "strong" then return 100, 50, 100, Animation("game/assets/squid_sprite.png", 280, 280, 0.5, "strong"), Animation("game/assets/squid_sprite_flip.png", 280, 280, 0.5, "strong")
-        elseif self.type == "magala" then return 200, 100, 2500, Animation("game/assets/squid_magala.png", 560, 560, 0.5, "magala"), Animation("game/assets/squid_magala_flip.png", 560, 560, 0.5, "magala")
+        elseif self.type == "basic" then return 150, 35, 30, Animation(i_squid_basic, 280, 280, 0.35, "basic"), Animation(i_squid_basic_flipped, 280, 280, 0.35, "basic")
+        elseif self.type == "fast" then return 250, 25, 20, Animation(i_squid_basic, 280, 280, 0.2, "fast"), Animation(i_squid_basic_flipped, 280, 280, 0.2, "fast")
+        elseif self.type == "strong" then return 100, 50, 100, Animation(i_squid_basic, 280, 280, 0.5, "strong"), Animation(i_squid_basic_flipped, 280, 280, 0.5, "strong")
+        elseif self.type == "magala" then return 200, 100, 2500, Animation(i_magala, 560, 560, 0.5, "magala"), Animation(i_magala_flipped, 560, 560, 0.5, "magala")
         elseif self.type == "blank" then return 0, 0, 0, nil end
     end
 

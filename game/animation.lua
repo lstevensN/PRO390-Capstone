@@ -1,7 +1,7 @@
 function Animation(i, w, h, d, t)
     local self = {}
 
-    self.sprite = love.graphics.newImage(i)
+    self.sprite = i
     self.width = w
     self.height = h
     self.duration = d or 1
