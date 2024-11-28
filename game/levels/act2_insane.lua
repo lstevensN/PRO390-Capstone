@@ -1,7 +1,7 @@
 function Act2_Insane()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 2
+    self.spawnTimer = 1.5
     self.over = false
     self.music = love.audio.newSource("game/audio/TheBattle_Music.wav", "stream")
     self.sandwiches = {

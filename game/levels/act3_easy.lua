@@ -1,7 +1,7 @@
 function Act3_Easy()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 4
+    self.spawnTimer = 3.5
     self.over = false
     self.music = love.audio.newSource("game/audio/TheWar_Music.wav", "stream")
     self.sandwiches = {

@@ -1,7 +1,7 @@
 function Act1_Hard()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 3
+    self.spawnTimer = 2.5
     self.over = false
     self.music = love.audio.newSource("game/audio/TheHunger_Music.wav", "stream")
     self.sandwiches = {

@@ -14,7 +14,7 @@ function Act4_Normal()
 
     local enemies = {
         Enemy(0, 0, "fast"),
-        Enemy(0, 0, "magala")
+        Enemy(0, 0, "magala", 300)
     }
     local spawnIndex = 1
 

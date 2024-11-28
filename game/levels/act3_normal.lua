@@ -1,15 +1,13 @@
 function Act3_Normal()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 3.5
+    self.spawnTimer = 3
     self.over = false
     self.music = love.audio.newSource("game/audio/TheWar_Music.wav", "stream")
     self.sandwiches = {
-        Sandwich(950, 430),
         Sandwich(970, 430),
         Sandwich(990, 430),
-        Sandwich(1010, 430),
-        Sandwich(1030, 430)
+        Sandwich(1010, 430)
     }
 
     local enemies = {

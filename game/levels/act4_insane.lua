@@ -14,7 +14,7 @@ function Act4_Insane()
 
     local enemies = {
         Enemy(0, 0, "fast"),
-        Enemy(0, 0, "magala", 300)
+        Enemy(0, 0, "magala", 500)
     }
     local spawnIndex = 1
 

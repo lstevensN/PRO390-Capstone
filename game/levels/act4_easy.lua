@@ -14,7 +14,7 @@ function Act4_Easy()
 
     local enemies = {
         Enemy(0, 0, "fast"),
-        Enemy(0, 0, "magala", 175)
+        Enemy(0, 0, "magala")
     }
     local spawnIndex = 1
 

@@ -387,6 +387,8 @@ function GameState()
 
         local sortDeck = function (letter1, letter2) return letter1.value < letter2.value end
 
+        local canCombine = true
+
         local glorbHolder = {}
         local glorbSelection = {}
         local glorbing = false
@@ -483,7 +485,7 @@ function GameState()
                 elseif value1 == 4 and value2 == 4 and type1 == "jade" and type2 == "jade" then valid = true letterFunction = randomTier5Letter letterType = "jade"
                 end
 
-                if valid == true then
+                if valid == true and canCombine == true then
                     for i, v in ipairs(Deck) do if v == transmutationQueue[1] then table.remove(Deck, i) end end
                     for i, v in ipairs(Deck) do if v == transmutationQueue[2] then table.remove(Deck, i) end end
                     table.insert(Deck, letterFunction(letterType))
@@ -582,6 +584,8 @@ function GameState()
                 end
             elseif love.keyboard.isDown('escape') == false then back = false end
 
+            if #Deck <= 15 then canCombine = false else canCombine = true end
+
             local selected = {}
 
             if glorbing == false then backButton.update(dt) goButton.update(dt) end
@@ -590,17 +594,16 @@ function GameState()
             for i, v in ipairs(Deck) do
                 local withinTransmutationZone = false
 
-                if #Deck > 15 then
-                    if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and
-                    v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH then withinTransmutationZone = true end
+                if v.x - v.radius >= transmutationX and v.x + v.radius <= transmutationX + transmutationW and
+                v.y - v.radius >= transmutationY and v.y + v.radius <= transmutationY + transmutationH then withinTransmutationZone = true end
 
-                    if glorbTransmuting == false and v.x - v.radius >= storageX - 15 and v.x + v.radius <= storageX + storageW + 15 and
-                    v.y - v.radius >= storageY - 15 and v.y + v.radius <= storageY + storageH + 15 then v.stored = true end
-                    
-                    if withinTransmutationZone then
-                        if #transmutationQueue < (glorbTransmuting and 1 or 2) and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
-                    else v.locked = false end
-                end
+                if canCombine == true and glorbTransmuting == false and 
+                v.x - v.radius >= storageX - 15 and v.x + v.radius <= storageX + storageW + 15 and
+                v.y - v.radius >= storageY - 15 and v.y + v.radius <= storageY + storageH + 15 then v.stored = true end
+                
+                if withinTransmutationZone then
+                    if #transmutationQueue < (glorbTransmuting and 1 or 2) and transmutationQueue[1] ~= v then v.locked = true table.insert(transmutationQueue, v) end
+                else v.locked = false end
 
                 -- letter collision checks
                 for index, letter in ipairs(Deck) do

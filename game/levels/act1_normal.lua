@@ -1,7 +1,7 @@
 function Act1_Normal()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 3.5
+    self.spawnTimer = 3
     self.over = false
     self.music = love.audio.newSource("game/audio/TheHunger_Music.wav", "stream")
     self.sandwiches = {
