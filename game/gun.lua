@@ -20,7 +20,7 @@ function Gun(xpos, ypos, mode)
     local next = next
 
     local blindSpots = function (enemy)
-        if enemy.x < 0 or enemy.x > 1200 then return true
+        if enemy.x < -10 or enemy.x > 1210 then return true
         else return false end
     end
 

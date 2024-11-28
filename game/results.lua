@@ -22,7 +22,7 @@ function Results()
             tip = "Enables powerful multi-hits.\n\nA E I R S - Hits multiple squids\nD G L O N T - Hits squids 2x\nB C H M P U - Hits squids 3x\nF K V W Y - Hits squids 4x\nJ Q X Z - Hits squids 5x"
         elseif num == 3 then
             title = "Jade Letters"
-            tip = "Boosts word power.\n\nA E I R S - 1.2x multiplier\nD G L O N T - 1.4x multiplier\nB C H M P U - 1.6x multiplier\nF K V W Y - 1.8x multiplier\nJ Q X Z - 2.0x multiplier"
+            tip = "Boosts word power.\n\nA E I R S - 1.5x multiplier\nD G L O N T - 2.0x multiplier\nB C H M P U - 2.5x multiplier\nF K V W Y - 3.0x multiplier\nJ Q X Z - 3.5x multiplier"
         end
 
         return {title, tip}

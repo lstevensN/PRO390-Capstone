@@ -157,7 +157,7 @@ function GameState()
         local buttonStart = Button(340, 225, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startImage, startSelectedImage)
         local buttonSettings = Button(340, 450, 620, 200, function () end, i_b_start_settings, i_b_start_settingsSelected)
         local buttonQuit = Button(340, 675, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () love.event.quit() end) end, i_b_start_quit, i_b_start_quitSelected)  -- DON'T FORGET TO ADD SAVING
-        local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = true end, i_b_start_info)
+        local buttonInfo = Button(1100, 800, 50, 50, function () showTutorial = not showTutorial end, i_b_start_info)
 
         buttonStart.selected = true
 
@@ -196,9 +196,11 @@ function GameState()
         gameState = function (dt)
             if GetKeyPressed() == "escape" then showTutorial = false ResetKeyPressed() end
 
-            buttonStart.update(dt)
-            buttonSettings.update(dt)
-            buttonQuit.update(dt)
+            if showTutorial == false then
+                buttonStart.update(dt)
+                buttonSettings.update(dt)
+                buttonQuit.update(dt)
+            end
 
             buttonInfo.update(dt)
 
@@ -914,8 +916,8 @@ function GameState()
         local fireTimer = cron.every(0.2, function (dt) gun.fire(dt) end)
         
         local line = Line(-100, 1300, 100, 1)
-        local line2 = Line(-100, 1300, 265, 2)
-        local line3 = Line(-100, 1050, 430, 3, true)
+        local line2 = Line(-200, 1300, 265, 2)
+        local line3 = Line(-200, 1050, 430, 3, true)
 
         line.nextLine = line2
         line2.prevLine = line
@@ -1329,6 +1331,8 @@ function GameState()
 
             gameResults.stolenSandwiches = successfullyStolenSandwiches
             gameResults.time = gameResults.time + dt
+
+            if not Level.music:isPlaying() then Level.music:play() end
         end
 
 
@@ -1440,7 +1444,7 @@ function GameState()
 
             end
             
-            if sfx_confirm:isPlaying() then sfx_confirm:stop() end
+            if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play()
         end
 
         local nextButton = Button(350, 700, 470, 175, nextFunc, i_b_result_next, i_b_result_nextHovered)

@@ -1,17 +1,20 @@
 function Act4_Insane()
     local self = {}
     self.canSpawn = true
-    self.spawnTimer = 2
+    self.spawnTimer = 1
     self.over = false
     self.music = love.audio.newSource("game/audio/TheShowdown_Music.wav", "stream")
     self.sandwiches = {
+        Sandwich(950, 430),
         Sandwich(970, 430),
         Sandwich(990, 430),
-        Sandwich(1010, 430)
+        Sandwich(1010, 430),
+        Sandwich(1030, 430)
     }
 
     local enemies = {
-        Enemy(0, 0, "magala")
+        Enemy(0, 0, "fast"),
+        Enemy(0, 0, "magala", 300)
     }
     local spawnIndex = 1
 

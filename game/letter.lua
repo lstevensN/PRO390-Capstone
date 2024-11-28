@@ -304,7 +304,7 @@ function Letter(l, xpos, ypos, type, trans)
     end
 
     self.value = setValue()
-    self.jadeMultiplier = (self.type == "jade" and self.value / 5 or 0) + 1
+    self.jadeMultiplier = (self.type == "jade" and self.value / 2 or 0) + 1
     self.pierceCount = (self.type == "pierce" and self.value or 1)
 
     self.update = function(dt)

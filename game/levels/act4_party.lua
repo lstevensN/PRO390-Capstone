@@ -72,7 +72,8 @@ function Act4_Party()
         Enemy(0, 0, "fast"),
         Enemy(0, 0, "basic"),
         Enemy(0, 0, "basic"),
-        Enemy(0, 0, "magala", 1500),
+        Enemy(0, 0, "fast"),
+        Enemy(0, 0, "magala"),
         Enemy(0, 0, "blank"), -- break
         Enemy(0, 0, "blank"), -- break
         Enemy(0, 0, "blank"), -- break
