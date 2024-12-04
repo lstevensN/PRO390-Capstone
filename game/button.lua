@@ -54,6 +54,7 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
     self.pressed = false
     self.hoveredOver = false
     self.locked = true
+    self.logo = false
     -- Image Property?
 
     self.front = f or nil
@@ -70,7 +71,7 @@ function ButtonGear(xpos, ypos, r, onclick, f, b, bh)
         mouseX = (mouseX - XOffset) / ScaleFactor
         mouseY = mouseY / ScaleFactor
 
-        if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius then
+        if DistanceBetween(self.x, self.y, mouseX, mouseY) < self.radius or self.logo == true then
             self.hoveredOver = true
             if self.locked == false then rotation = rotation + dt end
         else self.hoveredOver = false end

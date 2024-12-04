@@ -20,7 +20,9 @@ function GameState()
     --#region ASSETS
         -- START
         local i_start_background = love.graphics.newImage("game/assets/start UI.png") -- Image by pikisuperstar on Freepik
-        local i_start_logo = love.graphics.newImage("game/assets/logo.png")
+        local i_start_logo = love.graphics.newImage("game/assets/logo-2.png")
+        local i_start_logoFront = love.graphics.newImage("game/assets/logo-2_gear.png")
+        local i_start_logoBack = love.graphics.newImage("game/assets/logo-2_gear_back.png")
         local i_start_howToPlay = love.graphics.newImage("game/assets/how_to_play.png")
 
         local i_b_start_new = love.graphics.newImage("game/assets/start_selection_new.png")
@@ -154,6 +156,10 @@ function GameState()
         local startImage = (started == true and i_b_start_continue or i_b_start_new)
         local startSelectedImage = (started == true and i_b_start_continueSelected or i_b_start_newSelected)
 
+        local buttonGear = ButtonGear(897, 397, 325, function () end, i_start_logoFront, i_start_logoBack, i_start_logoBack)
+        buttonGear.logo = true
+        buttonGear.locked = false
+
         local buttonStart = Button(340, 225, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() started = true Fade.start(function () gameState = progress end) end, startImage, startSelectedImage)
         local buttonSettings = Button(340, 450, 620, 200, function () end, i_b_start_settings, i_b_start_settingsSelected)
         local buttonQuit = Button(340, 675, 620, 200, function () if sfx_confirm:isPlaying() then sfx_confirm:stop() end sfx_confirm:play() Fade.start(function () love.event.quit() end) end, i_b_start_quit, i_b_start_quitSelected)  -- DON'T FORGET TO ADD SAVING
@@ -183,10 +189,10 @@ function GameState()
                 Letter('p', -100, -100, "iron"),
                 Letter('u', -100, -100, "iron"),
 
-                Letter('j', -100, -100, "iron"),
-                Letter('q', -100, -100, "iron"),
-                Letter('x', -100, -100, "iron"),
-                Letter('z', -100, -100, "iron")
+                Letter('f', -100, -100, "iron"),
+                Letter('k', -100, -100, "iron"),
+                Letter('w', -100, -100, "iron"),
+                Letter('y', -100, -100, "iron")
             }
         end
         if Storage == nil then Storage = { Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb") } end
@@ -202,6 +208,7 @@ function GameState()
                 buttonQuit.update(dt)
             end
 
+            buttonGear.update(dt)
             buttonInfo.update(dt)
 
             local x, y = love.mouse.getPosition()
@@ -233,15 +240,17 @@ function GameState()
         drawState = function ()
             love.graphics.draw(i_start_background, 0, 0, 0, 0.5, 0.5)
 
-            love.graphics.setColor(216/255, 190/255, 103/255)
+            love.graphics.setColor(0, 0, 0)
             love.graphics.circle("fill", 900, 400, 200)
-            love.graphics.setColor(155/255, 125/255, 65/255)
+            love.graphics.setColor(1, 1, 1)
             love.graphics.setLineWidth(10)
             love.graphics.circle("line", 900, 400, 200)
             --love.graphics.draw(i_game_icon, 680, 180, 0, 1.25)
             love.graphics.setColor(1, 1, 1)
             love.graphics.setLineWidth(1)
-            love.graphics.draw(i_start_logo, 735, 235, 0, 0.5, 0.5)
+            
+            buttonGear.draw()
+            love.graphics.draw(i_start_logo, 656, 156, 0, 0.75, 0.75)
 
             buttonStart.draw()
             buttonSettings.draw()
@@ -1163,6 +1172,7 @@ function GameState()
             for i, v in ipairs(submittedLetters) do
                 if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then
                     if v.type ~= "pierce" then v.canPierce = false end
+                    if v.type ~= "jade" then v.jadeMultiplier = 1 end
                     table.remove(submittedLetters, i)
                 else v.update(dt) end
             end
@@ -1172,15 +1182,19 @@ function GameState()
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local hitByCount = 0
+                        local tempJade = 0
                     
-                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        if letter.canPierce == false then
+                            tempJade = letter.jadeMultiplier
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            local power = letter.value * letter.jadeMultiplier
+                            local power = letter.value * (tempJade > letter.jadeMultiplier and tempJade or letter.jadeMultiplier)
                             v.health = v.health - power
                             local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
@@ -1215,15 +1229,19 @@ function GameState()
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local hitByCount = 0
+                        local tempJade = 0
                     
-                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        if letter.canPierce == false then
+                            tempJade = letter.jadeMultiplier
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            local power = letter.value * letter.jadeMultiplier
+                            local power = letter.value * (tempJade > letter.jadeMultiplier and tempJade or letter.jadeMultiplier)
                             v.health = v.health - power
                             local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font))
@@ -1258,15 +1276,19 @@ function GameState()
                 for index, letter in ipairs(submittedLetters) do
                     if DistanceBetween(v.x, v.y, letter.x, letter.y) <= v.radius + 15 then
                         local hitByCount = 0
+                        local tempJade = 0
                     
-                        if letter.canPierce == false then table.remove(submittedLetters, index)
+                        if letter.canPierce == false then
+                            tempJade = letter.jadeMultiplier
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
                             if hitByCount ~= letter.pierceCount then table.insert(v.hitBy, letter) end
                         end
 
                         if letter.canPierce == false or hitByCount ~= letter.pierceCount then
-                            local power = letter.value * letter.jadeMultiplier
+                            local power = letter.value * (tempJade > letter.jadeMultiplier and tempJade or letter.jadeMultiplier)
                             v.health = v.health - power
                             local font = (power >= 30 and f_game_powerBigNum or f_game_powerNum)
                             table.insert(VFX, DamageNumber(math.ceil(power), v.x, v.y, font, 3))

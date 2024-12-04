@@ -63,7 +63,7 @@ function love.draw()
         -- love.graphics.print("offset x: "..tostring(XOffset), 10, 90)
         -- love.graphics.print("scale factor: "..tostring(ScaleFactor), 10, 110)
 
-        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1080, 10)
+        --love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 1080, 10)
     love.graphics.pop()
 
     love.graphics.setColor(0, 0, 0)
