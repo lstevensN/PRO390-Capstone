@@ -1,3 +1,5 @@
+if arg[2] == "debug" then require("lldebugger").start() end
+
 local state
 
 local screenX, screenY = 1200, 900
@@ -69,4 +71,14 @@ function love.draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("fill", 0, 0, XOffset - 1, love.graphics.getHeight())
     love.graphics.rectangle("fill", screenX * ScaleFactor + XOffset + 1, 0, XOffset - 1, love.graphics.getHeight())
+end
+
+local love_errorhandler = love.errorhandler
+
+function love.errorhandler(msg)
+    if lldebugger then
+        error(msg, 2)
+    else
+        return love_errorhandler(msg)
+    end
 end

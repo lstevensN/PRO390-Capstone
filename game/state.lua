@@ -1172,7 +1172,8 @@ function GameState()
             for i, v in ipairs(submittedLetters) do
                 if v.x < 0 or v.x > love.graphics.getWidth() or v.y < 0 or v.y > love.graphics.getHeight() then
                     if v.type ~= "pierce" then v.canPierce = false end
-                    if v.type ~= "jade" then v.jadeMultiplier = 1 end
+                    if v.type ~= "jade" then v.jadeMultiplier = 1
+                    else v.jadeMultiplier = v.value / 2 + 1 end
                     table.remove(submittedLetters, i)
                 else v.update(dt) end
             end
@@ -1186,7 +1187,8 @@ function GameState()
                     
                         if letter.canPierce == false then
                             tempJade = letter.jadeMultiplier
-                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1
+                            else letter.jadeMultiplier = letter.value / 2 + 1 end
                             table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
@@ -1233,7 +1235,8 @@ function GameState()
                     
                         if letter.canPierce == false then
                             tempJade = letter.jadeMultiplier
-                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1
+                            else letter.jadeMultiplier = letter.value / 2 + 1 end
                             table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
@@ -1280,7 +1283,8 @@ function GameState()
                     
                         if letter.canPierce == false then
                             tempJade = letter.jadeMultiplier
-                            if letter.type ~= "jade" then letter.jadeMultiplier = 1 end
+                            if letter.type ~= "jade" then letter.jadeMultiplier = 1
+                            else letter.jadeMultiplier = letter.value / 2 + 1 end
                             table.remove(submittedLetters, index)
                         else
                             for _, l in ipairs(v.hitBy) do if l == letter then hitByCount = hitByCount + 1 end end
