@@ -191,11 +191,17 @@ function GameState()
 
                 Letter('f', -100, -100, "iron"),
                 Letter('k', -100, -100, "iron"),
+                Letter('v', -100, -100, "iron"),
                 Letter('w', -100, -100, "iron"),
-                Letter('y', -100, -100, "iron")
+                Letter('y', -100, -100, "iron"),
+
+                Letter('j', -100, -100, "iron"),
+                Letter('q', -100, -100, "iron"),
+                Letter('x', -100, -100, "iron"),
+                Letter('z', -100, -100, "iron")
             }
         end
-        if Storage == nil then Storage = { Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb"), Letter('?', -100, -100, "glorb") } end
+        if Storage == nil then Storage = {} end
 
 
         -- Start State Loop
