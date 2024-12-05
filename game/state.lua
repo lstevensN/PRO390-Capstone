@@ -1408,16 +1408,20 @@ function GameState()
         t_result_timeTitle:set("Time:  ")
         t_result_time:set(string.format(timeFormat, gameResults.time / 60, math.fmod(gameResults.time, 60)))
 
-        t_result_sandwichTitle:set("Sandwiches Lost:  ")
-        t_result_sandwich:set(tostring(gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
+        t_result_sandwichTitle:set("Sandwiches Saved:  ")
+        t_result_sandwich:set(tostring(gameResults.totalSandwiches - gameResults.stolenSandwiches).."/"..tostring(gameResults.totalSandwiches))
         t_result_enemiesTitle:set("Squids Repelled:  ")
         t_result_enemies:set(tostring(gameResults.enemies).."/"..tostring(gameResults.totalEnemies))
         t_result_bestWordTitle:set("Best Word:  ")
         t_result_bestWord:set("("..tostring(math.ceil(gameResults.bestValue))..")")
 
         if Act == 4 and alive == true then
+            local w, tText = f_result_tip:getWrap("Thank you for playing! (^v^)\nYou are awesome. Sorry, it's a bit of a mess; development is still in progress.\nPlay again now if you want to keep everything in your Boiler for next run.", 375)
+            local tipString = ""
+            for i, v in ipairs(tText) do tipString = tipString..v.."\n" end
+
             t_result_tipTitle:set("You Won!")
-            t_result_tip:set("Thanks for playing this demo! (^v^)\nYou are awesome.\nSorry, it's a bit of a mess.\nDevelopment is still in progress.\nCongratulations on making it \nhere regardless!\nPlay again now if you want to \nkeep everything in your Storage \nfor next run.")
+            t_result_tip:set(tipString)
         else
             local w, tText = f_result_tip:getWrap(gameResults.tip[2], 375)
             local tipString = ""
@@ -1458,7 +1462,7 @@ function GameState()
                     started = false
                     unlocked = false
 
-                    Deck = nil
+                    Storage = nil
                 end
             else -- Restart Game
                 Fade.start(function () gameState = start end)

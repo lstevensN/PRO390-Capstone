@@ -1,0 +1,10 @@
+name = "Squidwords"
+
+default_targets = ["lovejs"]
+
+build_directory = "bin"
+
+love_files = [
+"+*",
+"-*/.*",
+]
